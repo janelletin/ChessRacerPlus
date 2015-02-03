@@ -151,23 +151,18 @@ BoardC.prototype.update = function() {
 
 Piece.prototype.move = function() {} */
 
-function Pawn(board, row, column) {
-	this.board = board.Board;
-	//console.log("The Board " + (board.Board)[1][3]);
-	this.theObj = board;
-	this.letter = "P";
-	this.row = row;
-	this.column = column;
-	//console.log("before add" + board.Pieces.length);
-	board.Pieces.push(this); // Adds to the pieces array of the board
-	//console.log("after add" + board.Pieces.length);
-
-	console.log("Creating a pawn at row " + this.row + " column " + this.column);
-	//this.move("left");
-
+function Piece() {
+	this.board;
+	this.letter;
+	this.row;
+	this.column;
+	this.secret = "hehe";
+}
+Piece.prototype.test = function() {
+	console.log(this.secret);
 }
 
-Pawn.prototype.move = function(direction) {
+Piece.prototype.move = function(){
 	// 0.25 chance to move
 	var poss = Math.floor(Math.random() * (4)); // Mozilla math.random
 	console.log(poss);
@@ -204,9 +199,78 @@ Pawn.prototype.move = function(direction) {
 
 }
 
-Pawn.prototype.toString = function() {
+Piece.prototype.toString = function() {
 	return this.letter + "(" + this.row + ", " + this.column + ")";
 }
+
+
+function Knight(board, row, column) {
+	this.board = board.Board;
+	this.letter = "K";
+	this.row = row;
+	this.column = column;
+	board.Pieces.push(this);
+	this.board[row][column] = this;
+}
+
+function Castle(board, row, column){
+	this.board = board.Board;
+	this.letter = "C";
+	this.row = row;
+	this.column = column;
+	board.Pieces.push(this);
+	this.board[row][column] = this;
+}
+
+function Bishop(board, row, column){
+	this.board = board.Board;
+	this.letter = "B";
+	this.row = row;
+	this.column = column;
+	board.Pieces.push(this); 
+	this.board[row][column] = this;
+}
+
+function Queen(board, row, column){
+	this.board = board.Board;
+	this.letter = "Q";
+	this.row = row;
+	this.column = column;
+	board.Pieces.push(this); 
+	this.board[row][column] = this;
+}
+
+function Pawn(board, row, column) {
+	this.board = board.Board;
+	//console.log("The Board " + (board.Board)[1][3]);
+	this.theObj = board;
+	this.letter = "P";
+	this.row = row;
+	this.column = column;
+	//console.log("before add" + board.Pieces.length);
+	board.Pieces.push(this); // Adds to the pieces array of the board
+	//console.log("after add" + board.Pieces.length);
+
+	console.log("Creating a pawn at row " + this.row + " column " + this.column);
+	//this.move("left");
+
+}
+
+Piece.prototype.constructor = Piece;
+Knight.prototype = new Piece();
+Knight.prototype.constructor = Knight;
+
+Castle.prototype = new Piece();
+Castle.prototype.constructor = Castle;
+
+Bishop.prototype = new Piece();
+Bishop.prototype.constructor = Bishop;
+
+Queen.prototype = new Piece();
+Queen.prototype.constructor = Pawn;
+
+Pawn.prototype = new Piece();
+Pawn.prototype.constructor = Pawn;
 
 function User(board, row, column) {
 	this.board = board.Board;
@@ -248,7 +312,13 @@ Pawn.prototype.constructor = Pawn;
 var b = new BoardC();
 console.log("Accessing the board " + b.Board);
 b.init();
-//b.print();
+var k = new Knight(b, 4, 2);
+var bi = new Bishop(b, 5, 3);
+var c = new Castle(b, 8, 5);
+var q = new Queen(b, 6, 4);
+
+
+b.print();
 b.newLine();
 b.update();
 b.update();
