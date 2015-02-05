@@ -280,14 +280,12 @@ function User(board, row, column) {
 	this.column = column;
 	this.score = 0;
 }
-// Moves the user piece left/right diagonal-left/right and the knight moves
-// Doesn't check for valid ranking yet
+// Moves the user piece left or right
 User.prototype.move = function(direction) {
-	
 	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column);
 	if(direction == "left") {
 		if(this.column < 1) {
-			console.log("Can't move " + direction + " anymore");
+			console.log("Can't move left anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row][this.column-1] = this;
@@ -295,81 +293,16 @@ User.prototype.move = function(direction) {
 		}
 	} else if (direction == "right") {
 		if(this.column > 7) {
-			console.log("Can't move " + direction + " anymore");
+			console.log("Can't move right anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row][this.column+1] = this;
 			this.column += 1;
 		}
-	} else if(direction == "Knight-1Right") { 
-		if(this.column > 6) {
-			console.log("Can't move " + direction + " anymore");
-		} else {
-			this.board[this.row][this.column] = "0";
-			this.board[this.row + 2][this.column + 1] = this;
-			this.row += 2;
-			this.column += 1;
-		}
-	} else if(direction == "Knight-1Left") {
-		if(this.column < 1) {
-			console.log("Can't move " + direction + " anymore");
-		} else {
-			this.board[this.row][this.column] = "0";
-			this.board[this.row + 2][this.column - 1] = this;
-			this.row += 2;
-			this.column -= 1;
-		}
-	} else if(direction == "Knight-2Right") { 
-		if(this.column > 5) {
-			console.log("Can't move " + direction + " anymore");
-		} else {
-			this.board[this.row][this.column] = "0";
-			this.board[this.row + 1][this.column + 2] = this;
-			this.row += 1;
-			this.column += 2;
-		}
-		
-	} else if(direction == "Knight-2Left") {
-		if(this.column < 2) {
-			console.log("Can't move " + direction + " anymore");
-		} else {
-			console.log(this.board[this.row][this.column]);
-			this.board[this.row][this.column] = "0";
-			console.log(this.board[this.row][this.column]);
-			this.board[this.row + 1][this.column - 2] = this;
-			this.row += 1;
-			this.column -2;
-		}
-
-	} else if(direction == "DLeft") {
-		if(this.column < 1) {
-			console.log("Can't move " + direction + " anymore");	
-		} else {
-			this.board[this.row][this.column] = "0";
-			this.board[this.row + 1][this.column - 1] = this;
-			this.row += 1;
-			this.column -= 1;
-		}
-	} else if(direction =="DRight") {
-		if(this.column > 6) {
-			console.log("Can't move " + direction + " anymore");			
-		} else {
-			this.board[this.row][this.column] = "0";
-			this.board[this.row + 1][this.column + 1] = this;
-			this.row += 1;
-			this.column += 1;
-		}
-	} else {
-		console.log("invalid direction");
 	}
 	console.log("User is now at row " + this.row + " column " + this.column);
 	console.log(this.board[this.row][this.column].letter);
-	
-	//
-	
 }
-
-
 
 User.prototype.toString = function() {
 	return this.letter + "(" + this.row + ", " + this.column + ")";
@@ -379,7 +312,7 @@ Pawn.prototype.constructor = Pawn;
 var b = new BoardC();
 console.log("Accessing the board " + b.Board);
 b.init();
-var k = new Knight(b, 4, 0);
+var k = new Knight(b, 4, 2);
 var bi = new Bishop(b, 5, 3);
 var c = new Castle(b, 8, 5);
 var q = new Queen(b, 6, 4);
