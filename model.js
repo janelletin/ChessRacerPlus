@@ -1,4 +1,5 @@
-function BoardC() {
+function BoardC(gameEngine) {
+	this.game = gameEngine;
 	this.User; // The user's piece
 	this.rows = 12; // row
 	this.columns = 8; // column
@@ -11,15 +12,17 @@ function BoardC() {
 			this.Board[i][j]=0;
 		}
 	}
+	this.init();
 	//console.log(this.Board);
 }
 
 
 BoardC.prototype.init = function() {
 	// Creates and places the user
-	this.User = new User(this,0,4);
-	this.Board[0][4] = this.User; // User
+	this.User = new User(this,0,5);
+	this.Board[0][5] = this.User; // User
 	this.Pieces.push(this.User);
+	console.log("initialized board model");
 }
 
 BoardC.prototype.print = function() {
@@ -38,7 +41,7 @@ BoardC.prototype.print = function() {
 BoardC.prototype.newLine = function() { // Adds a new line
 	// number of new pieces to add 
 	var numOfPieces = Math.floor(Math.random() * (4 - 1)) + 1 // Mozilla math.random get Int
-			console.log("adding : " + numOfPieces);
+	//console.log("adding : " + numOfPieces);
 	var piecesLoc = new Array(); // An array of the pieces location
 	//console.log(pieces.indexOf(0));
 	//console.log(pieces.indexOf(1));
@@ -53,23 +56,26 @@ BoardC.prototype.newLine = function() { // Adds a new line
 		}
 		piecesLoc.push(tempLoc);
 	}
-	console.log(piecesLoc);
+	//console.log(piecesLoc);
 	//put the pieces into the board
 	for(var i = 0; i < piecesLoc.length; i++) {
-		var temp = new Pawn(this, 11, piecesLoc[i]);
+		var temp = new Pawn(this.game, this, 11, piecesLoc[i]);
 		this.Board[11][piecesLoc[i]] = temp;
-
+		var temp = new Piece(this.game, "pawn", piecesLoc[i], 0, "white");
+		this.game.addEntity(temp);
+		
 	}
+	
 }
 
 BoardC.prototype.update = function() {
 	for(var p = 0; p < this.Pieces.length; p++) {
 		if(this.Pieces[p] != this.User) {
-			this.Pieces[p].move();
+			//this.Pieces[p].move();
 		}
 	}
 
-	console.log("number of pieces before update " + this.Pieces.length);
+	//console.log("number of pieces before update " + this.Pieces.length);
 	// Checks the first row for collision and removes pieces
 	for(j=0;j<this.columns;j++) {
 		//console.log("Piece " + this.Board[0][j] + " User " + this.User + " " + this.Board[0][j] != this.User);
@@ -79,6 +85,7 @@ BoardC.prototype.update = function() {
 			//console.log(this.Board[0][j] + " index = " + index);
 			if (index > -1) {
 				this.Pieces.splice(index, 1);
+				this.Board[0][j].removeFromWorld = true;
 				console.log("removing a piece");
 			}
 			this.Board[0][j] = 0;
@@ -107,36 +114,29 @@ BoardC.prototype.update = function() {
 			}
 		}
 	}
-	console.log("number of pieces middle " + this.Pieces.length);
-	this.newLine(); // adds a new lin
-	console.log("number of pieces after " + this.Pieces.length);
+	//console.log("number of pieces middle " + this.Pieces.length);
+	this.newLine(); // adds a new line
+	//console.log("number of pieces after " + this.Pieces.length);
 	//console.log(this.Pieces);
-	this.print();
+	//this.print();
 }
+PieceC.prototype = new Entity();
+PieceC.prototype.constructor = PieceC;
 
-//Haven't implemented this yet
-/* function Piece(board) {
-	this.board = board;
-	this.letter;
-	this.row;
-	this.column;
-
-}
-
-Piece.prototype.move = function() {} */
-
-function Piece() {
+function PieceC() {
+	this.game;
 	this.board;
 	this.letter;
 	this.row;
 	this.column;
+	this.removeFromWorld = false;
 	this.secret = "hehe";
 }
-Piece.prototype.test = function() {
+PieceC.prototype.test = function() {
 	console.log(this.secret);
 }
 
-Piece.prototype.move = function(){
+PieceC.prototype.move = function(){
 	// 0.25 chance to move
 	var poss = Math.floor(Math.random() * (4)); // Mozilla math.random
 	console.log(poss);
@@ -173,12 +173,13 @@ Piece.prototype.move = function(){
 
 }
 
-Piece.prototype.toString = function() {
+PieceC.prototype.toString = function() {
 	return this.letter + "(" + this.row + ", " + this.column + ")";
 }
 
 
-function Knight(board, row, column) {
+function Knight(game, board, row, column) {
+	this.game = game;
 	this.board = board.Board;
 	this.letter = "K";
 	this.row = row;
@@ -187,7 +188,8 @@ function Knight(board, row, column) {
 	this.board[row][column] = this;
 }
 
-function Castle(board, row, column){
+function Castle(game, board, row, column){
+	this.game = game;
 	this.board = board.Board;
 	this.letter = "C";
 	this.row = row;
@@ -196,7 +198,8 @@ function Castle(board, row, column){
 	this.board[row][column] = this;
 }
 
-function Bishop(board, row, column){
+function Bishop(game, board, row, column){
+	this.game = game;
 	this.board = board.Board;
 	this.letter = "B";
 	this.row = row;
@@ -205,7 +208,8 @@ function Bishop(board, row, column){
 	this.board[row][column] = this;
 }
 
-function Queen(board, row, column){
+function Queen(game, board, row, column){
+	this.game = game;
 	this.board = board.Board;
 	this.letter = "Q";
 	this.row = row;
@@ -214,7 +218,8 @@ function Queen(board, row, column){
 	this.board[row][column] = this;
 }
 
-function Pawn(board, row, column) {
+function Pawn(game, board, row, column) {
+	this.game = game;
 	this.board = board.Board;
 	//console.log("The Board " + (board.Board)[1][3]);
 	this.theObj = board;
@@ -225,25 +230,25 @@ function Pawn(board, row, column) {
 	board.Pieces.push(this); // Adds to the pieces array of the board
 	//console.log("after add" + board.Pieces.length);
 
-	console.log("Creating a pawn at row " + this.row + " column " + this.column);
+	//console.log("Creating a pawn at row " + this.row + " column " + this.column);
 	//this.move("left");
 
 }
 
-Piece.prototype.constructor = Piece;
-Knight.prototype = new Piece();
+PieceC.prototype.constructor = PieceC;
+Knight.prototype = new PieceC();
 Knight.prototype.constructor = Knight;
 
-Castle.prototype = new Piece();
+Castle.prototype = new PieceC();
 Castle.prototype.constructor = Castle;
 
-Bishop.prototype = new Piece();
+Bishop.prototype = new PieceC();
 Bishop.prototype.constructor = Bishop;
 
-Queen.prototype = new Piece();
+Queen.prototype = new PieceC();
 Queen.prototype.constructor = Pawn;
 
-Pawn.prototype = new Piece();
+Pawn.prototype = new PieceC();
 Pawn.prototype.constructor = Pawn;
 
 function User(board, row, column) {
@@ -343,35 +348,6 @@ User.prototype.move = function(direction) {
 	
 }
 
-
-
 User.prototype.toString = function() {
 	return this.letter + "(" + this.row + ", " + this.column + ")";
 }
-//Pawn.prototype = new Piece();
-Pawn.prototype.constructor = Pawn;
-var b = new BoardC();
-console.log("Accessing the board " + b.Board);
-b.init();
-var k = new Knight(b, 4, 0);
-var bi = new Bishop(b, 5, 3);
-var c = new Castle(b, 8, 5);
-var q = new Queen(b, 6, 4);
-
-
-b.print();
-b.newLine();
-b.update();
-b.update();
-//b.print();
-/* var p = new Pawn(b, 1, 3);
-p.move("left");
-p.move("right");
-p.move("right"); */
-/* var k;
-for(var k = 1; k < 18; k++) {
-	console.log("UPDATE " + k);
-	b.update();
-}
-console.log(k); */
-//b.print();

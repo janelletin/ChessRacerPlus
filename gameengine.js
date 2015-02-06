@@ -28,6 +28,8 @@ Timer.prototype.tick = function () {
     return gameDelta;
 }
 
+
+
 function GameEngine() {
     this.entities = [];
     this.showOutlines = false;
@@ -37,6 +39,8 @@ function GameEngine() {
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+	this.on = true;
+	this.timer;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -55,6 +59,14 @@ GameEngine.prototype.start = function () {
         that.loop();
         requestAnimFrame(gameLoop, that.ctx.canvas);
     })();
+}
+
+GameEngine.prototype.stop = function() {
+	console.log(this);
+	console.log("stopping game");
+	//console.log(this.on);
+	this.on = !this.on;
+	//console.log(this.on);
 }
 
 GameEngine.prototype.startInput = function () {
@@ -116,10 +128,19 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
-
-    for (var i = 0; i < entitiesCount; i++) {
+	//console.log("began update");
+	// Starting from the oldest to newest entities
+/*     for (var i = 1; i < entitiesCount; i++) {
         var entity = this.entities[i];
-
+		console.log(entity.toString());
+        if (!entity.removeFromWorld) {
+            entity.update();
+        }
+    } */
+	// Starting from the newest to the oldest entities
+	 for (var i = entitiesCount - 1; i > 0; i--) {
+        var entity = this.entities[i];
+		//console.log(entity.toString());
         if (!entity.removeFromWorld) {
             entity.update();
         }
@@ -128,15 +149,19 @@ GameEngine.prototype.update = function () {
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
             this.entities.splice(i, 1);
+			console.log("removed");
         }
     }
 }
-
 GameEngine.prototype.loop = function () {
-    this.clockTick = this.timer.tick();
-    this.update();
-    this.draw();
-    this.space = null;
+	if(this.on) {
+		this.clockTick = this.timer.tick();
+		this.update();
+		this.draw();
+		this.space = null;
+	} else {
+		//console.log("game is paused");
+	}
 }
 
 function Entity(game, x, y) {
