@@ -15,7 +15,8 @@
 //
 
 var ASSET_MANAGER = new AssetManager();
-var boardC;
+//Global variable used for console testing
+var boardC; 
 var gameEngine;
 
 ASSET_MANAGER.queueDownload("./img/0.png");
@@ -72,7 +73,7 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine = new GameEngine();
 	boardC = new BoardC(gameEngine);
     var gb = new GameBoard(gameEngine, boardC);
-    var pl = new Player(gameEngine);
+    var pl = new Player(gameEngine, boardC);
     var pwn = new Piece(gameEngine, "pawn", 0, 0, "white");
 	var pwn2 = new Piece(gameEngine, "bishop", 3, 0, "white");
 	

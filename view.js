@@ -15,7 +15,7 @@
 //
 var CANVAS_HEIGHT = 800;
 var CANVAS_WIDTH = 800;
-var GAME_SPEED = .1; //.04
+var GAME_SPEED = .5; //.04
 var BOARD_HEIGHT = 530;
 var BOARD_FRAMES = 40;
 var new_square = true;
@@ -276,7 +276,8 @@ PieceAnimation.prototype.drawFrame = function (ctx, x, y, scaleBy, frameHeight, 
 //
 //
 //
-function Player(game) {
+function Player(game, boardC) {
+	this.board = boardC;
     this.frameHeight = 158;
     this.frameWidth = 96;
     var startX = CANVAS_WIDTH / 2 + 5;
@@ -343,21 +344,27 @@ Player.prototype.pawnUpdate = function() {
         if (this.x > canvasPartition + 10 && this.x < canvasPartition + 15) {
             this.x = canvasPartition + 10;
             this.game.left = false;
+			this.board.User.move("left");
         } else if (this.x > canvasPartition * 2 + 10 && this.x < canvasPartition * 2 + 15) {
             this.x = canvasPartition * 2 + 10;
             this.game.left = false;
+			this.board.User.move("left");
         } else if (this.x > canvasPartition * 3 + 7 && this.x < canvasPartition * 3 + 12) {
             this.x = canvasPartition * 3 + 7;
             this.game.left = false;
+			this.board.User.move("left");
         } else if (this.x > canvasPartition * 4 + 5 && this.x < canvasPartition * 4 + 10) {
             this.x = canvasPartition * 4 + 5;
             this.game.left = false;
+			this.board.User.move("left");
         } else if (this.x > canvasPartition * 5 && this.x < canvasPartition * 5 + 5) {
             this.x = canvasPartition * 5;
             this.game.left = false;
+			this.board.User.move("left");
         } else if (this.x > canvasPartition * 6 && this.x < canvasPartition * 6 + 5) {
             this.x = canvasPartition * 6;
             this.game.left = false;
+			this.board.User.move("left");
         } else {
             this.x -= this.horizontalSpeed;
         }
@@ -365,21 +372,27 @@ Player.prototype.pawnUpdate = function() {
         if (this.x < canvasPartition + 10 && this.x > canvasPartition + 5) {
             this.x = canvasPartition + 10;
             this.game.right = false;
+			this.board.User.move("right");
         } else if (this.x < canvasPartition * 2 + 10 && this.x > canvasPartition * 2 + 5) {
             this.x = canvasPartition * 2 + 10;
             this.game.right = false;
+			this.board.User.move("right");
         } else if (this.x < canvasPartition * 3 + 7 && this.x > canvasPartition * 3 + 2) {
             this.x = canvasPartition * 3 + 7;
             this.game.right = false;
+			this.board.User.move("right");
         } else if (this.x < canvasPartition * 4 + 5 && this.x > canvasPartition * 4) {
             this.x = canvasPartition * 4 + 5;
             this.game.right = false;
+			this.board.User.move("right");
         } else if (this.x < canvasPartition * 5 && this.x > canvasPartition * 5 - 5) {
             this.x = canvasPartition * 5;
             this.game.right = false;
+			this.board.User.move("right");
         } else if (this.x < canvasPartition * 6 && this.x > canvasPartition * 6 - 5) {
             this.x = canvasPartition * 6;
             this.game.right = false;
+			this.board.User.move("right");
         } else {
             this.x += this.horizontalSpeed;
         }
@@ -450,10 +463,10 @@ GameBoardAnimation.prototype.drawFrame = function (tick, ctx) {
 	this.halfTime += tick;
     if (this.isDone()) {
         this.elapsedTime = 0;
-		//this.boardC.update();
+		this.boardC.update(); // Updates every other row
     } else if(this.isHalfway()){
 		this.halfTime = 0;
-		this.boardC.update();
+		//this.boardC.update(); // Updates every row
     }
     
    // current_board_frame_index = Math.floor(this.elapsedTime / GAME_SPEED / 2) + Math.floor(this.elapsedTime / GAME_SPEED) % 2;
