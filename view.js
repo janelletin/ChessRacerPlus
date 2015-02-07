@@ -15,13 +15,13 @@
 //
 var CANVAS_HEIGHT = 800;
 var CANVAS_WIDTH = 800;
-var GAME_SPEED = .5; //.04
+var GAME_SPEED = .2; //.04
 var BOARD_HEIGHT = 530;
 var BOARD_FRAMES = 40;
 var new_square = true;
 var current_board_frame_index;
 var TOTAL_FRAMES = 40;
-
+var background; 
 
 //
 //
@@ -98,8 +98,8 @@ Piece.prototype.constructor = Piece;
 
 
 Piece.prototype.update = function () {
-
-    // Remove piece after it moves off the board
+	
+	// Remove piece after it moves off the board
     if (this.row > 13) {
         return;
     }
@@ -284,7 +284,7 @@ function Player(game, boardC) {
     var startY = CANVAS_HEIGHT - this.frameHeight;
     this.x = startX;
     this.y = startY;
-    this.horizontalSpeed = 1 * (1 - GAME_SPEED);
+    this.horizontalSpeed = (GAME_SPEED * 20) * (1 - GAME_SPEED);
     this.animation = new PlayerAnimation(ASSET_MANAGER.getAsset("./img/pawn.png"), this.x, this.y, this.frameHeight, this.frameWidth);
     this.moveRight = false;
     this.moveLeft = false;
@@ -325,7 +325,7 @@ Player.prototype.update = function () {
 
     switch (this.state) {
         case 'pawn':
-            this.pawnUpdate();
+       		this.pawnUpdate();
             break;
         default:
             if (this.game.left) {
@@ -454,12 +454,12 @@ function GameBoardAnimation(frames, x, y, frameHeight, frameWidth, boardC) {
     this.totalTime = GAME_SPEED * TOTAL_FRAMES;
     this.elapsedTime = 0;
 	this.boardC = boardC;
-	this.halfTime = 0; // Halfway. When black/white changes
 }
 
 GameBoardAnimation.prototype.drawFrame = function (tick, ctx) {
     // Calculate elapsed time and see if the frame needs to be started over
-    this.elapsedTime += tick;
+	var halftime = 0; // Halfway. When black/white changes
+	this.elapsedTime += tick;
 	this.halfTime += tick;
     if (this.isDone()) {
         this.elapsedTime = 0;
@@ -489,6 +489,15 @@ GameBoardAnimation.prototype.isDone = function () {
 
 GameBoardAnimation.prototype.isHalfway = function () {
 	return (this.halfTime >= this.totalTime/2);
+}
+
+//
+//The Table the gameboard is resting on.
+//
+function WoodTable(game, boardC) {
+
+	this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/" + piece_rank + ".png"));
+	
 }
 
 //

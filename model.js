@@ -17,6 +17,7 @@ function BoardC(gameEngine) {
 }
 
 
+
 BoardC.prototype.init = function() {
 	// Creates and places the user
 	this.User = new User(this,0,5);
@@ -105,7 +106,7 @@ BoardC.prototype.update = function() {
 		}
 	}
 	// Moves pieces down a row starting from the second row
-	for (i=1;i<this.rows;i++) {
+	for (i=1;i<this.rows;i++) { 
 		for (j=0;j<this.columns;j++) {
 			if(this.Board[i][j]!=0) {
 				this.Board[i][j].row -= 1;
@@ -119,7 +120,9 @@ BoardC.prototype.update = function() {
 	//console.log("number of pieces after " + this.Pieces.length);
 	//console.log(this.Pieces);
 	//this.print();
-}
+	
+} // end of BoardC
+
 PieceC.prototype = new Entity();
 PieceC.prototype.constructor = PieceC;
 
@@ -130,6 +133,7 @@ function PieceC() {
 	this.row;
 	this.column;
 	this.removeFromWorld = false;
+	this.moveable = false;
 	this.secret = "hehe";
 }
 PieceC.prototype.test = function() {
@@ -137,6 +141,11 @@ PieceC.prototype.test = function() {
 }
 
 PieceC.prototype.move = function(){
+	
+	if(!this.moveable){
+		return; 
+	}
+	
 	// 0.25 chance to move
 	var poss = Math.floor(Math.random() * (4)); // Mozilla math.random
 	console.log(poss);
@@ -170,7 +179,20 @@ PieceC.prototype.move = function(){
 		}
 		console.log("Piece is now at row " + this.row + " column " + this.column);
 	}
+	
+BoardC.prototype.isMoveable = function(){
+	/*
+	 * TODO: Need to implement each peice and detect from the board if moveable is true 
+	 */	
+	
 
+	if (moveable){
+		this.moveable = true;
+	}
+	
+	return this.moveable;
+}
+	
 }
 
 PieceC.prototype.toString = function() {
@@ -262,7 +284,7 @@ function User(board, row, column) {
 // Moves the user piece left/right diagonal-left/right and the knight moves
 // Doesn't check for valid ranking yet
 User.prototype.move = function(direction) {
-	
+
 	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column);
 	if(direction == "left") {
 		if(this.column < 1) {

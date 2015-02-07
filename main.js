@@ -18,6 +18,7 @@ var ASSET_MANAGER = new AssetManager();
 //Global variable used for console testing
 var boardC; 
 var gameEngine;
+var background;
 
 ASSET_MANAGER.queueDownload("./img/0.png");
 ASSET_MANAGER.queueDownload("./img/1.png");
@@ -64,6 +65,7 @@ ASSET_MANAGER.queueDownload("./img/bishop.png");
 ASSET_MANAGER.queueDownload("./img/queen.png");
 ASSET_MANAGER.queueDownload("./img/king.png");
 ASSET_MANAGER.queueDownload("./img/castle.png");
+ASSET_MANAGER.queueDownload("./img/woodtable.png");
 window.onload = (function () {
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da shield");
@@ -84,7 +86,10 @@ ASSET_MANAGER.downloadAll(function () {
 
     gameEngine.init(ctx);
     gameEngine.start();
-	
+    
+    canvas.width="800";
+    canvas.height="800";
+       
 	
 	document.getElementById("PauseButton").onclick = function(){gameEngine.stop();}
 });
