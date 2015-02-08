@@ -18,7 +18,6 @@ var ASSET_MANAGER = new AssetManager();
 //Global variable used for console testing
 var boardC; 
 var gameEngine;
-var background;
 
 ASSET_MANAGER.queueDownload("./img/0.png");
 ASSET_MANAGER.queueDownload("./img/1.png");
@@ -65,7 +64,11 @@ ASSET_MANAGER.queueDownload("./img/bishop.png");
 ASSET_MANAGER.queueDownload("./img/queen.png");
 ASSET_MANAGER.queueDownload("./img/king.png");
 ASSET_MANAGER.queueDownload("./img/castle.png");
-ASSET_MANAGER.queueDownload("./img/woodtable.png");
+ASSET_MANAGER.queueDownload("./img/broken_pawn.png");
+ASSET_MANAGER.queueDownload("./img/woodtable4.png");
+ASSET_MANAGER.queueDownload("./img/chess_clock.png");
+ASSET_MANAGER.queueDownload("./img/chess_clock_frame.png");
+ASSET_MANAGER.queueDownload("./img/clock_noon.png");
 window.onload = (function () {
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da shield");
@@ -76,21 +79,27 @@ ASSET_MANAGER.downloadAll(function () {
 	boardC = new BoardC(gameEngine);
     var gb = new GameBoard(gameEngine, boardC);
     var pl = new Player(gameEngine, boardC);
+    //Starting pieces when board initialize
     var pwn = new Piece(gameEngine, "pawn", 0, 0, "white");
-	var pwn2 = new Piece(gameEngine, "bishop", 3, 0, "white");
+	var bishop = new Piece(gameEngine, "bishop", 5, 0, "white");
 	
-    gameEngine.addEntity(gb);
+	gameEngine.addEntity(gb);
     gameEngine.addEntity(pl);
     gameEngine.addEntity(pwn);
-	gameEngine.addEntity(pwn2);
+	gameEngine.addEntity(bishop);
 
     gameEngine.init(ctx);
     gameEngine.start();
+    
+    
+    gameEngine.addEntity(new ChessClockLeft(gameEngine, ASSET_MANAGER.getAsset("./img/chess_clock.png")));
+    gameEngine.addEntity(new ChessClockRight(gameEngine, ASSET_MANAGER.getAsset("./img/chess_clock.png")));
     
     canvas.width="800";
     canvas.height="800";
        
 	
 	document.getElementById("PauseButton").onclick = function(){gameEngine.stop();}
+	
 });
 });

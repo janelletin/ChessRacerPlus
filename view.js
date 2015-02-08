@@ -21,7 +21,11 @@ var BOARD_FRAMES = 40;
 var new_square = true;
 var current_board_frame_index;
 var TOTAL_FRAMES = 40;
-var background; 
+var backgroundTable = new Image();
+var backgroundPark = new Image();
+var backgroundClock = new Image();
+var moveable = false;
+var logging = false;
 
 //
 //
@@ -237,6 +241,7 @@ Piece.prototype.draw = function (ctx) {
 }
 
 Piece.prototype.currentFrame = function () {
+	console.log("Piece CurrentFrame function " + Math.floor(this.elapsedTime / GAME_SPEED));
     return Math.floor(this.elapsedTime / GAME_SPEED);
 }
 
@@ -292,6 +297,7 @@ function Player(game, boardC) {
     this.totalTime = GAME_SPEED * TOTAL_FRAMES / 2;
     this.elapsedTime = 0;
     Entity.call(this, game, this.x, this.y);
+    //console.log(this.x, this.y); //(405,642) This is the gameboard starting point to draw. 
 }
 
 Player.prototype = new Entity();
@@ -320,12 +326,16 @@ Player.prototype.update = function () {
         this.frameHeight = 220;
         this.frameWidth = 90;
         this.state = 'bishop';
-        this.animation.spriteSheet = ASSET_MANAGER.getAsset("./img/bishop.png")
+        this.animation.spriteSheet = ASSET_MANAGER.getAsset("./img/bishop.png");
+        alert("You are now a Bishop. Just because you went all the way to the right.");
     }
 
     switch (this.state) {
         case 'pawn':
-       		this.pawnUpdate();
+        	if(this.isMoveable())
+       		{ 
+        		this.pawnUpdate();
+       		}
             break;
         default:
             if (this.game.left) {
@@ -338,6 +348,21 @@ Player.prototype.update = function () {
     Entity.prototype.update.call(this);
 }
 
+Player.prototype.isMoveable = function() {
+	
+	//console.log("Board stuff: " + this.y);
+	if(moveable)
+		return true;
+	
+	return true;
+	
+}
+
+
+/*
+ * This is to properly place the Pawn on the board for when the user moves left or right.  
+ * It does not have anything to do with the board, only the canvas. 
+ */
 Player.prototype.pawnUpdate = function() {
     var canvasPartition = CANVAS_WIDTH / 8;
     if (this.game.left) {
@@ -400,10 +425,14 @@ Player.prototype.pawnUpdate = function() {
 }
 
 Player.prototype.currentFrame = function () {
+	if (logging)
+		console.log("Player CurrentFrame function " + Math.floor(this.elapsedTime / GAME_SPEED));
     return Math.floor(this.elapsedTime / GAME_SPEED);
 }
 
 Player.prototype.isDone = function () {
+	if (logging)
+		console.log("player isDone function " + (this.elapsedTime >= this.totalTime));
     return (this.elapsedTime >= this.totalTime);
 }
 
@@ -469,17 +498,36 @@ GameBoardAnimation.prototype.drawFrame = function (tick, ctx) {
 		//this.boardC.update(); // Updates every row
     }
     
+    backgroundTable.src = "./img/woodtable4.png";
+    backgroundClock.src = "./img/chess_clock_frame.png";
+    backgroundPark.src = "./img/lake.jpg";
+    
+
+    //Static background images. Now need to make the table move. 
+    ctx.drawImage(backgroundTable,-500,200); // We are on a table!
+    ctx.drawImage(backgroundPark,0,-400); // We are in a park!
+    ctx.drawImage(backgroundClock,260,30); // Chess Clock on table!
+    
    // current_board_frame_index = Math.floor(this.elapsedTime / GAME_SPEED / 2) + Math.floor(this.elapsedTime / GAME_SPEED) % 2;
     
     // Draw the image of the current frame
+          
     ctx.drawImage(//this.frames[0],
                   this.frames[Math.floor(this.elapsedTime / GAME_SPEED)],
                   this.x, this.y,
                   this.frameWidth, this.frameHeight);
+    if(logging)
+    	{
+    	console.log(this.frames[Math.floor(this.elapsedTime / GAME_SPEED)], this.x, this.y,
+    		    this.frameWidth, this.frameHeight);
+    	}
+        
 }
 
 
 GameBoardAnimation.prototype.currentFrame = function () {
+	if(logging)
+		console.log("GameBoardAnimation CurrentFrame function " + Math.floor(this.elapsedTime / GAME_SPEED));
     return Math.floor(this.elapsedTime / GAME_SPEED);
 }
 
@@ -491,14 +539,102 @@ GameBoardAnimation.prototype.isHalfway = function () {
 	return (this.halfTime >= this.totalTime/2);
 }
 
-//
-//The Table the gameboard is resting on.
-//
-function WoodTable(game, boardC) {
 
-	this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/" + piece_rank + ".png"));
+
+/* 
+ * This function will animate a clock after each time a player takes a piece or any 
+ * other event deemed worthy of moving the clock. For now, it just spins and spins. 
+ */ 
+function ChessClockRight(game, spritesheet) {
+    this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
+    this.x = 422;  //ctx.drawImage(backgroundClock,260,30)
+    this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
+    this.game = game;
+    this.ctx = game.ctx;
+}
+
+ChessClockRight.prototype.draw = function () {
+	this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
+}
+
+ChessClockRight.prototype.update = function() {
+	Entity.prototype.update.call(this);	
+}
+//End ChessClock
+
+/* 
+ * This function will animate a clock after each time a player takes a piece or any 
+ * other event deemed worthy of moving the clock. For now, it just spins and spins. 
+ */ 
+function ChessClockLeft(game, spritesheet) {
+    this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
+    this.x = 297;  //ctx.drawImage(backgroundClock,260,30)
+    this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
+    this.game = game;
+    this.ctx = game.ctx;
+}
+
+ChessClockLeft.prototype.draw = function () {
+	this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
+}
+
+ChessClockLeft.prototype.update = function() {
+	Entity.prototype.update.call(this);	
+}
+//End ChessClock
+
+
+
+//Begin ChessClockAnimation 
+function ChessClockAnimation(spriteSheet, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
+    this.spriteSheet = spriteSheet;
+    this.frameWidth = frameWidth;
+    this.frameDuration = frameDuration;
+    this.frameHeight = frameHeight;
+    this.frames = frames;
+    this.totalTime = frameDuration * frames;
+    this.elapsedTime = 0;
+    this.loop = loop;
+    this.reverse = reverse;
+}
+
+ChessClockAnimation.prototype.drawFrame = function (tick, ctx, x, y) {
+    this.elapsedTime += tick;
+    if (this.isDone()) {
+        if (this.loop) this.elapsedTime = 0;
+    }
+    
+    var frame = this.currentFrame();
+    if (frame > 12) {
+        frame = 30 - frame;
+    }
+    
+    xindex = frame % 4;
+    yindex = Math.floor(frame / 4);
+    
+    if(logging)
+    	console.log("ClockAnimation:prototype:drawFrame " + frame + " " + xindex + " " + yindex, + " " +
+    			("./img/clock.png"));
+    
+	ctx.drawImage(ASSET_MANAGER.getAsset("./img/chess_clock.png"),
+		    xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
+            this.frameWidth, this.frameHeight,
+            x, y,
+            this.frameWidth,
+            this.frameHeight);
 	
 }
+
+
+ChessClockAnimation.prototype.currentFrame = function () {
+    return Math.floor(this.elapsedTime / this.frameDuration);
+}
+
+ChessClockAnimation.prototype.isDone = function () {
+    return (this.elapsedTime >= this.totalTime);
+}
+// End Animation
+
 
 //
 //      The Game Board Object

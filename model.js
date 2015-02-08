@@ -133,7 +133,6 @@ function PieceC() {
 	this.row;
 	this.column;
 	this.removeFromWorld = false;
-	this.moveable = false;
 	this.secret = "hehe";
 }
 PieceC.prototype.test = function() {
@@ -142,10 +141,7 @@ PieceC.prototype.test = function() {
 
 PieceC.prototype.move = function(){
 	
-	if(!this.moveable){
-		return; 
-	}
-	
+		
 	// 0.25 chance to move
 	var poss = Math.floor(Math.random() * (4)); // Mozilla math.random
 	console.log(poss);
@@ -180,19 +176,6 @@ PieceC.prototype.move = function(){
 		console.log("Piece is now at row " + this.row + " column " + this.column);
 	}
 	
-BoardC.prototype.isMoveable = function(){
-	/*
-	 * TODO: Need to implement each peice and detect from the board if moveable is true 
-	 */	
-	
-
-	if (moveable){
-		this.moveable = true;
-	}
-	
-	return this.moveable;
-}
-	
 }
 
 PieceC.prototype.toString = function() {
@@ -200,6 +183,10 @@ PieceC.prototype.toString = function() {
 }
 
 
+/*
+ * Creats a Knight piece on the game board.  
+ * This is a knight piece that will be coming at the users piece
+ */
 function Knight(game, board, row, column) {
 	this.game = game;
 	this.board = board.Board;
@@ -210,6 +197,10 @@ function Knight(game, board, row, column) {
 	this.board[row][column] = this;
 }
 
+/*
+ * Creats a Castle piece on the game board.  
+ * This is a Castle piece that will be coming at the users piece
+ */
 function Castle(game, board, row, column){
 	this.game = game;
 	this.board = board.Board;
@@ -220,6 +211,10 @@ function Castle(game, board, row, column){
 	this.board[row][column] = this;
 }
 
+/*
+ * Creats a Bishop piece on the game board.  
+ * This is a Bishop piece that will be coming at the users piece
+ */
 function Bishop(game, board, row, column){
 	this.game = game;
 	this.board = board.Board;
@@ -230,6 +225,10 @@ function Bishop(game, board, row, column){
 	this.board[row][column] = this;
 }
 
+/*
+ * Creats a Queen piece on the game board.  
+ * This is a Queen piece that will be coming at the users piece
+ */
 function Queen(game, board, row, column){
 	this.game = game;
 	this.board = board.Board;
@@ -240,6 +239,10 @@ function Queen(game, board, row, column){
 	this.board[row][column] = this;
 }
 
+/*
+ * Creats a Pawn piece on the game board.  
+ * This is a Pawn piece that will be coming at the users piece
+ */
 function Pawn(game, board, row, column) {
 	this.game = game;
 	this.board = board.Board;
@@ -257,6 +260,7 @@ function Pawn(game, board, row, column) {
 
 }
 
+// What is this code doing? 
 PieceC.prototype.constructor = PieceC;
 Knight.prototype = new PieceC();
 Knight.prototype.constructor = Knight;
@@ -268,11 +272,14 @@ Bishop.prototype = new PieceC();
 Bishop.prototype.constructor = Bishop;
 
 Queen.prototype = new PieceC();
-Queen.prototype.constructor = Pawn;
+Queen.prototype.constructor = Queen;
 
 Pawn.prototype = new PieceC();
 Pawn.prototype.constructor = Pawn;
 
+/*
+ * This creates the Players section of the game with their piece and board settings. 
+ */
 function User(board, row, column) {
 	this.board = board.Board;
 	this.letter = "U";
@@ -280,12 +287,15 @@ function User(board, row, column) {
 	this.row = row;
 	this.column = column;
 	this.score = 0;
+		
 }
+
 // Moves the user piece left/right diagonal-left/right and the knight moves
 // Doesn't check for valid ranking yet
 User.prototype.move = function(direction) {
-
-	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column);
+	
+	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column + 
+			" with the rank of " + this.rank);
 	if(direction == "left") {
 		if(this.column < 1) {
 			console.log("Can't move " + direction + " anymore");
