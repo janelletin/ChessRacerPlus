@@ -15,7 +15,7 @@
 //
 var CANVAS_HEIGHT = 800;
 var CANVAS_WIDTH = 800;
-var GAME_SPEED = .2; //.04
+var GAME_SPEED = .05; //.04
 var BOARD_HEIGHT = 530;
 var BOARD_FRAMES = 40;
 var new_square = true;
@@ -24,6 +24,7 @@ var TOTAL_FRAMES = 40;
 var backgroundTable = new Image();
 var backgroundPark = new Image();
 var backgroundClock = new Image();
+var backgroundBoarder = new Image();
 var moveable = false;
 var logging = false;
 
@@ -498,10 +499,10 @@ GameBoardAnimation.prototype.drawFrame = function (tick, ctx) {
 		//this.boardC.update(); // Updates every row
     }
     
-    backgroundTable.src = "./img/woodtable4.png";
+    backgroundTable.src = "./img/woodtable.png";
     backgroundClock.src = "./img/chess_clock_frame.png";
     backgroundPark.src = "./img/lake.jpg";
-    
+    backgroundBoarder.src = "./img/border.png";
 
     //Static background images. Now need to make the table move. 
     ctx.drawImage(backgroundTable,-500,200); // We are on a table!
@@ -511,11 +512,16 @@ GameBoardAnimation.prototype.drawFrame = function (tick, ctx) {
    // current_board_frame_index = Math.floor(this.elapsedTime / GAME_SPEED / 2) + Math.floor(this.elapsedTime / GAME_SPEED) % 2;
     
     // Draw the image of the current frame
-          
+       
+
+
     ctx.drawImage(//this.frames[0],
                   this.frames[Math.floor(this.elapsedTime / GAME_SPEED)],
                   this.x, this.y,
                   this.frameWidth, this.frameHeight);
+
+    ctx.drawImage(backgroundBoarder, 0, 250); // Chess boarder on table!
+
     if(logging)
     	{
     	console.log(this.frames[Math.floor(this.elapsedTime / GAME_SPEED)], this.x, this.y,
@@ -670,6 +676,7 @@ GameBoard.prototype.update = function () {
 //
 GameBoard.prototype.draw = function (ctx) {
     // Draw Game Board animation
+
     this.animation.drawFrame(this.game.clockTick, ctx);
     Entity.prototype.draw.call(this);
 }

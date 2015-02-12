@@ -69,6 +69,7 @@ ASSET_MANAGER.queueDownload("./img/woodtable4.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock_frame.png");
 ASSET_MANAGER.queueDownload("./img/clock_noon.png");
+ASSET_MANAGER.queueDownload("./img/border.png");
 window.onload = (function () {
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da shield");

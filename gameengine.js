@@ -122,7 +122,8 @@ GameEngine.prototype.draw = function () {
     this.ctx.save();
 
     this.entities[0].draw(this.ctx);
-    for (var i = this.entities.length - 1; i > 0; i--) {
+    this.entities[1].draw(this.ctx);
+    for (var i = this.entities.length - 1; i > 1; i--) {
         this.entities[i].draw(this.ctx);
     }
     this.ctx.restore();
