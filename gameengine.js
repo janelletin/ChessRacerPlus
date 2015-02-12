@@ -120,7 +120,9 @@ GameEngine.prototype.addEntity = function (entity) {
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
-    for (var i = 0; i < this.entities.length; i++) {
+
+    this.entities[0].draw(this.ctx);
+    for (var i = this.entities.length - 1; i > 0; i--) {
         this.entities[i].draw(this.ctx);
     }
     this.ctx.restore();
@@ -128,24 +130,12 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
-	//console.log("began update");
-	// Starting from the oldest to newest entities
-/*     for (var i = 1; i < entitiesCount; i++) {
-        var entity = this.entities[i];
-		console.log(entity.toString());
-        if (!entity.removeFromWorld) {
-            entity.update();
-        }
-    } */
-	// Starting from the newest to the oldest entities
 	 for (var i = entitiesCount - 1; i > 0; i--) {
         var entity = this.entities[i];
-		//console.log(entity.toString());
         if (!entity.removeFromWorld) {
             entity.update();
         }
-    }
-
+	 }
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
             this.entities.splice(i, 1);
