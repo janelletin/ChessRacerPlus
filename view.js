@@ -88,9 +88,14 @@ function Piece(game, piece_rank, starting_column, starting_row, color) {
     this.rowPrevDepth = 0;
 
     this.color = color;
-        
-    this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/" + piece_rank + ".png"));
+    if(color == "black") {
+		this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/black" + piece_rank + ".png"));
 
+	} else {
+		this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/" + piece_rank + ".png"));
+
+	}
+    
     // Used to keep track of the frame the board is in
     this.totalTime = GAME_SPEED * TOTAL_FRAMES / 2;
     this.elapsedTime = 0;
@@ -370,27 +375,27 @@ Player.prototype.pawnUpdate = function() {
         if (this.x > canvasPartition + 10 && this.x < canvasPartition + 15) {
             this.x = canvasPartition + 10;
             this.game.left = false;
-			this.board.User.move("left");
+			//this.board.User.move("left");
         } else if (this.x > canvasPartition * 2 + 10 && this.x < canvasPartition * 2 + 15) {
             this.x = canvasPartition * 2 + 10;
             this.game.left = false;
-			this.board.User.move("left");
+			//this.board.User.move("left");
         } else if (this.x > canvasPartition * 3 + 7 && this.x < canvasPartition * 3 + 12) {
             this.x = canvasPartition * 3 + 7;
             this.game.left = false;
-			this.board.User.move("left");
+			//this.board.User.move("left");
         } else if (this.x > canvasPartition * 4 + 5 && this.x < canvasPartition * 4 + 10) {
             this.x = canvasPartition * 4 + 5;
             this.game.left = false;
-			this.board.User.move("left");
+			//this.board.User.move("left");
         } else if (this.x > canvasPartition * 5 && this.x < canvasPartition * 5 + 5) {
             this.x = canvasPartition * 5;
             this.game.left = false;
-			this.board.User.move("left");
+			//this.board.User.move("left");
         } else if (this.x > canvasPartition * 6 && this.x < canvasPartition * 6 + 5) {
             this.x = canvasPartition * 6;
             this.game.left = false;
-			this.board.User.move("left");
+			//this.board.User.move("left");
         } else {
             this.x -= this.horizontalSpeed;
         }
@@ -398,27 +403,27 @@ Player.prototype.pawnUpdate = function() {
         if (this.x < canvasPartition + 10 && this.x > canvasPartition + 5) {
             this.x = canvasPartition + 10;
             this.game.right = false;
-			this.board.User.move("right");
+			//this.board.User.move("right");
         } else if (this.x < canvasPartition * 2 + 10 && this.x > canvasPartition * 2 + 5) {
             this.x = canvasPartition * 2 + 10;
             this.game.right = false;
-			this.board.User.move("right");
+			//this.board.User.move("right");
         } else if (this.x < canvasPartition * 3 + 7 && this.x > canvasPartition * 3 + 2) {
             this.x = canvasPartition * 3 + 7;
             this.game.right = false;
-			this.board.User.move("right");
+			//this.board.User.move("right");
         } else if (this.x < canvasPartition * 4 + 5 && this.x > canvasPartition * 4) {
             this.x = canvasPartition * 4 + 5;
             this.game.right = false;
-			this.board.User.move("right");
+			//this.board.User.move("right");
         } else if (this.x < canvasPartition * 5 && this.x > canvasPartition * 5 - 5) {
             this.x = canvasPartition * 5;
             this.game.right = false;
-			this.board.User.move("right");
+			//this.board.User.move("right");
         } else if (this.x < canvasPartition * 6 && this.x > canvasPartition * 6 - 5) {
             this.x = canvasPartition * 6;
             this.game.right = false;
-			this.board.User.move("right");
+			//this.board.User.move("right");
         } else {
             this.x += this.horizontalSpeed;
         }
@@ -484,19 +489,20 @@ function GameBoardAnimation(frames, x, y, frameHeight, frameWidth, boardC) {
     this.totalTime = GAME_SPEED * TOTAL_FRAMES;
     this.elapsedTime = 0;
 	this.boardC = boardC;
+	this.halfTime = 0;
 }
 
 GameBoardAnimation.prototype.drawFrame = function (tick, ctx) {
     // Calculate elapsed time and see if the frame needs to be started over
-	var halftime = 0; // Halfway. When black/white changes
+	// NO var halftime = 0; // Halfway. When black/white changes
 	this.elapsedTime += tick;
 	this.halfTime += tick;
     if (this.isDone()) {
         this.elapsedTime = 0;
-		this.boardC.update(); // Updates every other row
+		//this.boardC.update(); // Updates every other row
     } else if(this.isHalfway()){
 		this.halfTime = 0;
-		//this.boardC.update(); // Updates every row
+		this.boardC.update(); // Updates every row
     }
     
     backgroundTable.src = "./img/woodtable.png";

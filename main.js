@@ -64,6 +64,10 @@ ASSET_MANAGER.queueDownload("./img/bishop.png");
 ASSET_MANAGER.queueDownload("./img/queen.png");
 ASSET_MANAGER.queueDownload("./img/king.png");
 ASSET_MANAGER.queueDownload("./img/castle.png");
+ASSET_MANAGER.queueDownload("./img/blackpawn.png");
+ASSET_MANAGER.queueDownload("./img/blackbishop.png");
+ASSET_MANAGER.queueDownload("./img/blackqueen.png");
+ASSET_MANAGER.queueDownload("./img/blackcastle.png");
 ASSET_MANAGER.queueDownload("./img/broken_pawn.png");
 ASSET_MANAGER.queueDownload("./img/woodtable4.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock.png");
@@ -81,12 +85,14 @@ ASSET_MANAGER.downloadAll(function () {
     var gb = new GameBoard(gameEngine, boardC);
     var pl = new Player(gameEngine, boardC);
     //Starting pieces when board initialize
-    var pwn = new Piece(gameEngine, "pawn", 0, 0, "white");
+    var pwn = new Piece(gameEngine, "pawn", 0, 0, "black");
+	var pwn2 = new Piece(gameEngine, "pawn", 1, 0, "white");
 	var bishop = new Piece(gameEngine, "bishop", 5, 0, "white");
 	
 	gameEngine.addEntity(gb);
     gameEngine.addEntity(pl);
     gameEngine.addEntity(pwn);
+	gameEngine.addEntity(pwn2);
 	gameEngine.addEntity(bishop);
 
     gameEngine.init(ctx);

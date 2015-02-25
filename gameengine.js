@@ -41,6 +41,7 @@ function GameEngine() {
     this.surfaceHeight = null;
 	this.on = true;
 	this.timer;
+	this.removedEntities = [];
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -113,8 +114,9 @@ GameEngine.prototype.startInput = function () {
 }
 
 GameEngine.prototype.addEntity = function (entity) {
-    console.log('added entity');
+    //console.log('before ' + this.entities.length);
     this.entities.push(entity);
+	//console.log("after " + this.entities.length + " at position " + this.entities.indexOf(entity));
 }
 
 GameEngine.prototype.draw = function () {
@@ -131,6 +133,10 @@ GameEngine.prototype.draw = function () {
 
 GameEngine.prototype.update = function () {
     var entitiesCount = this.entities.length;
+	if(this.removedEntities.length > 0) {
+		//console.log(this.removedEntities.length);
+	}
+	//console.log("number of entities = " + entitiesCount);
 	 for (var i = entitiesCount - 1; i > 0; i--) {
         var entity = this.entities[i];
         if (!entity.removeFromWorld) {
@@ -139,8 +145,9 @@ GameEngine.prototype.update = function () {
 	 }
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
+			//console.log("removing " + this.entities[i]);
+			this.removedEntities.push(this.entities[i]);
             this.entities.splice(i, 1);
-			console.log("removed");
         }
     }
 }

@@ -21,8 +21,10 @@ function BoardC(gameEngine) {
 BoardC.prototype.init = function() {
 	// Creates and places the user
 	this.User = new User(this,0,5);
-	this.Board[0][5] = this.User; // User
+	this.Board[0][4] = this.User; // User
 	this.Pieces.push(this.User);
+	//var test = new Pawn(this.game, "pawn", 3, 5, "white");
+	//this.Pieces.push(test);
 	console.log("initialized board model");
 }
 
@@ -60,16 +62,27 @@ BoardC.prototype.newLine = function() { // Adds a new line
 	//console.log(piecesLoc);
 	//put the pieces into the board
 	for(var i = 0; i < piecesLoc.length; i++) {
-		var temp = new Pawn(this.game, this, 11, piecesLoc[i]);
-		this.Board[11][piecesLoc[i]] = temp;
-		var temp = new Piece(this.game, "pawn", piecesLoc[i], 0, "white");
-		this.game.addEntity(temp);
+		var color;
+		var a = Math.round(Math.random()); // used to randomize black and white
+		if( a == 0) {
+			color = "white";
+		} else {
+			color = "black";
+		}
+		//console.log(color + " " + a);
+		var temp = new Piece(this.game, "pawn", piecesLoc[i], 0, color);
+		
+		var tempPawn = new Pawn(this.game, this, 11, piecesLoc[i], temp);
+		//this.Board[11][piecesLoc[i]] = tempPawn;
+		
+		//this.game.addEntity(temp);
 		
 	}
 	
 }
 
 BoardC.prototype.update = function() {
+	// Moves the pieces
 	for(var p = 0; p < this.Pieces.length; p++) {
 		if(this.Pieces[p] != this.User) {
 			//this.Pieces[p].move();
@@ -81,27 +94,41 @@ BoardC.prototype.update = function() {
 	for(j=0;j<this.columns;j++) {
 		//console.log("Piece " + this.Board[0][j] + " User " + this.User + " " + this.Board[0][j] != this.User);
 		// Removes the pieces from row 0 except the user
-		if(this.Board[0][j] != this.User) {
+		if(this.Board[0][j] != this.User) { // Pieces on row 0 that aren't the user
 			var index = this.Pieces.indexOf(this.Board[0][j]);
 			//console.log(this.Board[0][j] + " index = " + index);
 			if (index > -1) {
+				
+				var indexOfEnt = this.game.entities.indexOf(this.Board[0][j].ent);
+				//console.log(indexOfEnt);
+				if(indexOfEnt > -1) {
+					this.game.entities[indexOfEnt].removeFromWorld = true;
+					//console.log(this.game.entities[indexOfEnt].removeFromWorld);
+				}
 				this.Pieces.splice(index, 1);
-				this.Board[0][j].removeFromWorld = true;
-				console.log("removing a piece");
+				//console.log("changed removeFromWorld");
 			}
 			this.Board[0][j] = 0;
 			// Checks row 1 for collisions with the User
 		} else {
 			if(this.Board[1][j] != 0) {
-				console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
+				//console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
 				var index = this.Pieces.indexOf(this.Board[1][j]);
 				if (index > -1) {
-					this.Pieces.splice(index, 1);
-					console.log("removing a collided piece");
+					
+					var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
+				//console.log(indexOfEnt);
+				if(indexOfEnt > -1) {
+					this.game.entities[indexOfEnt].removeFromWorld = true;
+					//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
 				}
-				this.Board[1][j] = this.User;
+					this.Pieces.splice(index, 1);
+					//console.log("removing a collided piece");
+					//this.Board[1][j].removeFromWorld = true;
+				}
+				this.Board[1][j] = 0;
 			} else {
-				console.log("no collision");
+				//console.log("no collision");
 			}
 		}
 	}
@@ -132,7 +159,8 @@ function PieceC() {
 	this.letter;
 	this.row;
 	this.column;
-	this.removeFromWorld = false;
+	this.ent;
+	//this.removeFromWorld = false;
 	this.secret = "hehe";
 }
 PieceC.prototype.test = function() {
@@ -184,7 +212,7 @@ PieceC.prototype.toString = function() {
 
 
 /*
- * Creats a Knight piece on the game board.  
+ * Creates a Knight piece on the game board.  
  * This is a knight piece that will be coming at the users piece
  */
 function Knight(game, board, row, column) {
@@ -198,7 +226,7 @@ function Knight(game, board, row, column) {
 }
 
 /*
- * Creats a Castle piece on the game board.  
+ * Creates a Castle piece on the game board.  
  * This is a Castle piece that will be coming at the users piece
  */
 function Castle(game, board, row, column){
@@ -212,7 +240,7 @@ function Castle(game, board, row, column){
 }
 
 /*
- * Creats a Bishop piece on the game board.  
+ * Creates a Bishop piece on the game board.  
  * This is a Bishop piece that will be coming at the users piece
  */
 function Bishop(game, board, row, column){
@@ -226,7 +254,7 @@ function Bishop(game, board, row, column){
 }
 
 /*
- * Creats a Queen piece on the game board.  
+ * Creates a Queen piece on the game board.  
  * This is a Queen piece that will be coming at the users piece
  */
 function Queen(game, board, row, column){
@@ -240,17 +268,20 @@ function Queen(game, board, row, column){
 }
 
 /*
- * Creats a Pawn piece on the game board.  
+ * Creates a Pawn piece on the game board.  
  * This is a Pawn piece that will be coming at the users piece
  */
-function Pawn(game, board, row, column) {
-	this.game = game;
+function Pawn(game, board, row, column, thePiece) {
+	this.game = game; // the game engine
 	this.board = board.Board;
 	//console.log("The Board " + (board.Board)[1][3]);
 	this.theObj = board;
 	this.letter = "P";
 	this.row = row;
 	this.column = column;
+	this.ent = thePiece; // the piece entity in the game
+	this.board[row][column] = this;
+	this.game.addEntity(thePiece); 
 	//console.log("before add" + board.Pieces.length);
 	board.Pieces.push(this); // Adds to the pieces array of the board
 	//console.log("after add" + board.Pieces.length);
