@@ -52,6 +52,9 @@ function Piece(game, piece_rank, starting_column, starting_row, color) {
             this.standardFrameHeight = 158;
             this.standardFrameWidth = 96;
             break;
+		case 'knight':
+			this.standardFrameHeight = 129;
+			this.standardFrameWidtht = 233;
         case 'bishop':
             this.standardFrameHeight = 220;
             this.standardFrameWidth = 90;
@@ -398,6 +401,7 @@ Player.prototype.pawnUpdate = function() {
 			//this.board.User.move("left");
         } else {
             this.x -= this.horizontalSpeed;
+			//this.board.User.move("left");
         }
     } else if (this.game.right) {
         if (this.x < canvasPartition + 10 && this.x > canvasPartition + 5) {

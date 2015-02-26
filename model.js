@@ -69,8 +69,20 @@ BoardC.prototype.newLine = function() { // Adds a new line
 		} else {
 			color = "black";
 		}
+		var type;
+		var b = Math.floor(Math.random() * (3 - 1));
+		//console.log(b);
+		if(b == 0) {
+			type = "pawn";
+		} else if(b == 1) {
+			type = "queen";
+		} else if(b == 2) {
+			type = "castle";
+		} else if(b == 3) {
+			type = "bishop";
+		}
 		//console.log(color + " " + a);
-		var temp = new Piece(this.game, "pawn", piecesLoc[i], 0, color);
+		var temp = new Piece(this.game, type, piecesLoc[i], 0, color);
 		
 		var tempPawn = new Pawn(this.game, this, 11, piecesLoc[i], temp);
 		//this.Board[11][piecesLoc[i]] = tempPawn;
