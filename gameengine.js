@@ -81,16 +81,19 @@ GameEngine.prototype.startInput = function () {
 
                 break;
             case 'A':
+
                 that.right = false;
                 that.left = true;
 
                 break;
             case 'D':
+
                 that.left = false;
                 that.right = true;
 
                 break;
             case '%':
+
                 that.right = false;
                 that.left = true;
  
@@ -98,6 +101,7 @@ GameEngine.prototype.startInput = function () {
                 that.isRight = false;
                 break;
             case '\'':
+
                 that.left = false;
                 that.right = true;
    
@@ -124,10 +128,11 @@ GameEngine.prototype.draw = function () {
     this.ctx.save();
 
     this.entities[0].draw(this.ctx);
-    this.entities[1].draw(this.ctx);
     for (var i = this.entities.length - 1; i > 1; i--) {
         this.entities[i].draw(this.ctx);
     }
+
+    this.entities[1].draw(this.ctx);
     this.ctx.restore();
 }
 
@@ -136,13 +141,15 @@ GameEngine.prototype.update = function () {
 	if(this.removedEntities.length > 0) {
 		//console.log(this.removedEntities.length);
 	}
-	//console.log("number of entities = " + entitiesCount);
+    //console.log("number of entities = " + entitiesCount);
+
 	 for (var i = entitiesCount - 1; i > 0; i--) {
         var entity = this.entities[i];
         if (!entity.removeFromWorld) {
             entity.update();
         }
 	 }
+
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
 			//console.log("removing " + this.entities[i]);
