@@ -143,7 +143,7 @@ GameEngine.prototype.update = function () {
 	}
     //console.log("number of entities = " + entitiesCount);
 
-	 for (var i = entitiesCount - 1; i > 0; i--) {
+	 for (var i = entitiesCount - 1; i >= 0; i--) {
         var entity = this.entities[i];
         if (!entity.removeFromWorld) {
             entity.update();
