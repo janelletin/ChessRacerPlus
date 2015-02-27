@@ -73,6 +73,7 @@ Piece.prototype.update = function () {
         this.row++;
         f = 0;
     }
+
   
 
     // Obtain position piece should be in and height of row based off of the current row they reside within
@@ -81,7 +82,6 @@ Piece.prototype.update = function () {
     var rowHeight;
     switch (this.row) {
         case 0:
-
             this.yPositions = [270, 270, 271, 271, 272, 273, 273, 274, 275, 275, 276, 277, 277, 278, 278, 279, 279, 280, 280, 281, 282];
             this.scales = [0.505, 0.506333333, 0.507666667, 0.509, 0.510333333, 0.511666667, 0.513, 0.514333333, 0.515666667, 0.517, 0.518333333, 0.519666667, 0.521, 0.522333333, 0.523666667, 0.525, 0.526333333, 0.527666667, 0.529, 0.530333333];
             rowHeight = 13;
@@ -144,10 +144,6 @@ Piece.prototype.update = function () {
         case 12:
             this.yPositions = [700, 705, 710, 715, 720, 725, 730, 735, 740, 745, 750, 755, 760, 765, 770, 775, 780, 785, 790, 795, 800];
             this.scales = [0.9025, 0.905, 0.9075, 0.91, 0.9125, 0.915, 0.9175, 0.92, 0.9225, 0.925, 0.9275, 0.93, 0.9325, 0.935, 0.9375, 0.94, 0.9425, 0.945, 0.9475, 0.95];
-
-            
-
-
             break;
         case 13:
             this.yPositions = [800, 806, 812, 818, 824, 830, 836, 842, 848, 854, 860, 866, 872, 878, 884, 890, 896, 902, 908, 914, 920];
@@ -157,14 +153,15 @@ Piece.prototype.update = function () {
 
 
 
-    // Move the piece to the y position based on the     
+    // Move the piece to the y position based on the
     this.frameHeight = this.standardFrameHeight * this.scale;
     this.frameWidth = this.standardFrameWidth * this.scale;
     this.scale = this.scales[f];
     this.y = this.yPositions[f] - this.frameHeight / 2 + 13;
- //   console.log("Row: " + this.row + " Col: " + this.column + "   Frame: " + f + "  Scale: " + this.scale + "   FrameHeight: " + this.frameHeight + " Y: " + this.y);
+    // console.log("Row: " + this.row + " Col: " + this.column + " Frame: " + f + " Scale: " + this.scale + " FrameHeight: " + this.frameHeight + " Y: " + this.y);
     this.x = 400 - (this.frameWidth / 2);
     // Calculate x position based on linear equation
+
     switch (this.column) {
         case 0:
 
