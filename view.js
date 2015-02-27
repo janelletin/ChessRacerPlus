@@ -44,6 +44,7 @@ function GameBoard(game, boardC) {
     this.halfTime = 0;
 
     this.player = new Player(game, boardC);
+	this.boardC.init(this.player);
   //  gameEngine.addEntity(pl);
 
 

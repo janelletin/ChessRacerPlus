@@ -12,15 +12,15 @@ function BoardC(gameEngine) {
 			this.Board[i][j]=0;
 		}
 	}
-	this.init();
+	//this.init();
 	//console.log(this.Board);
 }
 
 
 
-BoardC.prototype.init = function() {
+BoardC.prototype.init = function(player) {
 	// Creates and places the user
-	this.User = new User(this,0,5);
+	this.User = new User(this,0,4, player);
 	this.Board[0][4] = this.User; // User
 	this.Pieces.push(this.User);
 	//var test = new Pawn(this.game, "pawn", 3, 5, "white");
@@ -42,10 +42,10 @@ BoardC.prototype.print = function() {
 }
 
 BoardC.prototype.newLine = function() { // Adds a new line
-	// number of new pieces to add 
-	var numOfPieces = Math.floor(Math.random() * (3 - 1)) + 1 // Mozilla math.random get Int
-	//console.log("adding : " + numOfPieces);
-	var piecesLoc = new Array(); // An array of the pieces location
+	// number of new pieces to add 1-3
+	var numOfPieces = Math.floor(Math.random() * (4 - 1)) + 1 // Mozilla math.random get Int
+			//console.log("adding : " + numOfPieces);
+			var piecesLoc = new Array(); // An array of the pieces location
 	//console.log(pieces.indexOf(0));
 	//console.log(pieces.indexOf(1));
 
@@ -70,27 +70,31 @@ BoardC.prototype.newLine = function() { // Adds a new line
 			color = "black";
 		}
 		var type;
-		var b = Math.floor(Math.random() * (3 - 1));
+		var b = Math.floor(Math.random() * (6));
 		//console.log(b);
 		if(b == 0) {
 			type = "pawn";
 		} else if(b == 1) {
-			type = "queen";
+			type = "pawn"; /**CHANGE TO KNIGHT WHEN IMAGE IS READY **/
 		} else if(b == 2) {
-			type = "castle";
-		} else if(b == 3) {
 			type = "bishop";
+		} else if(b == 3) {
+			type = "rook";
+		} else if(b == 4) {
+			type = "queen";
+		} else if(b == 5) {
+			type = "king";
 		}
 		//console.log(color + " " + a);
 		var temp = new Piece(this.game, type, piecesLoc[i], 0, color);
-		
-		var tempPawn = new Pawn(this.game, this, 11, piecesLoc[i], temp);
+		var p = new PieceC(this.game,this, 11, piecesLoc[i], type, color, temp)
+		//var tempPawn = new Pawn(this.game, this, 11, piecesLoc[i], temp);
 		//this.Board[11][piecesLoc[i]] = tempPawn;
-		
+
 		//this.game.addEntity(temp);
-		
+
 	}
-	
+
 }
 
 BoardC.prototype.update = function() {
@@ -110,7 +114,7 @@ BoardC.prototype.update = function() {
 			var index = this.Pieces.indexOf(this.Board[0][j]);
 			//console.log(this.Board[0][j] + " index = " + index);
 			if (index > -1) {
-				
+
 				var indexOfEnt = this.game.entities.indexOf(this.Board[0][j].ent);
 				//console.log(indexOfEnt);
 				if(indexOfEnt > -1) {
@@ -123,23 +127,33 @@ BoardC.prototype.update = function() {
 			this.Board[0][j] = 0;
 			// Checks row 1 for collisions with the User
 		} else {
-			if(this.Board[1][j] != 0) {
+			if(this.Board[1][j] != 0) { /** COLLIDED **/
 				//console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
-				var index = this.Pieces.indexOf(this.Board[1][j]);
-				if (index > -1) {
-					
-					var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
-				//console.log(indexOfEnt);
-				if(indexOfEnt > -1) {
-					this.game.entities[indexOfEnt].removeFromWorld = true;
-					//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
-				}
-					this.Pieces.splice(index, 1);
-					//console.log("removing a collided piece");
-					//this.Board[1][j].removeFromWorld = true;
+				if(this.Board[1][j].color == this.User.color) {
+					alert("DEAD because collided with same color " + this.Board[1][j].color);
+				} else {
+					if(this.Board[1][j].rank > this.User.rank) {
+						alert("DEAD because higher rank");
+					} else {
+						var index = this.Pieces.indexOf(this.Board[1][j]);
+						if (index > -1) {
+
+							var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
+							//console.log(indexOfEnt);
+							if(indexOfEnt > -1) {
+								this.game.entities[indexOfEnt].removeFromWorld = true;
+								this.User.eat(this.Board[1][j].rank);
+								//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
+							}
+							this.Pieces.splice(index, 1);
+							//console.log("removing a collided piece");
+							//this.Board[1][j].removeFromWorld = true;
+						}
+						//this.Board[1][j] = 0;
+					}
 				}
 				this.Board[1][j] = 0;
-			} else {
+			} else { // NO COLLISION
 				//console.log("no collision");
 			}
 		}
@@ -159,29 +173,54 @@ BoardC.prototype.update = function() {
 	//console.log("number of pieces after " + this.Pieces.length);
 	//console.log(this.Pieces);
 	//this.print();
-	
+
 } // end of BoardC
 
 PieceC.prototype = new Entity();
 PieceC.prototype.constructor = PieceC;
 
-function PieceC() {
-	this.game;
-	this.board;
+function PieceC(game, board, row, column, type, color, thePiece) {
+	this.game = game; // the game engine
+	this.board = board.Board; // the 2D Array
+	this.row = row;
+	this.column = column;
+	this.ent = thePiece; // the piece entity in the game engine
+	this.color = color;
 	this.letter;
-	this.row;
-	this.column;
-	this.ent;
+	this.rank;
+	if(type == "pawn") {
+		this.letter = "P";
+		this.rank = 0;
+	} else if(type == "knight") {
+		this.letter = "K";
+		this.rank = 1;
+	} else if(type == "bishop") {
+		this.letter = "K";
+		this.rank = 2;
+	} else if(type == "rook") {
+		this.letter = "R";
+		this.rank = 3;
+	} else if(type == "queen") {
+		this.letter = "Q";
+		this.rank = 4;
+	} else if(type == "king") {
+		this.letter = "KING";
+		this.rank = 5;
+	}
+	this.board[row][column] = this; // adds to 2d array of board
+	this.game.addEntity(thePiece); // adds to game engine 
+	board.Pieces.push(this); // Adds to the pieces array of the board
 	//this.removeFromWorld = false;
 	this.secret = "hehe";
+	//this.test();
 }
 PieceC.prototype.test = function() {
 	console.log(this.secret);
 }
 
 PieceC.prototype.move = function(){
-	
-		
+
+
 	// 0.25 chance to move
 	var poss = Math.floor(Math.random() * (4)); // Mozilla math.random
 	console.log(poss);
@@ -215,7 +254,7 @@ PieceC.prototype.move = function(){
 		}
 		console.log("Piece is now at row " + this.row + " column " + this.column);
 	}
-	
+
 }
 
 PieceC.prototype.toString = function() {
@@ -224,119 +263,24 @@ PieceC.prototype.toString = function() {
 
 
 /*
- * Creates a Knight piece on the game board.  
- * This is a knight piece that will be coming at the users piece
- */
-function Knight(game, board, row, column) {
-	this.game = game;
-	this.board = board.Board;
-	this.letter = "K";
-	this.row = row;
-	this.column = column;
-	board.Pieces.push(this);
-	this.board[row][column] = this;
-}
-
-/*
- * Creates a Castle piece on the game board.  
- * This is a Castle piece that will be coming at the users piece
- */
-function Castle(game, board, row, column){
-	this.game = game;
-	this.board = board.Board;
-	this.letter = "C";
-	this.row = row;
-	this.column = column;
-	board.Pieces.push(this);
-	this.board[row][column] = this;
-}
-
-/*
- * Creates a Bishop piece on the game board.  
- * This is a Bishop piece that will be coming at the users piece
- */
-function Bishop(game, board, row, column){
-	this.game = game;
-	this.board = board.Board;
-	this.letter = "B";
-	this.row = row;
-	this.column = column;
-	board.Pieces.push(this); 
-	this.board[row][column] = this;
-}
-
-/*
- * Creates a Queen piece on the game board.  
- * This is a Queen piece that will be coming at the users piece
- */
-function Queen(game, board, row, column){
-	this.game = game;
-	this.board = board.Board;
-	this.letter = "Q";
-	this.row = row;
-	this.column = column;
-	board.Pieces.push(this); 
-	this.board[row][column] = this;
-}
-
-/*
- * Creates a Pawn piece on the game board.  
- * This is a Pawn piece that will be coming at the users piece
- */
-function Pawn(game, board, row, column, thePiece) {
-	this.game = game; // the game engine
-	this.board = board.Board;
-	//console.log("The Board " + (board.Board)[1][3]);
-	this.theObj = board;
-	this.letter = "P";
-	this.row = row;
-	this.column = column;
-	this.ent = thePiece; // the piece entity in the game
-	this.board[row][column] = this;
-	this.game.addEntity(thePiece); 
-	//console.log("before add" + board.Pieces.length);
-	board.Pieces.push(this); // Adds to the pieces array of the board
-	//console.log("after add" + board.Pieces.length);
-
-	//console.log("Creating a pawn at row " + this.row + " column " + this.column);
-	//this.move("left");
-
-}
-
-// What is this code doing? 
-PieceC.prototype.constructor = PieceC;
-Knight.prototype = new PieceC();
-Knight.prototype.constructor = Knight;
-
-Castle.prototype = new PieceC();
-Castle.prototype.constructor = Castle;
-
-Bishop.prototype = new PieceC();
-Bishop.prototype.constructor = Bishop;
-
-Queen.prototype = new PieceC();
-Queen.prototype.constructor = Queen;
-
-Pawn.prototype = new PieceC();
-Pawn.prototype.constructor = Pawn;
-
-/*
  * This creates the Players section of the game with their piece and board settings. 
  */
-function User(board, row, column) {
+function User(board, row, column, player) {
 	this.board = board.Board;
 	this.letter = "U";
-	this.rank = "P";
+	this.player = player;
+	this.rank = 0;
 	this.row = row;
 	this.column = column;
 	this.score = 0;
-		
+	this.count = 0;
+
 }
 
 // Moves the user piece left/right diagonal-left/right and the knight moves
 // Doesn't check for valid ranking yet
 User.prototype.move = function(direction) {
-	
+
 	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column + 
 			" with the rank of " + this.rank);
 	if(direction == "left") {
@@ -382,7 +326,7 @@ User.prototype.move = function(direction) {
 			this.row += 1;
 			this.column += 2;
 		}
-		
+
 	} else if(direction == "Knight-2Left") {
 		if(this.column < 2) {
 			console.log("Can't move " + direction + " anymore");
@@ -418,9 +362,22 @@ User.prototype.move = function(direction) {
 	}
 	console.log("User is now at row " + this.row + " column " + this.column);
 	console.log(this.board[this.row][this.column].letter);
-	
+
 	//
-	
+
+}
+
+User.prototype.eat = function(piece) {
+	console.log("eating " + piece + " current score " + this.score);
+	if(piece == this.rank) {
+		this.count++;
+		if(this.count == 10) {
+			this.count = 0;
+			player.setRank(this.rank++);
+			this.score += 100;
+		}
+	}
+	this.score += piece + 1;
 }
 
 User.prototype.toString = function() {

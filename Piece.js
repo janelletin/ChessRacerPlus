@@ -40,10 +40,10 @@ function Piece(game, piece_rank, starting_column, starting_row, color) {
 
     this.color = color;
     if(color == "black") {
-		this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/black" + piece_rank + ".png"));
+		this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/black" + piece_rank + ".png"), this);
 
 	} else {
-		this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/" + piece_rank + ".png"));
+		this.animation = new PieceAnimation(ASSET_MANAGER.getAsset("./img/" + piece_rank + ".png"), this);
 
 	}
     
@@ -208,14 +208,16 @@ Piece.prototype.isDone = function () {
 }
 
 Piece.prototype.toString = function() {
-	return "(" + this.row + ", " + this.column + ")";
+	return this.color + this.rank + "(" + this.row + ", " + this.column + ")";
 }
 
-function PieceAnimation(spriteSheet) {
+function PieceAnimation(spriteSheet, piece) {
     this.spriteSheet = spriteSheet;
+	this.piece = piece;
 }
 
 PieceAnimation.prototype.drawFrame = function (ctx, x, y, scaleBy, frameHeight, frameWidth) {
+	//console.log("drawing " + this.piece.toString());
     ctx.drawImage(this.spriteSheet, x, y,
                   frameWidth * scaleBy, frameHeight * scaleBy);
     
