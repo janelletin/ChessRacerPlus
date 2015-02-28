@@ -42,6 +42,7 @@ function GameEngine() {
 	this.on = true;
 	this.timer;
 	this.removedEntities = [];
+	this.lastKeypressTime;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -74,6 +75,7 @@ GameEngine.prototype.startInput = function () {
     console.log('Starting input');
     var that = this;
 
+    that.doubleTap = false;
     this.ctx.canvas.addEventListener("keydown", function (e) {
         switch (String.fromCharCode(e.which)) {
             case ' ':
@@ -81,16 +83,27 @@ GameEngine.prototype.startInput = function () {
 
                 break;
             case 'A':
-
-                that.right = false;
+                var tolerance = 500;
+                var thisKeypressTime = new Date();
+                if (thisKeypressTime - this.lastKeypressTime <= tolerance) {
+                    that.doubleTap = true;
+                }
                 that.left = true;
-
+                that.right = false;
+                this.lastKeypressTime = thisKeypressTime;
                 break;
             case 'D':
-
+                var tolerance = 500;
+                var thisKeypressTime = new Date();
+                if (thisKeypressTime - this.lastKeypressTime <= tolerance) {
+                    that.doubleTap = true;
+                }
                 that.left = false;
                 that.right = true;
-
+                this.lastKeypressTime = thisKeypressTime;
+                break;
+            case 'W':
+                that.stopping = true;
                 break;
             case '%':
 
@@ -112,7 +125,6 @@ GameEngine.prototype.startInput = function () {
         //        console.log(e);
         e.preventDefault();
     }, false);
-
     console.log('Input started');
 
 }

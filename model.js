@@ -130,10 +130,10 @@ BoardC.prototype.update = function() {
 			if(this.Board[1][j] != 0) { /** COLLIDED **/
 				//console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
 				if(this.Board[1][j].color == this.User.color) {
-					alert("DEAD because collided with same color " + this.Board[1][j].color);
+			//		alert("DEAD because collided with same color " + this.Board[1][j].color);
 				} else {
 					if(this.Board[1][j].rank > this.User.rank) {
-						alert("DEAD because higher rank");
+				//		alert("DEAD because higher rank");
 					} else {
 						var index = this.Pieces.indexOf(this.Board[1][j]);
 						if (index > -1) {
@@ -226,33 +226,33 @@ PieceC.prototype.move = function(){
 	console.log(poss);
 	if(poss == 0) { // 0 means move
 		var dir = Math.floor(Math.random() * (2)); // 0 means left 1 means right
-		console.log("Moving Piece " + dir + " from row " + this.row + " column " + this.column);
+	//	console.log("Moving Piece " + dir + " from row " + this.row + " column " + this.column);
 		if(dir == 0) {
 			if(this.column < 1) {
-				console.log("Can't move left anymore");
+	//			console.log("Can't move left anymore");
 			} else {
 				if(this.board[this.row][this.column-1] == 0) {
 					this.board[this.row][this.column] = "0";
 					this.board[this.row][this.column-1] = this;
 					this.column -= 1;
 				} else {
-					console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
+		//			console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
 				}
 			}
 		} else if (dir == 1) {
 			if(this.column > 7) {
-				console.log("Can't move right anymore");
+	//			console.log("Can't move right anymore");
 			} else {
 				if(this.board[this.row][this.column+1] == 0) {
 					this.board[this.row][this.column] = "0";
 					this.board[this.row][this.column+1] = this;
 					this.column += 1;
 				} else {
-					console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
+		//			console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
 				}
 			}
 		}
-		console.log("Piece is now at row " + this.row + " column " + this.column);
+	//	console.log("Piece is now at row " + this.row + " column " + this.column);
 	}
 
 }
@@ -281,8 +281,8 @@ function User(board, row, column, player) {
 // Doesn't check for valid ranking yet
 User.prototype.move = function(direction) {
 
-	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column + 
-			" with the rank of " + this.rank);
+//	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column + 
+//			" with the rank of " + this.rank);
 	if(direction == "left") {
 		if(this.column < 1) {
 			console.log("Can't move " + direction + " anymore");
@@ -293,7 +293,7 @@ User.prototype.move = function(direction) {
 		}
 	} else if (direction == "right") {
 		if(this.column > 7) {
-			console.log("Can't move " + direction + " anymore");
+//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row][this.column+1] = this;
@@ -301,7 +301,7 @@ User.prototype.move = function(direction) {
 		}
 	} else if(direction == "Knight-1Right") { 
 		if(this.column > 6) {
-			console.log("Can't move " + direction + " anymore");
+//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 2][this.column + 1] = this;
@@ -310,7 +310,7 @@ User.prototype.move = function(direction) {
 		}
 	} else if(direction == "Knight-1Left") {
 		if(this.column < 1) {
-			console.log("Can't move " + direction + " anymore");
+//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 2][this.column - 1] = this;
@@ -319,7 +319,7 @@ User.prototype.move = function(direction) {
 		}
 	} else if(direction == "Knight-2Right") { 
 		if(this.column > 5) {
-			console.log("Can't move " + direction + " anymore");
+//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 1][this.column + 2] = this;
@@ -329,11 +329,11 @@ User.prototype.move = function(direction) {
 
 	} else if(direction == "Knight-2Left") {
 		if(this.column < 2) {
-			console.log("Can't move " + direction + " anymore");
+	//		console.log("Can't move " + direction + " anymore");
 		} else {
-			console.log(this.board[this.row][this.column]);
+		//	console.log(this.board[this.row][this.column]);
 			this.board[this.row][this.column] = "0";
-			console.log(this.board[this.row][this.column]);
+	//		console.log(this.board[this.row][this.column]);
 			this.board[this.row + 1][this.column - 2] = this;
 			this.row += 1;
 			this.column -2;
@@ -341,7 +341,7 @@ User.prototype.move = function(direction) {
 
 	} else if(direction == "DLeft") {
 		if(this.column < 1) {
-			console.log("Can't move " + direction + " anymore");	
+//			console.log("Can't move " + direction + " anymore");	
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 1][this.column - 1] = this;
@@ -350,7 +350,7 @@ User.prototype.move = function(direction) {
 		}
 	} else if(direction =="DRight") {
 		if(this.column > 6) {
-			console.log("Can't move " + direction + " anymore");			
+	//		console.log("Can't move " + direction + " anymore");			
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 1][this.column + 1] = this;
@@ -358,10 +358,11 @@ User.prototype.move = function(direction) {
 			this.column += 1;
 		}
 	} else {
-		console.log("invalid direction");
+	//	console.log("invalid direction");
 	}
+	return this.column;
 	console.log("User is now at row " + this.row + " column " + this.column);
-	console.log(this.board[this.row][this.column].letter);
+	//console.log(this.board[this.row][this.column].letter);
 
 	//
 
@@ -381,5 +382,5 @@ User.prototype.eat = function(piece) {
 }
 
 User.prototype.toString = function() {
-	return this.letter + "(" + this.row + ", " + this.column + ")";
+//	return this.letter + "(" + this.row + ", " + this.column + ")";
 }
