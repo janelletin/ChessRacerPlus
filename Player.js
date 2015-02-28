@@ -23,7 +23,7 @@ function Player(game, boardC, visualBoard) {
 
     this.inSquare = true;
     this.newRank = 0;
-    this.setRank(2);
+  //  this.setRank(2);
     var canvasPartition = CANVAS_WIDTH / 8;
     this.separationLines = [canvasPartition + 15, canvasPartition * 2 + 15, canvasPartition * 3 + 9, canvasPartition * 4 + 5, canvasPartition * 5, canvasPartition * 6 - 5, CANVAS_WIDTH - this.frameWidth - 20, CANVAS_WIDTH];
     Entity.call(this, game, this.x, this.y);
@@ -256,7 +256,7 @@ Player.prototype.draw = function (ctx) {
 * @the_rank 0 - 6 changes the rank. 0-pawn, 1-knight, 2-bishop, 3-rook, 4-queen, 5-king
 **/
 Player.prototype.setRank = function (the_rank) {
-    if (the_rank > 0 && the_rank < 6) {
+    if (the_rank >= 0 && the_rank < 6) {
         this.newRank = the_rank;
     }
 }

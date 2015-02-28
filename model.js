@@ -19,7 +19,7 @@ function BoardC(gameEngine) {
 
 
 BoardC.prototype.init = function(player) {
-	// Creates and places the user
+    // Creates and places the user
 	this.User = new User(this,0,4, player);
 	this.Board[0][4] = this.User; // User
 	this.Pieces.push(this.User);
@@ -86,7 +86,7 @@ BoardC.prototype.newLine = function() { // Adds a new line
 			type = "king";
 		}
 		//console.log(color + " " + a);
-		var temp = new Piece(this.game, type, piecesLoc[i], 0, color);
+		var temp = new Piece(this.game, type, piecesLoc[i], color);
 		var p = new PieceC(this.game,this, 11, piecesLoc[i], type, color, temp)
 		//var tempPawn = new Pawn(this.game, this, 11, piecesLoc[i], temp);
 		//this.Board[11][piecesLoc[i]] = tempPawn;
@@ -374,7 +374,7 @@ User.prototype.eat = function(piece) {
 		this.count++;
 		if(this.count == 10) {
 			this.count = 0;
-			player.setRank(this.rank++);
+			this.player.setRank(this.rank++);
 			this.score += 100;
 		}
 	}

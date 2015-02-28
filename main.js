@@ -89,18 +89,14 @@ ASSET_MANAGER.downloadAll(function () {
 	boardC = new BoardC(gameEngine);
 	var gb = new GameBoard(gameEngine, boardC);
 	var pl = new Player(gameEngine, boardC, gb);
-    //Starting pieces when board initialize
-    var pwn = new Piece(gameEngine, "pawn", 0, 0, "black");
 
-	var pwn2 = new Piece(gameEngine, "pawn", 1, 0, "white");
-	var bishop = new Piece(gameEngine, "bishop", 5, 0, "white");
-	
+    //game, piece_rank, starting_column, color
+	var king = new Piece(gameEngine, "king", 4, "white");
+
 	gameEngine.addEntity(gb);
 	gameEngine.addEntity(pl);
-    gameEngine.addEntity(pwn);
-	gameEngine.addEntity(pwn2);
-	gameEngine.addEntity(bishop);
-
+	gameEngine.addEntity(king);
+	boardC.init(pl);
     gameEngine.init(ctx);
     gameEngine.start();
     

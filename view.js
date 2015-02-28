@@ -42,17 +42,11 @@ function GameBoard(game, boardC) {
     this.elapsedTime = 0;
     this.boardC = boardC;
     this.halfTime = 0;
-
-    this.player = new Player(game, boardC);
-	this.boardC.init(this.player);
-  //  gameEngine.addEntity(pl);
-
-
     Entity.call(this, game, this.x, this.y);
 }
 
-//GameBoard.prototype = new Entity();
-//GameBoard.prototype.constructor = GameBoard;
+GameBoard.prototype = new Entity();
+GameBoard.prototype.constructor = GameBoard;
 
 
 
@@ -71,7 +65,6 @@ GameBoard.prototype.update = function () {
     }
 
     this.frameInterval = Math.floor(this.elapsedTime / GAME_SPEED);
-  //  this.player.update(this.frameInterval);
     Entity.prototype.update.call(this);
 }
 
@@ -94,14 +87,13 @@ GameBoard.prototype.draw = function (ctx) {
 
     // Draw the Boards boarder
     ctx.drawImage(this.backgroundBoarder, 0, 250); // Chess boarder on table!
-   // this.player.draw(ctx, this.frameInterval);
     Entity.prototype.draw.call(this);
 }
 
 GameBoard.prototype.currentFrame = function () {
     if (logging)
         console.log("GameBoardAnimation CurrentFrame function " + this.frameInterval);
-    return Mthis.frameInterval;
+    return this.frameInterval;
 }
 
 
