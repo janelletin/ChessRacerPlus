@@ -103,7 +103,8 @@ GameEngine.prototype.startInput = function () {
                 this.lastKeypressTime = thisKeypressTime;
                 break;
             case 'W':
-                that.stopping = true;
+                that.left = false;
+                that.right = false;
                 break;
             case '%':
 

@@ -19,6 +19,7 @@ var ASSET_MANAGER = new AssetManager();
 var boardC; 
 var gameEngine;
 
+
 ASSET_MANAGER.queueDownload("./img/0.png");
 ASSET_MANAGER.queueDownload("./img/1.png");
 ASSET_MANAGER.queueDownload("./img/2.png");
@@ -63,8 +64,10 @@ ASSET_MANAGER.queueDownload("./img/pawn.png");
 ASSET_MANAGER.queueDownload("./img/bishop.png");
 ASSET_MANAGER.queueDownload("./img/queen.png");
 ASSET_MANAGER.queueDownload("./img/king.png");
+ASSET_MANAGER.queueDownload("./img/knight.png");
 ASSET_MANAGER.queueDownload("./img/rook.png");
 ASSET_MANAGER.queueDownload("./img/blackpawn.png");
+ASSET_MANAGER.queueDownload("./img/blackknight.png");
 ASSET_MANAGER.queueDownload("./img/blackbishop.png");
 ASSET_MANAGER.queueDownload("./img/blackqueen.png");
 ASSET_MANAGER.queueDownload("./img/blackrook.png");
@@ -84,13 +87,16 @@ ASSET_MANAGER.downloadAll(function () {
 
     gameEngine = new GameEngine();
 	boardC = new BoardC(gameEngine);
-    var gb = new GameBoard(gameEngine, boardC);
+	var gb = new GameBoard(gameEngine, boardC);
+	var pl = new Player(gameEngine, boardC, gb);
     //Starting pieces when board initialize
     var pwn = new Piece(gameEngine, "pawn", 0, 0, "black");
+
 	var pwn2 = new Piece(gameEngine, "pawn", 1, 0, "white");
 	var bishop = new Piece(gameEngine, "bishop", 5, 0, "white");
 	
 	gameEngine.addEntity(gb);
+	gameEngine.addEntity(pl);
     gameEngine.addEntity(pwn);
 	gameEngine.addEntity(pwn2);
 	gameEngine.addEntity(bishop);
@@ -107,6 +113,10 @@ ASSET_MANAGER.downloadAll(function () {
        
 	
 	document.getElementById("PauseButton").onclick = function(){gameEngine.stop();}
-	
+	document.getElementById("PawnButton").onclick = function () { pl.setRank(0); }
+	document.getElementById("KnightButton").onclick = function () { pl.setRank(1); }
+	document.getElementById("BishopButton").onclick = function () { pl.setRank(2); }
+	document.getElementById("RookButton").onclick = function () { pl.setRank(3); }
+	document.getElementById("QueenButton").onclick = function () { pl.setRank(4); }
 });
 });

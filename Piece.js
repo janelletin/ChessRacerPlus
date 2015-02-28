@@ -165,28 +165,28 @@ Piece.prototype.update = function () {
     switch (this.column) {
         case 0:
 
-            //this.x = Math.floor((76492 - 127 * this.y) / 194 + 52);
+            this.x = Math.floor((76492 - 127 * this.y) / 194 + 52);
             break;
         case 1:
-            //this.x = Math.floor((38690 - 45 * this.y) / 97) + 57 - this.frameWidth / 2;
+            this.x = Math.floor((38690 - 45 * this.y) / 97) + 57 - this.frameWidth / 2;
             break;
         case 2:
-            //this.x = Math.floor((155350 - 115 * this.y) / 388) + 48 - this.frameWidth / 2;
+            this.x = Math.floor((155350 - 115 * this.y) / 388) + 48 - this.frameWidth / 2;
             break;
         case 3:
-            //this.x = Math.floor((78698 - 27 * this.y) / 194) + 37 - this.frameWidth / 2;
+            this.x = Math.floor((78698 - 27 * this.y) / 194) + 37 - this.frameWidth / 2;
             break;
         case 4:
-            //this.x = Math.floor((40012 + 2 * this.y) / 97) + 24 - this.frameWidth / 2;
+            this.x = Math.floor((40012 + 2 * this.y) / 97) + 24 - this.frameWidth / 2;
             break;
         case 5:
-            //this.x = Math.floor((161850 + 75 * this.y) / 388) + 7 - this.frameWidth / 2;
+            this.x = Math.floor((161850 + 75 * this.y) / 388) + 7 - this.frameWidth / 2;
             break;d
         case 6:
-            //this.x = Math.floor((82070 + 65 * this.y) / 194) + 3 - this.frameWidth / 2;
+            this.x = Math.floor((82070 + 65 * this.y) / 194) + 3 - this.frameWidth / 2;
             break;
         case 7:
-            //this.x = Math.floor((82790 + 95 * this.y) / 194) - 3 - this.frameWidth / 2;
+            this.x = Math.floor((82790 + 95 * this.y) / 194) - 3 - this.frameWidth / 2;
             break;
     }
 
