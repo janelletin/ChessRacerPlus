@@ -386,7 +386,8 @@ User.prototype.eat = function(piece) {
 			this.count = 0;
 			this.player.setRank(this.rank++);
 			// Giving Player a multipler from their rank for additional points when taking a piece. 
-			this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) ); 
+			//TODO: implement game speed multipler for taking a piece.  
+			this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );
 		}
 	}
 	this.score += piece + 1;
@@ -410,6 +411,11 @@ ScoreEngine.prototype.getScore = function(){
 // Increase the score of the game. 
 ScoreEngine.prototype.IncreaseScore = function(points){
 	score += points;
+}
+
+//Increase the score of the game. 
+ScoreEngine.prototype.setSpeed = function(gameSpeed){
+	this.gameSpeed = gameSpeed;
 }
 
 ScoreEngine.prototype.getHighScore = function(){

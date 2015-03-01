@@ -10,7 +10,6 @@ var backgroundClock = new Image();
 var logging = false;
 var scoreclock;
 var clockBounsCount = 0;
-//var userScore = 0;
 
 
 /**
@@ -52,7 +51,10 @@ function GameBoard(game, boardC) {
 GameBoard.prototype = new Entity();
 GameBoard.prototype.constructor = GameBoard;
 
-
+//need this to use for increasing score for a gain in speed of game. 
+GameBoard.prototype.getSpeed = function(){
+	return this.GAME_SPEED;
+}
 
 //
 //  Update game board, called by Entitiy in gameengine
@@ -106,6 +108,7 @@ GameBoard.prototype.currentFrame = function () {
  * other event deemed worthy of moving the clock. For now, it just spins and spins. 
  */ 
 function ChessClockRight(game, spritesheet) {
+	//TODO: Add multiplier for Game Speed with clock speed. 
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.11, 12, true, false);
     this.x = 422;  //ctx.drawImage(backgroundClock,260,30)
     this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
@@ -135,6 +138,7 @@ ChessClockRight.prototype.update = function() {
  * other event deemed worthy of moving the clock. For now, it just spins and spins. 
  */ 
 function ChessClockLeft(game, spritesheet) {
+	//TODO: Add multiplier for Game Speed with clock speed. 
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
     this.x = 297;  //ctx.drawImage(backgroundClock,260,30)
     this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
@@ -231,6 +235,7 @@ UserScore.prototype.updateScore = function (tick, ctx, x, y) {
         	this.elapsedTime = 0;
         } 
     }
+    document.getElementById("demo").innerHTML = this.userScore.getScore();
     	
 }
 /*
