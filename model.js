@@ -1,3 +1,6 @@
+var score;
+var scoreBoard;
+
 function BoardC(gameEngine) {
 	this.game = gameEngine;
 	this.User; // The user's piece
@@ -5,6 +8,8 @@ function BoardC(gameEngine) {
 	this.columns = 8; // column
 	this.Pieces = new Array(); // An array of the pieces in the board
 	this.Board = new Array(); // A 2D array representing the board[row][column]
+	score = 0;
+	this.scoreBoard = new ScoreEngine(gameEngine);
 	//Creates 2D array of Board
 	for (i=0;i<this.rows;i++) {
 		this.Board[i]=new Array();
@@ -173,6 +178,10 @@ BoardC.prototype.update = function() {
 	//console.log("number of pieces after " + this.Pieces.length);
 	//console.log(this.Pieces);
 	//this.print();
+	/*
+	 * Add a score to the game for staying alive! 
+	 */
+	this.scoreBoard.IncreaseScore(50);
 
 } // end of BoardC
 
@@ -272,7 +281,7 @@ function User(board, row, column, player) {
 	this.rank = 0;
 	this.row = row;
 	this.column = column;
-	this.score = 0;
+	this.score = score;
 	this.count = 0;
 
 }
@@ -369,13 +378,15 @@ User.prototype.move = function(direction) {
 }
 
 User.prototype.eat = function(piece) {
-	console.log("eating " + piece + " current score " + this.score);
+	console.log("piece: " + piece + " score: " + score + " rank: "+ this.rank);
 	if(piece == this.rank) {
 		this.count++;
 		if(this.count == 10) {
 			this.count = 0;
 			this.player.setRank(this.rank++);
-			this.score += 100;
+			// Giving Player a multipler from their rank for additional points when taking a piece. 
+			ScoreEngine.IncreaseScore(20000000);
+			this.scoreBoard.IncreaseScore(50 * ((rank+1)*3) ); 
 		}
 	}
 	this.score += piece + 1;
@@ -384,3 +395,27 @@ User.prototype.eat = function(piece) {
 User.prototype.toString = function() {
 //	return this.letter + "(" + this.row + ", " + this.column + ")";
 }
+
+
+/*
+ * This function is to control the score of the game. 
+ */
+function ScoreEngine(game){
+	this.game = gameEngine;
+}
+// Get the score of the game currently running.
+ScoreEngine.prototype.getScore = function(){
+	return score;
+}
+// Increase the score of the game. 
+ScoreEngine.prototype.IncreaseScore = function(points){
+	//prove this crap is working....
+	//console.log("getScore " + this.getScore());
+	score += points;
+}
+
+ScoreEngine.prototype.getHighScore = function(){
+	/*
+	 * Need to implenent DB or something to save a high score. 
+	 */
+}//end ScoreEngine

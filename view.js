@@ -37,7 +37,6 @@ function GameBoard(game, boardC) {
     this.frameInterval = 0;
 
 
-
     this.totalTime = GAME_SPEED * TOTAL_FRAMES;
     this.elapsedTime = 0;
     this.boardC = boardC;
@@ -108,7 +107,7 @@ GameBoard.prototype.currentFrame = function () {
  * other event deemed worthy of moving the clock. For now, it just spins and spins. 
  */ 
 function ChessClockRight(game, spritesheet) {
-    this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
+    this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.11, 12, true, false);
     this.x = 422;  //ctx.drawImage(backgroundClock,260,30)
     this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
     this.game = game;
@@ -156,7 +155,7 @@ function ChessClockAnimation(spriteSheet, frameWidth, frameHeight, frameDuration
     this.frames = frames;
     this.totalTime = frameDuration * frames;
     this.elapsedTime = 0;
-    this.loop = loop;
+    this.loop = loop
     this.reverse = reverse;
 }
 
