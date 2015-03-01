@@ -8,6 +8,7 @@ var current_board_frame_index;
 var TOTAL_FRAMES = 40;
 var backgroundClock = new Image();
 var logging = false;
+var scoreclock;
 
 
 /**
@@ -120,6 +121,12 @@ ChessClockRight.prototype.draw = function () {
 
 ChessClockRight.prototype.update = function() {
 	Entity.prototype.update.call(this);	
+	this.clockBounsCount += 1;
+	if (this.clockBounsCount > 12)
+	{
+		this.clockBounsCount = 0;
+		this.scoreclock.IncreaseScore(12);
+	}
 }
 //End ChessClock
 
@@ -127,12 +134,15 @@ ChessClockRight.prototype.update = function() {
  * This function will animate a clock after each time a player takes a piece or any 
  * other event deemed worthy of moving the clock. For now, it just spins and spins. 
  */ 
+var clockBounsCount = 0;
 function ChessClockLeft(game, spritesheet) {
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
     this.x = 297;  //ctx.drawImage(backgroundClock,260,30)
     this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
     this.game = game;
     this.ctx = game.ctx;
+    this.scoreclock = new ScoreEngine(game); 
+    this.clockBounsCount = clockBounsCount;
 }
 
 ChessClockLeft.prototype.draw = function () {
@@ -140,7 +150,13 @@ ChessClockLeft.prototype.draw = function () {
 }
 
 ChessClockLeft.prototype.update = function() {
-	Entity.prototype.update.call(this);	
+	Entity.prototype.update.call(this);
+	this.clockBounsCount += 1;
+	if (this.clockBounsCount > 12)
+	{
+		this.clockBounsCount = 0;
+		this.scoreclock.IncreaseScore(12);
+	}
 }
 //End ChessClock
 
@@ -155,14 +171,18 @@ function ChessClockAnimation(spriteSheet, frameWidth, frameHeight, frameDuration
     this.frames = frames;
     this.totalTime = frameDuration * frames;
     this.elapsedTime = 0;
-    this.loop = loop
+    this.loop = loop;
     this.reverse = reverse;
+    this.scoreclock = scoreclock; 
 }
 
 ChessClockAnimation.prototype.drawFrame = function (tick, ctx, x, y) {
     this.elapsedTime += tick;
     if (this.isDone()) {
-        if (this.loop) this.elapsedTime = 0;
+        if (this.loop){
+        	this.elapsedTime = 0;
+        } 
+        	
     }
     
     var frame = this.currentFrame();
