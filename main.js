@@ -90,12 +90,8 @@ ASSET_MANAGER.downloadAll(function () {
 	var gb = new GameBoard(gameEngine, boardC);
 	var pl = new Player(gameEngine, boardC, gb);
 
-    //game, piece_rank, starting_column, color
-	var king = new Piece(gameEngine, "king", 4, "white");
-
 	gameEngine.addEntity(gb);
 	gameEngine.addEntity(pl);
-	gameEngine.addEntity(king);
 	boardC.init(pl);
     gameEngine.init(ctx);
     gameEngine.start();

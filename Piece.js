@@ -88,6 +88,7 @@ Piece.prototype.update = function () {
     // Calculate x position
     switch (this.column) {
         case 0:
+
             this.x = (this.y - 592.361) / -1.2574;
             break;
         case 1:
