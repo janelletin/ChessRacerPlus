@@ -283,6 +283,7 @@ function User(board, row, column, player) {
 	this.column = column;
 	this.score = score;
 	this.count = 0;
+	this.scoreBoard = new ScoreEngine(gameEngine);
 
 }
 
@@ -378,15 +379,14 @@ User.prototype.move = function(direction) {
 }
 
 User.prototype.eat = function(piece) {
-	console.log("piece: " + piece + " score: " + score + " rank: "+ this.rank);
+	//console.log("piece: " + piece + " score: " + score + " rank: "+ this.rank);
 	if(piece == this.rank) {
 		this.count++;
-		if(this.count == 10) {
+		if(this.count == 1) {
 			this.count = 0;
 			this.player.setRank(this.rank++);
 			// Giving Player a multipler from their rank for additional points when taking a piece. 
-			ScoreEngine.IncreaseScore(20000000);
-			this.scoreBoard.IncreaseScore(50 * ((rank+1)*3) ); 
+			this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) ); 
 		}
 	}
 	this.score += piece + 1;
@@ -409,13 +409,13 @@ ScoreEngine.prototype.getScore = function(){
 }
 // Increase the score of the game. 
 ScoreEngine.prototype.IncreaseScore = function(points){
-	//prove this crap is working....
-	//console.log("getScore " + this.getScore());
 	score += points;
 }
 
 ScoreEngine.prototype.getHighScore = function(){
 	/*
-	 * Need to implenent DB or something to save a high score. 
+	 * TODO: Need to implenent DB or something to save a high score. 
+	 * For now just hit keyboard for a high score.
 	 */
+	return 1032402;
 }//end ScoreEngine

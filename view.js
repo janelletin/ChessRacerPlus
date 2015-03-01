@@ -9,6 +9,8 @@ var TOTAL_FRAMES = 40;
 var backgroundClock = new Image();
 var logging = false;
 var scoreclock;
+var clockBounsCount = 0;
+//var userScore = 0;
 
 
 /**
@@ -22,7 +24,7 @@ function GameBoard(game, boardC) {
     this.frameHeight = 530;
     this.frameWidth = 800;
 
-    // Sets the game board position releative to canvs
+    // Sets the game board position releative to canvas
     this.x = 0;
     this.y = CANVAS_HEIGHT - this.frameHeight;
 
@@ -36,6 +38,8 @@ function GameBoard(game, boardC) {
     this.backgroundBoarder = ASSET_MANAGER.getAsset("./img/border.png");
     // This holds the frame interval the game board is within (i.e. what click between space changes the game boards stat is in)
     this.frameInterval = 0;
+    //initialize the score display for the player. 
+    this.userScoreOnBoard = new UserScore(game);
 
 
     this.totalTime = GAME_SPEED * TOTAL_FRAMES;
@@ -88,19 +92,13 @@ GameBoard.prototype.draw = function (ctx) {
     // Draw the Boards boarder
     ctx.drawImage(this.backgroundBoarder, 0, 250); // Chess boarder on table!
     Entity.prototype.draw.call(this);
+    
+    this.userScoreOnBoard.updateScore();
 }
 
 GameBoard.prototype.currentFrame = function () {
-    if (logging)
-        console.log("GameBoardAnimation CurrentFrame function " + this.frameInterval);
     return this.frameInterval;
 }
-
-
-
-
-
-
 
 
 /* 
@@ -113,6 +111,8 @@ function ChessClockRight(game, spritesheet) {
     this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
     this.game = game;
     this.ctx = game.ctx;
+    this.scoreClockRight = new ScoreEngine(game); 
+    this.scoreBounsClockRight = clockBounsCount;
 }
 
 ChessClockRight.prototype.draw = function () {
@@ -121,11 +121,11 @@ ChessClockRight.prototype.draw = function () {
 
 ChessClockRight.prototype.update = function() {
 	Entity.prototype.update.call(this);	
-	this.clockBounsCount += 1;
-	if (this.clockBounsCount > 12)
+	this.scoreBounsClockRight += 1;
+	if (this.scoreBounsClockRight > 12)
 	{
-		this.clockBounsCount = 0;
-		this.scoreclock.IncreaseScore(12);
+		this.scoreBounsClockRight = 0;
+		this.scoreClockRight.IncreaseScore(12);
 	}
 }
 //End ChessClock
@@ -134,15 +134,14 @@ ChessClockRight.prototype.update = function() {
  * This function will animate a clock after each time a player takes a piece or any 
  * other event deemed worthy of moving the clock. For now, it just spins and spins. 
  */ 
-var clockBounsCount = 0;
 function ChessClockLeft(game, spritesheet) {
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
     this.x = 297;  //ctx.drawImage(backgroundClock,260,30)
     this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
     this.game = game;
     this.ctx = game.ctx;
-    this.scoreclock = new ScoreEngine(game); 
-    this.clockBounsCount = clockBounsCount;
+    this.scoreClockLeft = new ScoreEngine(game); 
+    this.scoreBounsClockLeft = clockBounsCount;
 }
 
 ChessClockLeft.prototype.draw = function () {
@@ -151,15 +150,14 @@ ChessClockLeft.prototype.draw = function () {
 
 ChessClockLeft.prototype.update = function() {
 	Entity.prototype.update.call(this);
-	this.clockBounsCount += 1;
-	if (this.clockBounsCount > 12)
+	this.scoreBounsClockLeft += 1;
+	if (this.scoreBounsClockLeft > 12)
 	{
-		this.clockBounsCount = 0;
-		this.scoreclock.IncreaseScore(12);
+		this.scoreBounsClockLeft = 0;
+		this.scoreClockLeft.IncreaseScore(12);
 	}
 }
 //End ChessClock
-
 
 
 //Begin ChessClockAnimation 
@@ -213,5 +211,31 @@ ChessClockAnimation.prototype.currentFrame = function () {
 
 ChessClockAnimation.prototype.isDone = function () {
     return (this.elapsedTime >= this.totalTime);
+}// end ChessClockAnimation
+
+/*
+ * This displays the user's score for the game. 
+ */
+function UserScore(game) {
+    this.userScore = new ScoreEngine(game); 
+    this.elapsedTime = 0; 
 }
 
+/*
+ * This will be used to grab the score and display on the game for the user. 
+ */
+UserScore.prototype.updateScore = function (tick, ctx, x, y) {
+    this.elapsedTime += tick;
+    if (this.isDone()) {
+        if (this.loop){
+        	this.elapsedTime = 0;
+        } 
+    }
+    	
+}
+/*
+ * this is used to keep a running update of the score on the gameboard. 
+ */
+UserScore.prototype.isDone = function () {
+    return (this.elapsedTime >= this.totalTime);
+}
