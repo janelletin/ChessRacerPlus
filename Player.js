@@ -182,6 +182,7 @@ Player.prototype.checkIfNewSpace = function () {
         }
         return this.separationLines[bc - 1];
     }
+    console.log(this.board.User.column);
 }
 
 // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board

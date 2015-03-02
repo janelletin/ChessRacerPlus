@@ -130,10 +130,10 @@ BoardC.prototype.update = function() {
 			if(this.Board[1][j] != 0) { /** COLLIDED **/
 				//console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
 				if(this.Board[1][j].color == this.User.color) {
-			//		alert("DEAD because collided with same color " + this.Board[1][j].color);
+					alert("DEAD because collided with same color " + this.Board[1][j].color);
 				} else {
 					if(this.Board[1][j].rank > this.User.rank) {
-				//		alert("DEAD because higher rank");
+						alert("DEAD because higher rank");
 					} else {
 						var index = this.Pieces.indexOf(this.Board[1][j]);
 						if (index > -1) {
