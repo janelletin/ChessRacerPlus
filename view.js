@@ -79,7 +79,8 @@ GameBoard.prototype.update = function () {
 //
 GameBoard.prototype.draw = function (ctx) {
     // Draw background pictures
-    backgroundClock.src = "./img/chess_clock_frame.png";
+    
+	backgroundClock.src = "./img/chess_clock_frame.png";
 
     ctx.drawImage(this.backgroundTable, -500, 200); // We are on a table!
     ctx.drawImage(this.backgroundPark, 0, -400); // We are in a park!
@@ -222,7 +223,8 @@ ChessClockAnimation.prototype.isDone = function () {
  */
 function UserScore(game) {
     this.userScore = new ScoreEngine(game); 
-    this.elapsedTime = 0; 
+    this.elapsedTime = 0;
+    document.getElementById("highScoreOnPage").innerHTML = this.userScore.getHighScore();
 }
 
 /*
@@ -235,7 +237,9 @@ UserScore.prototype.updateScore = function (tick, ctx, x, y) {
         	this.elapsedTime = 0;
         } 
     }
-    document.getElementById("demo").innerHTML = this.userScore.getScore();
+    
+    document.getElementById("scoreOnPage").innerHTML = this.userScore.getScore();
+    
     	
 }
 /*
@@ -243,4 +247,9 @@ UserScore.prototype.updateScore = function (tick, ctx, x, y) {
  */
 UserScore.prototype.isDone = function () {
     return (this.elapsedTime >= this.totalTime);
+}
+
+UserScore.prototype.niceNumber = function(number){
+	//Assumes we are working in whole numbers. 
+		
 }
