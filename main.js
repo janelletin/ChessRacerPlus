@@ -76,7 +76,6 @@ ASSET_MANAGER.queueDownload("./img/broken_pawn.png");
 ASSET_MANAGER.queueDownload("./img/woodtable.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock_frame.png");
-ASSET_MANAGER.queueDownload("./img/clock_noon.png");
 ASSET_MANAGER.queueDownload("./img/border.png");
 ASSET_MANAGER.queueDownload("./img/lake.jpg");
 window.onload = (function () {
