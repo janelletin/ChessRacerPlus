@@ -15,6 +15,7 @@
 //
 
 var ASSET_MANAGER = new AssetManager();
+//Global variable used for console testing
 var boardC; 
 var gameEngine;
 

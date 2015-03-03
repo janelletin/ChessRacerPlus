@@ -259,9 +259,13 @@ Player.prototype.checkIfNewSpace = function () {
             this.specialActivated = false;
         }
     }
+<<<<<<< HEAD
     return newX;
    // console.log(this.board.User.column);
 
+=======
+    console.log(this.board.User.column);
+>>>>>>> parent of 5c8ba88... Added counters for pieces taken to ScoreEngine
 }
 
 // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board
@@ -343,14 +347,4 @@ Player.prototype.setRank = function (the_rank) {
     if (the_rank >= 0 && the_rank < 6) {
         this.newRank = the_rank;
     }
-
-/**
- * Returns the Players current rank. 
- * @returns {Number} a numerical representation of the Player's Rank.
- */
-Player.prototype.getRank = function(){
-	return this.rank;
-}    
-    
-    
 }

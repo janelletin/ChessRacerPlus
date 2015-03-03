@@ -40,7 +40,6 @@ function GameEngine() {
     this.surfaceWidth = null;
     this.surfaceHeight = null;
 	this.on = true;
-	this.rightClockRunning = false;
 	this.timer;
 	this.removedEntities = [];
 	this.lastKeypressTime;
@@ -172,17 +171,6 @@ GameEngine.prototype.update = function () {
 }
 GameEngine.prototype.loop = function () {
 	if(this.on) {
-		this.clockTick = this.timer.tick();
-		this.update();
-		this.draw();
-		this.space = null;
-	} else {
-		//console.log("game is paused");
-	}
-}
-
-GameEngine.prototype.rightClockRunning = function () {
-	if(this.rightClockRunning) {
 		this.clockTick = this.timer.tick();
 		this.update();
 		this.draw();

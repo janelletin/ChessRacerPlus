@@ -10,8 +10,6 @@ var backgroundClock = new Image();
 var logging = false;
 var scoreclock;
 var clockBounsCount = 0;
-var leftClockMoving = true;
-var rightClockMoving = false;
 
 
 /**
@@ -47,7 +45,6 @@ function GameBoard(game, boardC) {
     this.elapsedTime = 0;
     this.boardC = boardC;
     this.halfTime = 0;
-    var TESTSCORE1;
     Entity.call(this, game, this.x, this.y);
 }
 
@@ -89,7 +86,6 @@ GameBoard.prototype.draw = function (ctx) {
     ctx.drawImage(this.backgroundPark, 0, -400); // We are in a park!
     ctx.drawImage(backgroundClock, 260, 30); // Chess Clock on table!
 
-
     // Draw the board
     ctx.drawImage(//this.frames[0],
               this.frames[this.frameInterval],
@@ -101,26 +97,6 @@ GameBoard.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
     
     this.userScoreOnBoard.updateScore();
-    //ctx.fillText(this.userScoreOnBoard.getScore(),75,100,150);
-    
-    //Draw Rectangle for Player Score to live in. 
-    ctx.rect(55, 63, 170, 50);
-    ctx.fillStyle="blue";
-    ctx.fill(); 
-    ctx.font = "36px arial";
-    ctx.fillStyle = '#00ff00';
-    
-    //Draw Rectangle for High Score to live in. 
-    ctx.rect(592, 63, 170, 50);
-    ctx.stroke();
-    //Score Headers
-    ctx.fillText("Player Score",55,50, 170); 
-    ctx.fillText("High Score",592,50, 170); 
-    
-    //Load the scores.
-    ctx.fillText(this.userScoreOnBoard.getHighScore(),602,100,150);   
-    ctx.fillText(this.userScoreOnBoard.getScore(),65,100,150);
-    
 }
 
 GameBoard.prototype.currentFrame = function () {
@@ -135,8 +111,8 @@ GameBoard.prototype.currentFrame = function () {
 function ChessClockRight(game, spritesheet) {
 	//TODO: Add multiplier for Game Speed with clock speed. 
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.11, 12, true, false);
-    this.x = 422;  
-    this.y = 77;  
+    this.x = 422;  //ctx.drawImage(backgroundClock,260,30)
+    this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
     this.game = game;
     this.ctx = game.ctx;
     this.scoreClockRight = new ScoreEngine(game); 
@@ -144,13 +120,11 @@ function ChessClockRight(game, spritesheet) {
 }
 
 ChessClockRight.prototype.draw = function () {
-	
 	this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
 }
 
 ChessClockRight.prototype.update = function() {
-	Entity.prototype.update.call(this);
-	
+	Entity.prototype.update.call(this);	
 	this.scoreBounsClockRight += 1;
 	if (this.scoreBounsClockRight > 12)
 	{
@@ -167,8 +141,8 @@ ChessClockRight.prototype.update = function() {
 function ChessClockLeft(game, spritesheet) {
 	//TODO: Add multiplier for Game Speed with clock speed. 
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
-    this.x = 297;  
-    this.y = 77;  
+    this.x = 297;  //ctx.drawImage(backgroundClock,260,30)
+    this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
     this.game = game;
     this.ctx = game.ctx;
     this.scoreClockLeft = new ScoreEngine(game); 
@@ -176,9 +150,7 @@ function ChessClockLeft(game, spritesheet) {
 }
 
 ChessClockLeft.prototype.draw = function () {
-	if(leftClockMoving){
-		this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
-	}
+	this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
 }
 
 ChessClockLeft.prototype.update = function() {
@@ -224,6 +196,10 @@ ChessClockAnimation.prototype.drawFrame = function (tick, ctx, x, y) {
     xindex = frame % 4;
     yindex = Math.floor(frame / 4);
     
+    if(logging)
+    	console.log("ClockAnimation:prototype:drawFrame " + frame + " " + xindex + " " + yindex, + " " +
+    			("./img/clock.png"));
+    
 	ctx.drawImage(ASSET_MANAGER.getAsset("./img/chess_clock.png"),
 		    xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
             this.frameWidth, this.frameHeight,
@@ -248,9 +224,7 @@ ChessClockAnimation.prototype.isDone = function () {
 function UserScore(game) {
     this.userScore = new ScoreEngine(game); 
     this.elapsedTime = 0;
-    var TESTSCORE1; 
     document.getElementById("highScoreOnPage").innerHTML = this.userScore.getHighScore();
-    
 }
 
 /*
@@ -258,18 +232,15 @@ function UserScore(game) {
  */
 UserScore.prototype.updateScore = function (tick, ctx, x, y) {
     this.elapsedTime += tick;
-
     if (this.isDone()) {
         if (this.loop){
         	this.elapsedTime = 0;
         } 
     }
-
+    
     document.getElementById("scoreOnPage").innerHTML = this.userScore.getScore();
     
-    //this.ctx.font = "48px serif";
-    //ctx.fillText(that,50,100);
-	
+    	
 }
 /*
  * this is used to keep a running update of the score on the gameboard. 
@@ -279,15 +250,6 @@ UserScore.prototype.isDone = function () {
 }
 
 UserScore.prototype.niceNumber = function(number){
-	//Assumes we are working in whole numbers. Need to make the score normalized with comma seperators. 
+	//Assumes we are working in whole numbers. 
 		
 }
-
-UserScore.prototype.getScore = function(){
-	return this.userScore.getScore();
-}
-
-UserScore.prototype.getHighScore = function(){
-	return this.userScore.getHighScore();
-}
-

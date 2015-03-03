@@ -1,6 +1,5 @@
 var score;
 var scoreBoard;
-var highScore;
 
 function BoardC(gameEngine) {
 	this.game = gameEngine;
@@ -138,6 +137,7 @@ BoardC.prototype.update = function() {
 			if(this.Board[1][j] != 0) 
 			{ /** COLLIDED **/
 				//console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
+<<<<<<< HEAD
 				if(this.Board[1][j].color == this.User.color) 
 				{
 					//alert("DEAD because collided with same color " + this.Board[1][j].color);
@@ -173,6 +173,23 @@ BoardC.prototype.update = function() {
 								this.Pieces.splice(index, 1);
 								//console.log("removing a collided piece");
 								//this.Board[1][j].removeFromWorld = true;
+=======
+				if(this.Board[1][j].color == this.User.color) {
+					alert("DEAD because collided with same color " + this.Board[1][j].color);
+				} else {
+					if(this.Board[1][j].rank > this.User.rank) {
+						alert("DEAD because higher rank");
+					} else {
+						var index = this.Pieces.indexOf(this.Board[1][j]);
+						if (index > -1) {
+
+							var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
+							//console.log(indexOfEnt);
+							if(indexOfEnt > -1) {
+								this.game.entities[indexOfEnt].removeFromWorld = true;
+								this.User.eat(this.Board[1][j].rank);
+								//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
+>>>>>>> parent of 5c8ba88... Added counters for pieces taken to ScoreEngine
 							}
 							//this.Board[1][j] = 0;
 						}
@@ -429,7 +446,6 @@ User.prototype.toString = function() {
  */
 function ScoreEngine(game){
 	this.game = gameEngine;
-	var captured = 0;
 }
 // Get the score of the game currently running.
 ScoreEngine.prototype.getScore = function(){
@@ -438,10 +454,11 @@ ScoreEngine.prototype.getScore = function(){
 // Increase the score of the game. 
 ScoreEngine.prototype.IncreaseScore = function(points){
 	score += points;
-	if(score > highScore){
-		//TODO: Notify the user in some fashion that they have passed the previous high score.
-	}
-		 
+}
+
+//Increase the score of the game. 
+ScoreEngine.prototype.setSpeed = function(gameSpeed){
+	this.gameSpeed = gameSpeed;
 }
 
 ScoreEngine.prototype.getHighScore = function(){
@@ -449,6 +466,7 @@ ScoreEngine.prototype.getHighScore = function(){
 	 * TODO: Need to implenent DB or something to save a high score. 
 	 * For now just hit keyboard for a high score.
 	 */
+<<<<<<< HEAD
 	return 1;
 }
 
@@ -471,3 +489,7 @@ ScoreEngine.prototype.getCaptures = function(){
 
 
 //end ScoreEngine
+=======
+	return 1032402;
+}//end ScoreEngine
+>>>>>>> parent of 5c8ba88... Added counters for pieces taken to ScoreEngine
