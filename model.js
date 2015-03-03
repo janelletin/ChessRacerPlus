@@ -1,5 +1,6 @@
 var score;
 var scoreBoard;
+var highScore;
 
 function BoardC(gameEngine) {
 	this.game = gameEngine;
@@ -135,10 +136,12 @@ BoardC.prototype.update = function() {
 			if(this.Board[1][j] != 0) { /** COLLIDED **/
 				//console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
 				if(this.Board[1][j].color == this.User.color) {
-					alert("DEAD because collided with same color " + this.Board[1][j].color);
+					//alert("DEAD because collided with same color " + this.Board[1][j].color);
+					//TODO: Add new modal window showing score and letting Player select to end or start again. 
 				} else {
 					if(this.Board[1][j].rank > this.User.rank) {
-						alert("DEAD because higher rank");
+						//alert("DEAD because higher rank");
+						//TODO: Add new modal window showing score and letting Player select to end or start again. 
 					} else {
 						var index = this.Pieces.indexOf(this.Board[1][j]);
 						if (index > -1) {
@@ -403,6 +406,7 @@ User.prototype.toString = function() {
  */
 function ScoreEngine(game){
 	this.game = gameEngine;
+	var captured = 0;
 }
 // Get the score of the game currently running.
 ScoreEngine.prototype.getScore = function(){
@@ -411,11 +415,10 @@ ScoreEngine.prototype.getScore = function(){
 // Increase the score of the game. 
 ScoreEngine.prototype.IncreaseScore = function(points){
 	score += points;
-}
-
-//Increase the score of the game. 
-ScoreEngine.prototype.setSpeed = function(gameSpeed){
-	this.gameSpeed = gameSpeed;
+	if(score > highScore){
+		//TODO: Notify the user in some fashion that they have passed the previous high score.
+	}
+		 
 }
 
 ScoreEngine.prototype.getHighScore = function(){
@@ -423,5 +426,24 @@ ScoreEngine.prototype.getHighScore = function(){
 	 * TODO: Need to implenent DB or something to save a high score. 
 	 * For now just hit keyboard for a high score.
 	 */
-	return 1032402;
-}//end ScoreEngine
+	return 1;
+}
+
+ScoreEngine.prototype.captures = function(captured){
+	this.captured += captured;
+}
+
+ScoreEngine.prototype.getCaptures = function(){
+	return this.captured;
+}
+
+ScoreEngine.prototype.captures = function(captured){
+	this.captured += captured;
+}
+
+ScoreEngine.prototype.getCaptures = function(){
+	return this.captured;
+}
+
+
+//end ScoreEngine

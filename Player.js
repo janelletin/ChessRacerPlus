@@ -182,7 +182,7 @@ Player.prototype.checkIfNewSpace = function () {
         }
         return this.separationLines[bc - 1];
     }
-    console.log(this.board.User.column);
+    //console.log(this.board.User.column);
 }
 
 // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board
@@ -260,4 +260,14 @@ Player.prototype.setRank = function (the_rank) {
     if (the_rank >= 0 && the_rank < 6) {
         this.newRank = the_rank;
     }
+
+/**
+ * Returns the Players current rank. 
+ * @returns {Number} a numerical representation of the Player's Rank.
+ */
+Player.prototype.getRank = function(){
+	return this.rank;
+}    
+    
+    
 }
