@@ -250,7 +250,6 @@ Player.prototype.checkIfNewSpace = function () {
         }
         newX = this.separationLines[bc - 1];
     }
-
     // If in the center of the space update speical moves
     if (newSquare) {
         if (this.specialMovesLeft > 0) {
@@ -259,13 +258,8 @@ Player.prototype.checkIfNewSpace = function () {
             this.specialActivated = false;
         }
     }
-<<<<<<< HEAD
     return newX;
    // console.log(this.board.User.column);
-
-=======
-    console.log(this.board.User.column);
->>>>>>> parent of 5c8ba88... Added counters for pieces taken to ScoreEngine
 }
 
 // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board

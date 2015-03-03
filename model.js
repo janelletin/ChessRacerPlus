@@ -136,38 +136,6 @@ BoardC.prototype.newLine = function() { // Adds a new line
 	//console.log(piecesLoc);
 	//put the pieces into the board
 	for(var i = 0; i < piecesLoc.length; i++) {
-<<<<<<< HEAD
-			var color;
-			var a = Math.round(Math.random()); // used to randomize black and white
-			if( a == 0) {
-				color = "white";
-			} else {
-				color = "black";
-			}
-			var type;
-			var b = Math.floor(Math.random() * (6));
-			//console.log(b);
-			if(b == 0) {
-				type = "pawn";
-			} else if(b == 1) {
-				type = "pawn"; /**CHANGE TO KNIGHT WHEN IMAGE IS READY **/
-			} else if(b == 2) {
-				type = "bishop";
-			} else if(b == 3) {
-				type = "rook";
-			} else if(b == 4) {
-				type = "queen";
-			} else if(b == 5) {
-				type = "king";
-			}
-			//console.log(color + " " + a);
-			var temp = new Piece(this.game, type, piecesLoc[i], color);
-			var p = new PieceC(this.game,this, 11, piecesLoc[i], type, color, temp)
-			//var tempPawn = new Pawn(this.game, this, 11, piecesLoc[i], temp);
-			//this.Board[11][piecesLoc[i]] = tempPawn;
-	
-			//this.game.addEntity(temp);
-=======
 		var color;
 		var a = Math.round(Math.random()); // used to randomize black and white
 		if( a == 0) {
@@ -202,35 +170,26 @@ BoardC.prototype.newLine = function() { // Adds a new line
 		
 	}
 	
->>>>>>> 5280251fe25ce288900a80b59a1f61011b66f2d3
 }
 
 BoardC.prototype.update = function() {
 	// Moves the pieces
-	for(var p = 0; p < this.Pieces.length; p++) 
-	{
-		if(this.Pieces[p] != this.User) 
-		{
+	for(var p = 0; p < this.Pieces.length; p++) {
+		if(this.Pieces[p] != this.User) {
 			//this.Pieces[p].move();
 		}
 	}
 	
 	//console.log("number of pieces before update " + this.Pieces.length);
 	// Checks the first row for collision and removes pieces
-	for(j=0;j<this.columns;j++) 
-	{
+	for(j=0;j<this.columns;j++) {
 		//console.log("Piece " + this.Board[0][j] + " User " + this.User + " " + this.Board[0][j] != this.User);
 		// Removes the pieces from row 0 except the user
 		if(this.Board[0][j] != this.User) { // Pieces on row 0 that aren't the user
 			var index = this.Pieces.indexOf(this.Board[0][j]);
 			//console.log(this.Board[0][j] + " index = " + index);
-<<<<<<< HEAD
-			if (index > -1) 
-			{
-=======
 			if (index > -1) {
 				
->>>>>>> 5280251fe25ce288900a80b59a1f61011b66f2d3
 				var indexOfEnt = this.game.entities.indexOf(this.Board[0][j].ent);
 				//console.log(indexOfEnt);
 				if(indexOfEnt > -1) {
@@ -242,87 +201,6 @@ BoardC.prototype.update = function() {
 			}
 			this.Board[0][j] = 0;
 			// Checks row 1 for collisions with the User
-<<<<<<< HEAD
-		} 
-		else  
-		{
-			if(this.Board[1][j] != 0) 
-			{ /** COLLIDED **/
-				//console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
-<<<<<<< HEAD
-				if(this.Board[1][j].color == this.User.color) 
-				{
-					//alert("DEAD because collided with same color " + this.Board[1][j].color);
-					//TODO: Add new modal window showing score and letting Player select to end or start again. 
-				} 
-				else 
-				{
-					if(this.Board[1][j].rank > this.User.rank) 
-					{
-						//alert("DEAD because higher rank");
-						//TODO: Add new modal window showing score and letting Player select to end or start again. 
-					alert("DEAD because collided with same color " + this.Board[1][j].color);
-					} 
-					else 
-					{
-						if(this.Board[1][j].rank > this.User.rank) 
-						{
-							alert("DEAD because higher rank");
-						} 
-						else 
-						{
-							var index = this.Pieces.indexOf(this.Board[1][j]);
-							if (index > -1) 
-							{
-								var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
-								//console.log(indexOfEnt);
-								if(indexOfEnt > -1) 
-								{
-									this.game.entities[indexOfEnt].removeFromWorld = true;
-									this.User.eat(this.Board[1][j].rank);
-									//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
-								}
-								this.Pieces.splice(index, 1);
-								//console.log("removing a collided piece");
-								//this.Board[1][j].removeFromWorld = true;
-=======
-				if(this.Board[1][j].color == this.User.color) {
-					alert("DEAD because collided with same color " + this.Board[1][j].color);
-				} else {
-					if(this.Board[1][j].rank > this.User.rank) {
-						alert("DEAD because higher rank");
-					} else {
-						var index = this.Pieces.indexOf(this.Board[1][j]);
-						if (index > -1) {
-
-							var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
-							//console.log(indexOfEnt);
-							if(indexOfEnt > -1) {
-								this.game.entities[indexOfEnt].removeFromWorld = true;
-								this.User.eat(this.Board[1][j].rank);
-								//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
->>>>>>> parent of 5c8ba88... Added counters for pieces taken to ScoreEngine
-							}
-							//this.Board[1][j] = 0;
-						}
-					}
-				this.Board[1][j] = 0;
-				}
-			}
-			 else 
-			 { // NO COLLISION
-				//console.log("no collision");
-			 }
-		}
-	}
-	// Moves pieces down a row starting from the second row
-	for (i=1;i<this.rows;i++) 
-	{ 
-		for (j=0;j<this.columns;j++) 
-		{
-			if(this.Board[i][j]!=0) 
-			{
-=======
 		} else {
 			if(this.Board[1][j] != 0) { /** COLLIDED **/
 				
@@ -353,7 +231,6 @@ BoardC.prototype.update = function() {
 	for (i=1;i<this.rows;i++) {
 		for (j=0;j<this.columns;j++) {
 			if(this.Board[i][j]!=0) {
->>>>>>> 5280251fe25ce288900a80b59a1f61011b66f2d3
 				this.Board[i][j].row -= 1;
 				this.Board[i-1][j] = this.Board[i][j];
 				this.Board[i][j] = 0;
@@ -531,8 +408,6 @@ User.prototype.move = function(direction) {
 			this.board[this.row][this.column+3] = this;
 			this.column += 3 ;
 		}
-	}
-	
 	} else if(direction == "Knight-1Right") {
 		if(this.column > 6) {
 			//			console.log("Can't move " + direction + " anymore");
@@ -663,39 +538,8 @@ ScoreEngine.prototype.setSpeed = function(gameSpeed){
 
 ScoreEngine.prototype.getHighScore = function(){
 	/*
-<<<<<<< HEAD
-	 * TODO: Need to implenent DB or something to save a high score. 
-	 * For now just hit keyboard for a high score.
-	 */
-<<<<<<< HEAD
-	return 1;
-}
-
-ScoreEngine.prototype.captures = function(captured){
-	this.captured += captured;
-}
-
-ScoreEngine.prototype.getCaptures = function(){
-	return this.captured;
-}
-
-ScoreEngine.prototype.captures = function(captured){
-	this.captured += captured;
-}
-
-ScoreEngine.prototype.getCaptures = function(){
-	return this.captured;
-}
-}
-
-
-//end ScoreEngine
-=======
-=======
 	* TODO: Need to implenent DB or something to save a high score.
 	* For now just hit keyboard for a high score.
 	*/
->>>>>>> 5280251fe25ce288900a80b59a1f61011b66f2d3
 	return 1032402;
 }//end ScoreEngine
->>>>>>> parent of 5c8ba88... Added counters for pieces taken to ScoreEngine
