@@ -117,13 +117,26 @@ GameBoard.prototype.draw = function (ctx) {
     
     //Load the scores.
     ctx.fillText(this.userScoreOnBoard.getHighScore(),602,100,150);   
+    //TODO: High Score is loading every time and is a waste. it should only load once and be done. 
     ctx.fillText(this.userScoreOnBoard.getScore(),65,100,150);
     
+    if(this.userScoreOnBoard.getScore() > this.userScoreOnBoard.getHighScore())
+    {
+    	this.PlayerBonus(ctx);
+    }
     
 }
 
 GameBoard.prototype.currentFrame = function () {
     return this.frameInterval;
+}
+
+GameBoard.prototype.PlayerBonus = function(ctx) {
+	ctx.font = "bold 36px arial";
+	ctx.fillStyle="red";
+	ctx.fillText("NEW HIGH SCORE!!!!!",55,175, 170);
+	
+	
 }
 
 

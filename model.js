@@ -537,11 +537,7 @@ ScoreEngine.prototype.IncreaseScore = function(points){
 
 //Increase the score of the game.
 ScoreEngine.prototype.setSpeed = function(gameSpeed){
-	this.gameSpeed = gameSpeed;
-	if(score > highScore){
-		//TODO: Notify the user in some fashion that they have passed the previous high score.
-	}
-	
+	this.gameSpeed = gameSpeed;	
 }
 
 ScoreEngine.prototype.getHighScore = function(){
@@ -549,7 +545,10 @@ ScoreEngine.prototype.getHighScore = function(){
 	* TODO: Need to implenent DB or something to save a high score.
 	* For now just hit keyboard for a high score.
 	*/
-	return 1032402;
+	if(score > highScore){
+		//TODO: Notify the user in some fashion that they have passed the previous high score.
+	}
+	return 2000;
 }
 
 ScoreEngine.prototype.captures = function(captured){
