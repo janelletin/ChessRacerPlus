@@ -87,8 +87,8 @@ GameBoard.prototype.draw = function (ctx) {
     ctx.drawImage(backgroundClock, 260, 30); // Chess Clock on table!
 
     // Draw the board
-    ctx.drawImage(//this.frames[0],
-              this.frames[this.frameInterval],
+    ctx.drawImage(this.frames[0],
+              //this.frames[this.frameInterval],
               this.x, this.y,
               this.frameWidth, this.frameHeight);
 
