@@ -23,6 +23,7 @@ function Player(game, boardC, visualBoard) {
 
     this.inSquare = true;
     this.newRank = 0;
+    this.rookMoves = 0;
   //  this.setRank(2);
     var canvasPartition = CANVAS_WIDTH / 8;
     this.separationLines = [canvasPartition + 15, canvasPartition * 2 + 15, canvasPartition * 3 + 9, canvasPartition * 4 + 5, canvasPartition * 5, canvasPartition * 6 - 5, CANVAS_WIDTH - this.frameWidth - 20, CANVAS_WIDTH];
@@ -38,7 +39,7 @@ Player.prototype.update = function () {
     if ((frameInterval >= 0 && frameInterval <= 2) || (frameInterval >= 18 && frameInterval <= 20)) {
         // Game Engine wants to move left
         var bc = this.board.User.column;
-        if (bc === 0 || bc === 7 || this.x >= this.separationLines[bc - 1] && this.x <= this.separationLines[bc - 1] + 7) {          
+        if (bc === 0 || bc === 7 || this.x >= this.separationLines[bc - 1] && this.x <= this.separationLines[bc - 1] + 7) {                     
             if (this.inSquare && this.rank != this.newRank) {
                 this.rank = this.newRank;
                 switch (this.rank) {
@@ -68,6 +69,11 @@ Player.prototype.update = function () {
                         break;
                 }
             }
+            if (this.game.doubleTap && this.rookMoves === 0) {
+                this.game.doubleTap = false;
+                this.rookMoves = 2;
+                console.log("Rook move now 2");
+            }
             if (this.game.left) {
                 if (this.inSquare) {
                     this.inSquare = false;
@@ -89,15 +95,22 @@ Player.prototype.update = function () {
     this.checkBounds();
 
     // Move the player left or right based on state of game ie this.game.left == true or this.game.right == true
+    var rate = 1;
+    if (this.rookMoves > 0) {
+        rate = 2;
+    }
     if (this.movingLeft) {
-        this.x -= this.horizontalSpeed;
+        this.x -= this.horizontalSpeed * rate;
     } else if (this.movingRight) {
-        this.x += this.horizontalSpeed;
+        this.x += this.horizontalSpeed * rate;
     }
     
 
     // Check to see if the player is in a new column
     var newX = this.checkIfNewSpace();
+    if (this.inSquare && this.rookMoves > 0) {
+        this.rookMoves--;
+    }
     // Handle what happends when in a new space
     if (this.movingLeft && this.inSquare) {
         switch (this.rank) {
@@ -119,6 +132,9 @@ Player.prototype.update = function () {
                 // Bishop nothing needs to Happen
                 break;
             case 3: // Rook
+                if (this.game.doubleTap) {
+                    console.log("Double Tap");
+                }
                 this.movingLeft = false;
                 this.game.left = false;
                 this.movingRight = false;
@@ -148,11 +164,16 @@ Player.prototype.update = function () {
                 // Bishop nothing needs to happen
                 break;
             case 3: // Rook
-                this.movingRight = false;
-                this.game.right = false;
-                this.movingLeft = false;
-                this.game.left = false;
-                this.x = newX;
+                if (this.game.doubleTap) {
+                    console.log("Double Tap");
+                }
+                if (this.rookMoves < 2) {
+                    this.movingRight = false;
+                    this.game.right = false;
+                    this.movingLeft = false;
+                    this.game.left = false;
+                    this.x = newX;
+                }
                 break;
             case 4: // Queen
                 break;
@@ -182,7 +203,6 @@ Player.prototype.checkIfNewSpace = function () {
         }
         return this.separationLines[bc - 1];
     }
-    console.log(this.board.User.column);
 }
 
 // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board
