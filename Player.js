@@ -342,3 +342,12 @@ Player.prototype.setRank = function (the_rank) {
         this.newRank = the_rank;
     }
 }
+
+/**
+ * Returns the Players current rank. 
+ * @returns {Number} a numerical representation of the Player's Rank.
+ */
+Player.prototype.getRank = function(){
+	return this.rank;
+} 
+

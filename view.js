@@ -10,6 +10,8 @@ var backgroundClock = new Image();
 var logging = false;
 var scoreclock;
 var clockBounsCount = 0;
+var leftClockMoving = true;
+var rightClockMoving = false;
 
 
 /**
@@ -96,6 +98,28 @@ GameBoard.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
     
     this.userScoreOnBoard.updateScore();
+    
+    //ctx.fillText(this.userScoreOnBoard.getScore(),75,100,150);
+    
+    //Draw Rectangle for Player Score to live in. 
+    ctx.rect(55, 63, 170, 50);
+    ctx.fillStyle="blue";
+    ctx.fill(); 
+    ctx.font = "36px arial";
+    ctx.fillStyle = '#00ff00';
+    
+    //Draw Rectangle for High Score to live in. 
+    ctx.rect(592, 63, 170, 50);
+    ctx.stroke();
+    //Score Headers
+    ctx.fillText("Player Score",55,50, 170); 
+    ctx.fillText("High Score",592,50, 170); 
+    
+    //Load the scores.
+    ctx.fillText(this.userScoreOnBoard.getHighScore(),602,100,150);   
+    ctx.fillText(this.userScoreOnBoard.getScore(),65,100,150);
+    
+    
 }
 
 GameBoard.prototype.currentFrame = function () {
@@ -110,8 +134,8 @@ GameBoard.prototype.currentFrame = function () {
 function ChessClockRight(game, spritesheet) {
 	//TODO: Add multiplier for Game Speed with clock speed. 
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.11, 12, true, false);
-    this.x = 422;  //ctx.drawImage(backgroundClock,260,30)
-    this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
+    this.x = 422;  
+    this.y = 77;  
     this.game = game;
     this.ctx = game.ctx;
     this.scoreClockRight = new ScoreEngine(game); 
@@ -140,8 +164,8 @@ ChessClockRight.prototype.update = function() {
 function ChessClockLeft(game, spritesheet) {
 	//TODO: Add multiplier for Game Speed with clock speed. 
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
-    this.x = 297;  //ctx.drawImage(backgroundClock,260,30)
-    this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
+    this.x = 297;  
+    this.y = 77;  
     this.game = game;
     this.ctx = game.ctx;
     this.scoreClockLeft = new ScoreEngine(game); 
@@ -194,11 +218,7 @@ ChessClockAnimation.prototype.drawFrame = function (tick, ctx, x, y) {
     
     xindex = frame % 4;
     yindex = Math.floor(frame / 4);
-    
-    if(logging)
-    	console.log("ClockAnimation:prototype:drawFrame " + frame + " " + xindex + " " + yindex, + " " +
-    			("./img/clock.png"));
-    
+        
 	ctx.drawImage(ASSET_MANAGER.getAsset("./img/chess_clock.png"),
 		    xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
             this.frameWidth, this.frameHeight,
@@ -223,6 +243,7 @@ ChessClockAnimation.prototype.isDone = function () {
 function UserScore(game) {
     this.userScore = new ScoreEngine(game); 
     this.elapsedTime = 0; 
+    document.getElementById("highScoreOnPage").innerHTML = this.userScore.getHighScore();
 }
 
 /*
@@ -235,7 +256,8 @@ UserScore.prototype.updateScore = function (tick, ctx, x, y) {
         	this.elapsedTime = 0;
         } 
     }
-    document.getElementById("demo").innerHTML = this.userScore.getScore();
+    document.getElementById("scoreOnPage").innerHTML = this.userScore.getScore();
+    
     	
 }
 /*
@@ -244,3 +266,14 @@ UserScore.prototype.updateScore = function (tick, ctx, x, y) {
 UserScore.prototype.isDone = function () {
     return (this.elapsedTime >= this.totalTime);
 }
+
+//Assumes we are working in whole numbers. Need to make the score normalized with comma seperators. 
+UserScore.prototype.getScore = function(){
+	return this.userScore.getScore();
+}
+
+UserScore.prototype.getHighScore = function(){
+	return this.userScore.getHighScore();
+}
+
+

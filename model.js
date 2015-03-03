@@ -1,5 +1,6 @@
 var score;
 var scoreBoard;
+var highScore;
 
 function BoardC(gameEngine) {
 	this.game = gameEngine;
@@ -213,6 +214,7 @@ BoardC.prototype.update = function() {
 						this.game.entities[indexOfEnt].removeFromWorld = true;
 						this.User.eat(this.Board[1][j]);
 						//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
+						//TODO: Add new modal window showing score and letting Player select to end or start again. 
 					}
 					this.Pieces.splice(index, 1);
 					//console.log("removing a collided piece");
@@ -486,11 +488,13 @@ User.prototype.eat = function(piece) {
 		//console.log("same color");
 		//return false;
 		alert("DEAD because collided with same color " + piece.color);
+		//TODO: Add new modal window showing score and letting Player select to end or start again. 
 		this.game.stop();
 	} else if(piece.rank > this.rank) {
 		//this.print();
 		//return false;
 		alert("DEAD because higher rank " + piece.letter);
+		//TODO: Add new modal window showing score and letting Player select to end or start again. 
 		this.game.stop();
 	} else {
 		console.log("eat success");
@@ -534,6 +538,10 @@ ScoreEngine.prototype.IncreaseScore = function(points){
 //Increase the score of the game.
 ScoreEngine.prototype.setSpeed = function(gameSpeed){
 	this.gameSpeed = gameSpeed;
+	if(score > highScore){
+		//TODO: Notify the user in some fashion that they have passed the previous high score.
+	}
+	
 }
 
 ScoreEngine.prototype.getHighScore = function(){
@@ -542,4 +550,24 @@ ScoreEngine.prototype.getHighScore = function(){
 	* For now just hit keyboard for a high score.
 	*/
 	return 1032402;
-}//end ScoreEngine
+}
+
+ScoreEngine.prototype.captures = function(captured){
+	this.captured += captured;
+}
+
+ScoreEngine.prototype.getCaptures = function(){
+	return this.captured;
+}
+
+ScoreEngine.prototype.captures = function(captured){
+	this.captured += captured;
+}
+
+ScoreEngine.prototype.getCaptures = function(){
+	return this.captured;
+}
+
+
+//end ScoreEngine
+
