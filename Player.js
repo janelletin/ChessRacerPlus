@@ -22,6 +22,8 @@ function Player(game, boardC, visualBoard) {
     this.movingRight = false;
 
     this.inSquare = true;
+    this.specialActivated = false;
+    this.specialMovesLeft = 0;
     this.newRank = 0;
   //  this.setRank(2);
     var canvasPartition = CANVAS_WIDTH / 8;
@@ -36,68 +38,107 @@ Player.prototype.update = function () {
     frameInterval = this.visualBoard.frameInterval;
     // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board
     if ((frameInterval >= 0 && frameInterval <= 2) || (frameInterval >= 18 && frameInterval <= 20)) {
-        // Game Engine wants to move left
-        var bc = this.board.User.column;
-        if (bc === 0 || bc === 7 || this.x >= this.separationLines[bc - 1] && this.x <= this.separationLines[bc - 1] + 7) {          
-            if (this.inSquare && this.rank != this.newRank) {
-                this.rank = this.newRank;
-                switch (this.rank) {
-                    case 0: // Pawn
-                        this.spriteSheet = ASSET_MANAGER.getAsset("./img/pawn.png");
-                        this.rank = 0;
-                        break;
-                    case 1: // Knight
-                        this.spriteSheet = ASSET_MANAGER.getAsset("./img/knight.png");
-                        this.rank = 1;
-                        break;
-                    case 2: // Bishop
-                        this.spriteSheet = ASSET_MANAGER.getAsset("./img/bishop.png");
-                        this.rank = 2;
-                        break;
-                    case 3: // Rook
-                        this.spriteSheet = ASSET_MANAGER.getAsset("./img/rook.png");
-                        this.rank = 3;
-                        break;
-                    case 4: // Queen
-                        this.spriteSheet = ASSET_MANAGER.getAsset("./img/queen.png");
-                        this.rank = 4;
-                        break;
-                    case 5: // King
-                        this.spriteSheet = ASSET_MANAGER.getAsset("./img/king.png");
-                        this.rank = 5;
-                        break;
-                }
+        // Handle Plaer Ranking Up
+        if (this.inSquare && this.rank != this.newRank) {
+            this.rank = this.newRank;
+            switch (this.rank) {
+                case 0: // Pawn
+                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/pawn.png");
+                    break;
+                case 1: // Knight
+                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/knight.png");
+                    break;
+                case 2: // Bishop
+                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/bishop.png");
+                    break;
+                case 3: // Rook
+                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/rook.png");
+                    break;
+                case 4: // Queen
+                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/queen.png");
+                    break;
+                case 5: // King
+                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/king.png");
+                    break;
             }
-            if (this.game.left) {
-                if (this.inSquare) {
-                    this.inSquare = false;
-                    this.movingLeft = true;
-                    this.movingRight = false;
-                    this.game.right = false;
-                }
-            } else if (this.game.right) {
-                // If I'm in a square
-                if (this.inSquare) {
-                    this.inSquare = false;
-                    this.movingRight = true;
-                    this.movingLeft = false;
-                    this.game.right = false;
-                }
+            this.specialActivated = false;
+            this.specialMovesLeft = 0;
+        }
+
+        // Handle animation starting to move right or left
+        if (this.game.left) {
+            if (this.inSquare) {
+                this.inSquare = false;
+                this.movingLeft = true;
+                this.movingRight = false;
+                this.game.right = false;
+                this.game.left = false;
+            }
+        } else if (this.game.right) {
+            if (this.inSquare) {
+                this.inSquare = false;
+                this.movingRight = true;
+                this.movingLeft = false;
+                this.game.right = false;
+                this.game.left = false;
+            }
+        }
+
+        // Handle Special Double Tap Activation
+        if (this.game.doubleTap && this.specialMovesLeft === 0) {
+            this.game.doubleTap = false;
+            switch (this.rank) {
+                case 0: // Pawn
+                    break;
+                case 1: // Knight
+                    break;
+                case 2: // Bishop
+                    break;
+                case 3: // Rook
+                    if (!(this.board.User.column > 4 && this.movingRight) ||
+                        !(this.board.User.column < 3 && this.movingLeft) || 
+                        this.board.User.column == 4 || this.board.User.column == 5) {
+                        this.specialActivated = true;
+                        this.specialMovesLeft = 3;
+                    }
+                    break;
+                case 4: // Queen
+                    this.specialActivated = true;
+                    this.specialMovesLeft = 3;
+                    break;
             }
         }
     }
+    // Handle edge boundries
     this.checkBounds();
 
     // Move the player left or right based on state of game ie this.game.left == true or this.game.right == true
+    var speedIncreasedBy = 1;
+    if (this.specialActivated) {
+        switch (this.rank) {
+            case 0: // Pawn
+                break;
+            case 1: // Knight
+                break;
+            case 2: // Bishop
+                break;
+            case 3: // Rook
+                speedIncreasedBy = 3;
+                break;
+            case 4: // Queen
+                break;
+        }
+    }
     if (this.movingLeft) {
-        this.x -= this.horizontalSpeed;
+        this.x -= this.horizontalSpeed * speedIncreasedBy;
     } else if (this.movingRight) {
-        this.x += this.horizontalSpeed;
+        this.x += this.horizontalSpeed * speedIncreasedBy;
     }
     
 
     // Check to see if the player is in a new column
     var newX = this.checkIfNewSpace();
+
     // Handle what happends when in a new space
     if (this.movingLeft && this.inSquare) {
         switch (this.rank) {
@@ -119,13 +160,22 @@ Player.prototype.update = function () {
                 // Bishop nothing needs to Happen
                 break;
             case 3: // Rook
-                this.movingLeft = false;
-                this.game.left = false;
-                this.movingRight = false;
-                this.game.right = false;
-                this.x = newX;
+                if (!this.specialActivated) {
+                    this.movingLeft = false;
+                    this.game.left = false;
+                    this.movingRight = false;
+                    this.game.right = false;
+                    this.x = newX;
+                }
                 break;
             case 4: // Queen
+                if (!this.specialActivated) {
+                    this.movingLeft = false;
+                    this.game.left = false;
+                    this.movingRight = false;
+                    this.game.right = false;
+                    this.x = newX;
+                }
                 break;
         }
     } else if (this.movingRight && this.inSquare) {
@@ -148,13 +198,22 @@ Player.prototype.update = function () {
                 // Bishop nothing needs to happen
                 break;
             case 3: // Rook
-                this.movingRight = false;
-                this.game.right = false;
-                this.movingLeft = false;
-                this.game.left = false;
-                this.x = newX;
+                if (!this.specialActivated) {
+                    this.movingRight = false;
+                    this.game.right = false;
+                    this.movingLeft = false;
+                    this.game.left = false;
+                    this.x = newX;
+                }
                 break;
             case 4: // Queen
+                if (!this.specialActivated) {
+                    this.movingRight = false;
+                    this.game.right = false;
+                    this.movingLeft = false;
+                    this.game.left = false;
+                    this.x = newX;
+                }
                 break;
         }
     }
@@ -164,25 +223,45 @@ Player.prototype.update = function () {
 Player.prototype.checkIfNewSpace = function () {
     var offset = 2;
     var bc = this.board.User.column;
-    var returnValue = 0;
+    var newX = 0;
+    var newSquare = false;
+    // Moving Left
     if (this.movingLeft) {
+        // Check if in the center of a space
         if (bc > 0 && (this.x >= this.separationLines[bc - 1] && this.x < this.separationLines[bc - 1] + offset)) {
             this.inSquare = true;
         }
+        // Check if in new space and update board model
         if (bc > 0 && this.x < this.separationLines[bc - 1]) {
             this.board.User.move("left");
+            newSquare = true;
         }
-        return this.separationLines[bc - 1];
+        newX = this.separationLines[bc - 1];
+    // Moving Right
     } else if (this.movingRight) {
+        // Check if in the center of a space
         if (bc < 7 && (this.x > this.separationLines[bc - 1] - offset && this.x <= this.separationLines[bc - 1])) {
             this.inSquare = true;
         }
+        // Check if in new space and update board model
         if (bc < 7 && this.x + this.frameWidth > this.separationLines[bc]) {
             this.board.User.move("right");
+            newSquare = true;
         }
-        return this.separationLines[bc - 1];
+        newX = this.separationLines[bc - 1];
     }
-    //console.log(this.board.User.column);
+
+    // If in the center of the space update speical moves
+    if (newSquare) {
+        if (this.specialMovesLeft > 0) {
+            this.specialMovesLeft--;
+        } else {
+            this.specialActivated = false;
+        }
+    }
+    return newX;
+   // console.log(this.board.User.column);
+
 }
 
 // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board
@@ -200,7 +279,9 @@ Player.prototype.checkBounds = function () {
             case 3: // Rook
                 break;
             case 4: // Queen
-                this.game.right = true;
+                if (this.specialActivated) {
+                    this.game.right = true;
+                }                
                 break;          
         }
         this.game.left = false;
@@ -220,7 +301,9 @@ Player.prototype.checkBounds = function () {
             case 3: // Rook
                 break;
             case 4: // Queen
-                this.game.left = true;         
+                if (this.specialActivated) {
+                    this.game.left = true;
+                }                         
                 break;
         }
         this.game.right = false;

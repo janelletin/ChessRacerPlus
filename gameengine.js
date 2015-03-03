@@ -44,6 +44,7 @@ function GameEngine() {
 	this.timer;
 	this.removedEntities = [];
 	this.lastKeypressTime;
+	this.lastKeypressed;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -52,11 +53,9 @@ GameEngine.prototype.init = function (ctx) {
     this.surfaceHeight = this.ctx.canvas.height;
     this.startInput();
     this.timer = new Timer();
-    console.log('game initialized');
 }
 
 GameEngine.prototype.start = function () {
-    console.log("starting game");
     var that = this;
     (function gameLoop() {
         that.loop();
@@ -66,14 +65,12 @@ GameEngine.prototype.start = function () {
 
 GameEngine.prototype.stop = function() {
 	console.log(this);
-	console.log("stopping game");
 	//console.log(this.on);
 	this.on = !this.on;
 	//console.log(this.on);
 }
 
 GameEngine.prototype.startInput = function () {
-    console.log('Starting input');
     var that = this;
 
     that.doubleTap = false;
@@ -81,26 +78,29 @@ GameEngine.prototype.startInput = function () {
         switch (String.fromCharCode(e.which)) {
             case ' ':
                 that.space = true;
-
                 break;
             case 'A':
-                var tolerance = 500;
+                var tolerance = 750;
                 var thisKeypressTime = new Date();
-                if (thisKeypressTime - this.lastKeypressTime <= tolerance) {
+                if (thisKeypressTime - this.lastKeypressTime <= tolerance && 
+                    this.lastKeyPressed == 'A') {
                     that.doubleTap = true;
+                } else {
                 }
                 that.left = true;
                 that.right = false;
                 this.lastKeypressTime = thisKeypressTime;
                 break;
             case 'D':
-                var tolerance = 500;
+                var tolerance = 750;
                 var thisKeypressTime = new Date();
-                if (thisKeypressTime - this.lastKeypressTime <= tolerance) {
+                if (thisKeypressTime - this.lastKeypressTime < tolerance && 
+                    this.lastKeyPressed == 'D') {
                     that.doubleTap = true;
+                } else {
                 }
                 that.left = false;
-                that.right = true;
+                that.right = true; 
                 this.lastKeypressTime = thisKeypressTime;
                 break;
             case 'W':
@@ -116,7 +116,6 @@ GameEngine.prototype.startInput = function () {
                 that.isRight = false;
                 break;
             case '\'':
-
                 that.left = false;
                 that.right = true;
    
@@ -124,10 +123,9 @@ GameEngine.prototype.startInput = function () {
                 that.isRight = true;
                 break;
         }
-        //        console.log(e);
+        this.lastKeyPressed = String.fromCharCode(e.which);
         e.preventDefault();
     }, false);
-    console.log('Input started');
 
 }
 
