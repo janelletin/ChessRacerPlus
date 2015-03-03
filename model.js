@@ -498,6 +498,41 @@ User.prototype.move = function(direction) {
 			this.board[this.row][this.column+1] = this;
 			this.column += 1;
 		}
+		
+	} else if (direction == "left2"){
+		if(this.column < 2 ){
+			console.log("Can't move " + direction + " anymore");
+		} else {
+			this.board[this.row][this.column] = "0";
+			this.board[this.row][this.column-2] = this;
+			this.column -= 2;
+		}
+	} else if (direction == "right2"){
+		if(this.column > 6) {
+			//			console.log("Can't move " + direction + " anymore");
+		} else {
+			this.board[this.row][this.column] = "0";
+			this.board[this.row][this.column+2] = this;
+			this.column += 2;
+		}
+	} else if (direction == "left3"){
+		if(this.column < 3 ){
+			console.log("Can't move " + direction + " anymore");
+		} else {
+			this.board[this.row][this.column] = "0";
+			this.board[this.row][this.column-3] = this;
+			this.column -= 3;
+		}
+	} else if (direction == "right3"){
+		if(this.column > 5) {
+			//			console.log("Can't move " + direction + " anymore");
+		} else {
+			this.board[this.row][this.column] = "0";
+			this.board[this.row][this.column+3] = this;
+			this.column += 3 ;
+		}
+	}
+	
 	} else if(direction == "Knight-1Right") {
 		if(this.column > 6) {
 			//			console.log("Can't move " + direction + " anymore");
