@@ -64,10 +64,10 @@ GameBoard.prototype.update = function () {
     this.halfTime += this.game.clockTick;
     if (this.elapsedTime >= this.totalTime) {
         this.elapsedTime = 0;
-        this.boardC.update(); // Updates every other row
+        //this.boardC.update(); // Updates every other row
     } else if (this.halfTime >= this.totalTime / 2) {
         this.halfTime = 0;
-       // this.boardC.update(); // Updates every row
+        this.boardC.update(); // Updates every row
     }
 
     this.frameInterval = Math.floor(this.elapsedTime / GAME_SPEED);
