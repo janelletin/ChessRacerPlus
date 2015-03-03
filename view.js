@@ -10,6 +10,8 @@ var backgroundClock = new Image();
 var logging = false;
 var scoreclock;
 var clockBounsCount = 0;
+var leftClockMoving = true;
+var rightClockMoving = false;
 
 
 /**
@@ -64,10 +66,10 @@ GameBoard.prototype.update = function () {
     this.halfTime += this.game.clockTick;
     if (this.elapsedTime >= this.totalTime) {
         this.elapsedTime = 0;
-        this.boardC.update(); // Updates every other row
+        //this.boardC.update(); // Updates every other row
     } else if (this.halfTime >= this.totalTime / 2) {
         this.halfTime = 0;
-       // this.boardC.update(); // Updates every row
+        this.boardC.update(); // Updates every row
     }
 
     this.frameInterval = Math.floor(this.elapsedTime / GAME_SPEED);
@@ -79,8 +81,7 @@ GameBoard.prototype.update = function () {
 //
 GameBoard.prototype.draw = function (ctx) {
     // Draw background pictures
-    
-	backgroundClock.src = "./img/chess_clock_frame.png";
+    backgroundClock.src = "./img/chess_clock_frame.png";
 
     ctx.drawImage(this.backgroundTable, -500, 200); // We are on a table!
     ctx.drawImage(this.backgroundPark, 0, -400); // We are in a park!
@@ -97,10 +98,45 @@ GameBoard.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
     
     this.userScoreOnBoard.updateScore();
+    
+    //ctx.fillText(this.userScoreOnBoard.getScore(),75,100,150);
+    
+    //Draw Rectangle for Player Score to live in. 
+    ctx.rect(55, 63, 170, 50);
+    ctx.fillStyle="blue";
+    ctx.fill(); 
+    ctx.font = "36px arial";
+    ctx.fillStyle = '#00ff00';
+    
+    //Draw Rectangle for High Score to live in. 
+    ctx.rect(592, 63, 170, 50);
+    ctx.stroke();
+    //Score Headers
+    ctx.fillText("Player Score",55,50, 170); 
+    ctx.fillText("High Score",592,50, 170); 
+    
+    //Load the scores.
+    ctx.fillText(this.userScoreOnBoard.getHighScore(),602,100,150);   
+    //TODO: High Score is loading every time and is a waste. it should only load once and be done. 
+    ctx.fillText(this.userScoreOnBoard.getScore(),65,100,150);
+    
+    if(this.userScoreOnBoard.getScore() > this.userScoreOnBoard.getHighScore())
+    {
+    	this.PlayerBonus(ctx);
+    }
+    
 }
 
 GameBoard.prototype.currentFrame = function () {
     return this.frameInterval;
+}
+
+GameBoard.prototype.PlayerBonus = function(ctx) {
+	ctx.font = "bold 36px arial";
+	ctx.fillStyle="red";
+	ctx.fillText("NEW HIGH SCORE!!!!!",55,175, 170);
+	
+	
 }
 
 
@@ -111,8 +147,8 @@ GameBoard.prototype.currentFrame = function () {
 function ChessClockRight(game, spritesheet) {
 	//TODO: Add multiplier for Game Speed with clock speed. 
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.11, 12, true, false);
-    this.x = 422;  //ctx.drawImage(backgroundClock,260,30)
-    this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
+    this.x = 422;  
+    this.y = 77;  
     this.game = game;
     this.ctx = game.ctx;
     this.scoreClockRight = new ScoreEngine(game); 
@@ -141,8 +177,8 @@ ChessClockRight.prototype.update = function() {
 function ChessClockLeft(game, spritesheet) {
 	//TODO: Add multiplier for Game Speed with clock speed. 
     this.animation = new ChessClockAnimation(spritesheet, 100.1, 99.5, 0.05, 12, true, false);
-    this.x = 297;  //ctx.drawImage(backgroundClock,260,30)
-    this.y = 77;  //ctx.drawImage(backgroundClock,260,30)
+    this.x = 297;  
+    this.y = 77;  
     this.game = game;
     this.ctx = game.ctx;
     this.scoreClockLeft = new ScoreEngine(game); 
@@ -195,11 +231,7 @@ ChessClockAnimation.prototype.drawFrame = function (tick, ctx, x, y) {
     
     xindex = frame % 4;
     yindex = Math.floor(frame / 4);
-    
-    if(logging)
-    	console.log("ClockAnimation:prototype:drawFrame " + frame + " " + xindex + " " + yindex, + " " +
-    			("./img/clock.png"));
-    
+        
 	ctx.drawImage(ASSET_MANAGER.getAsset("./img/chess_clock.png"),
 		    xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
             this.frameWidth, this.frameHeight,
@@ -223,7 +255,7 @@ ChessClockAnimation.prototype.isDone = function () {
  */
 function UserScore(game) {
     this.userScore = new ScoreEngine(game); 
-    this.elapsedTime = 0;
+    this.elapsedTime = 0; 
     document.getElementById("highScoreOnPage").innerHTML = this.userScore.getHighScore();
 }
 
@@ -237,7 +269,6 @@ UserScore.prototype.updateScore = function (tick, ctx, x, y) {
         	this.elapsedTime = 0;
         } 
     }
-    
     document.getElementById("scoreOnPage").innerHTML = this.userScore.getScore();
     
     	
@@ -249,7 +280,13 @@ UserScore.prototype.isDone = function () {
     return (this.elapsedTime >= this.totalTime);
 }
 
-UserScore.prototype.niceNumber = function(number){
-	//Assumes we are working in whole numbers. 
-		
+//Assumes we are working in whole numbers. Need to make the score normalized with comma seperators. 
+UserScore.prototype.getScore = function(){
+	return this.userScore.getScore();
 }
+
+UserScore.prototype.getHighScore = function(){
+	return this.userScore.getHighScore();
+}
+
+

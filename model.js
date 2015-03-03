@@ -1,5 +1,6 @@
 var score;
 var scoreBoard;
+var highScore;
 
 function BoardC(gameEngine) {
 	this.game = gameEngine;
@@ -24,13 +25,82 @@ function BoardC(gameEngine) {
 
 
 BoardC.prototype.init = function(player) {
-    // Creates and places the user
-	this.User = new User(this,0,4, player);
+	// Creates and places the user
+	this.User = new User(this.game, this, 0, 4, player);
 	this.Board[0][4] = this.User; // User
 	this.Pieces.push(this.User);
 	//var test = new Pawn(this.game, "pawn", 3, 5, "white");
 	//this.Pieces.push(test);
 	console.log("initialized board model");
+	//this.test();
+}
+/** Used to test the eat function **/
+BoardC.prototype.test = function() {
+	var pass = 0;
+	var failed = 0;
+	//var p = new PieceC(this.game, this, 1, 1, "pawn", "white", null);
+	var type = ["pawn", "knight", "bishop", "rook", "queen"];
+	console.log(type);
+	console.log(this.assert);
+	for(var j = 0; j < 5; j++) {
+		this.User.rank = j;
+		
+		for(var i = 0; i < type.length; i++) {
+			var p = new PieceC(this.game, this, 1, 1, type[i], "white", null);
+			//console.log(p + " " + p.rank);
+			if(assert(boardC.User.eat(p), false,  "can't eat white pieces")){ // Checks White pieces
+				pass++;
+			} else {
+				failed++;
+				console.log("Failed on: User " + this.User + " Piece: " + p.rank + p.color);
+			}
+			p.color = "black";
+			if(i <= type.indexOf(type[j])) {
+				if(assert(boardC.User.eat(p), true, "Can eat " + p.color + type[i])){
+					pass++;
+				} else {
+					failed++;
+					console.log("Failed on: User " + this.User + " Piece: " + p.rank + p.color);
+				}
+			} else {
+				if(assert(boardC.User.eat(p), false, "Can't eat " + p.color + type[i])) {
+					pass++;
+				} else {
+					failed++;
+					console.log("Failed on: User " + this.User + " Piece: " + p.rank + p.color);
+				}
+			}
+			
+		}
+	}
+	// Test Rook
+	/* 	this.User.rank = 3;
+	this.User.letter = "R";
+	for(var i = 0; i < type.length; i++) {
+	var p = new PieceC(this.game, this, 1, 1, type[i], "white", null);
+	//console.log(p + " " + p.rank);
+	console.log(assert(boardC.User.eat(p), false,  "can't eat white pieces")); // Checking white pieces
+	p.color = "black";
+	if(i <= type.indexOf("rook")) {
+	console.log(assert(boardC.User.eat(p), true, "Can eat " + p.color + type[i]));
+	} else {
+	console.log(assert(boardC.User.eat(p), false, "Can't eat " + p.color + type[i]));
+	}
+	
+	} */
+	
+	console.log("Passed: " + pass + " Failed: " + failed);
+	//assert.equals(board.User.eat(p), false, "can't eat white pawn");
+	
+}
+/** an assertion method**/
+var assert = function(actual, expected, message) {
+	if(actual === expected) {
+		return true;
+	} else {
+		return false;
+	}
+	
 }
 
 BoardC.prototype.print = function() {
@@ -49,12 +119,12 @@ BoardC.prototype.print = function() {
 BoardC.prototype.newLine = function() { // Adds a new line
 	// number of new pieces to add 1-3
 	var numOfPieces = Math.floor(Math.random() * (4 - 1)) + 1 // Mozilla math.random get Int
-			//console.log("adding : " + numOfPieces);
-			var piecesLoc = new Array(); // An array of the pieces location
+	//console.log("adding : " + numOfPieces);
+	var piecesLoc = new Array(); // An array of the pieces location
 	//console.log(pieces.indexOf(0));
 	//console.log(pieces.indexOf(1));
-
-	// Randomly assigns locations for the pieces 
+	
+	// Randomly assigns locations for the pieces
 	for(var i = 0; i < numOfPieces; i++) {
 		var contains = 0;
 		var tempLoc;
@@ -90,16 +160,17 @@ BoardC.prototype.newLine = function() { // Adds a new line
 		} else if(b == 5) {
 			type = "king";
 		}
+		//console.log("model " + type);
 		//console.log(color + " " + a);
 		var temp = new Piece(this.game, type, piecesLoc[i], color);
 		var p = new PieceC(this.game,this, 11, piecesLoc[i], type, color, temp)
 		//var tempPawn = new Pawn(this.game, this, 11, piecesLoc[i], temp);
 		//this.Board[11][piecesLoc[i]] = tempPawn;
-
+		
 		//this.game.addEntity(temp);
-
+		
 	}
-
+	
 }
 
 BoardC.prototype.update = function() {
@@ -109,7 +180,7 @@ BoardC.prototype.update = function() {
 			//this.Pieces[p].move();
 		}
 	}
-
+	
 	//console.log("number of pieces before update " + this.Pieces.length);
 	// Checks the first row for collision and removes pieces
 	for(j=0;j<this.columns;j++) {
@@ -119,7 +190,7 @@ BoardC.prototype.update = function() {
 			var index = this.Pieces.indexOf(this.Board[0][j]);
 			//console.log(this.Board[0][j] + " index = " + index);
 			if (index > -1) {
-
+				
 				var indexOfEnt = this.game.entities.indexOf(this.Board[0][j].ent);
 				//console.log(indexOfEnt);
 				if(indexOfEnt > -1) {
@@ -133,38 +204,33 @@ BoardC.prototype.update = function() {
 			// Checks row 1 for collisions with the User
 		} else {
 			if(this.Board[1][j] != 0) { /** COLLIDED **/
-				//console.log("COLLISION with " + this.Board[1][j]); /** NEEDS TO BE IMPLEMENTED **/
-				if(this.Board[1][j].color == this.User.color) {
-		//			alert("DEAD because collided with same color " + this.Board[1][j].color);
-				} else {
-					if(this.Board[1][j].rank > this.User.rank) {
-		//				alert("DEAD because higher rank");
-					} else {
-						var index = this.Pieces.indexOf(this.Board[1][j]);
-						if (index > -1) {
-
-							var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
-							//console.log(indexOfEnt);
-							if(indexOfEnt > -1) {
-								this.game.entities[indexOfEnt].removeFromWorld = true;
-								this.User.eat(this.Board[1][j].rank);
-								//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
-							}
-							this.Pieces.splice(index, 1);
-							//console.log("removing a collided piece");
-							//this.Board[1][j].removeFromWorld = true;
-						}
-						//this.Board[1][j] = 0;
+				
+				var index = this.Pieces.indexOf(this.Board[1][j]);
+				if (index > -1) {
+					console.log(this.Board[1][j].color + this.Board[1][j].rank + " trying to eat");
+					var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
+					//console.log(indexOfEnt);
+					if(indexOfEnt > -1) {
+						this.game.entities[indexOfEnt].removeFromWorld = true;
+						this.User.eat(this.Board[1][j]);
+						//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
+						//TODO: Add new modal window showing score and letting Player select to end or start again. 
 					}
+					this.Pieces.splice(index, 1);
+					//console.log("removing a collided piece");
+					//this.Board[1][j].removeFromWorld = true;
 				}
-				this.Board[1][j] = 0;
-			} else { // NO COLLISION
-				//console.log("no collision");
+				//this.Board[1][j] = 0;
+				//}
 			}
+			this.Board[1][j] = 0;
+			/* } else { // NO COLLISION
+			//console.log("no collision");
+			} */
 		}
 	}
 	// Moves pieces down a row starting from the second row
-	for (i=1;i<this.rows;i++) { 
+	for (i=1;i<this.rows;i++) {
 		for (j=0;j<this.columns;j++) {
 			if(this.Board[i][j]!=0) {
 				this.Board[i][j].row -= 1;
@@ -179,10 +245,10 @@ BoardC.prototype.update = function() {
 	//console.log(this.Pieces);
 	//this.print();
 	/*
-	 * Add a score to the game for staying alive! 
-	 */
+	* Add a score to the game for staying alive!
+	*/
 	this.scoreBoard.IncreaseScore(50);
-
+	
 } // end of BoardC
 
 PieceC.prototype = new Entity();
@@ -204,7 +270,7 @@ function PieceC(game, board, row, column, type, color, thePiece) {
 		this.letter = "K";
 		this.rank = 1;
 	} else if(type == "bishop") {
-		this.letter = "K";
+		this.letter = "B";
 		this.rank = 2;
 	} else if(type == "rook") {
 		this.letter = "R";
@@ -217,7 +283,7 @@ function PieceC(game, board, row, column, type, color, thePiece) {
 		this.rank = 5;
 	}
 	this.board[row][column] = this; // adds to 2d array of board
-	this.game.addEntity(thePiece); // adds to game engine 
+	this.game.addEntity(thePiece); // adds to game engine
 	board.Pieces.push(this); // Adds to the pieces array of the board
 	//this.removeFromWorld = false;
 	this.secret = "hehe";
@@ -228,53 +294,54 @@ PieceC.prototype.test = function() {
 }
 
 PieceC.prototype.move = function(){
-
-
+	
+	
 	// 0.25 chance to move
 	var poss = Math.floor(Math.random() * (4)); // Mozilla math.random
 	console.log(poss);
 	if(poss == 0) { // 0 means move
 		var dir = Math.floor(Math.random() * (2)); // 0 means left 1 means right
-	//	console.log("Moving Piece " + dir + " from row " + this.row + " column " + this.column);
+		//	console.log("Moving Piece " + dir + " from row " + this.row + " column " + this.column);
 		if(dir == 0) {
 			if(this.column < 1) {
-	//			console.log("Can't move left anymore");
+				//			console.log("Can't move left anymore");
 			} else {
 				if(this.board[this.row][this.column-1] == 0) {
 					this.board[this.row][this.column] = "0";
 					this.board[this.row][this.column-1] = this;
 					this.column -= 1;
 				} else {
-		//			console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
+					//			console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
 				}
 			}
 		} else if (dir == 1) {
 			if(this.column > 7) {
-	//			console.log("Can't move right anymore");
+				//			console.log("Can't move right anymore");
 			} else {
 				if(this.board[this.row][this.column+1] == 0) {
 					this.board[this.row][this.column] = "0";
 					this.board[this.row][this.column+1] = this;
 					this.column += 1;
 				} else {
-		//			console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
+					//			console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
 				}
 			}
 		}
-	//	console.log("Piece is now at row " + this.row + " column " + this.column);
+		//	console.log("Piece is now at row " + this.row + " column " + this.column);
 	}
-
+	
 }
 
 PieceC.prototype.toString = function() {
-	return this.letter + "(" + this.row + ", " + this.column + ")";
+	return this.color[0] + this.letter + "(" + this.row + ", " + this.column + ")";
 }
 
 
 /*
- * This creates the Players section of the game with their piece and board settings. 
- */
-function User(board, row, column, player) {
+* This creates the Players section of the game with their piece and board settings.
+*/
+function User(game, board, row, column, player) {
+	this.game = game;
 	this.board = board.Board;
 	this.letter = "U";
 	this.player = player;
@@ -283,16 +350,17 @@ function User(board, row, column, player) {
 	this.column = column;
 	this.score = score;
 	this.count = 0;
+	this.color = "white";
 	this.scoreBoard = new ScoreEngine(gameEngine);
-
+	
 }
 
 // Moves the user piece left/right diagonal-left/right and the knight moves
 // Doesn't check for valid ranking yet
 User.prototype.move = function(direction) {
-
-//	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column + 
-//			" with the rank of " + this.rank);
+	
+	//	console.log("Moving User " + direction + " from row " + this.row + " column " + this.column +
+	//			" with the rank of " + this.rank);
 	if(direction == "left") {
 		if(this.column < 1) {
 			console.log("Can't move " + direction + " anymore");
@@ -303,15 +371,48 @@ User.prototype.move = function(direction) {
 		}
 	} else if (direction == "right") {
 		if(this.column > 7) {
-//			console.log("Can't move " + direction + " anymore");
+			//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row][this.column+1] = this;
 			this.column += 1;
 		}
-	} else if(direction == "Knight-1Right") { 
+		
+	} else if (direction == "left2"){
+		if(this.column < 2 ){
+			console.log("Can't move " + direction + " anymore");
+		} else {
+			this.board[this.row][this.column] = "0";
+			this.board[this.row][this.column-2] = this;
+			this.column -= 2;
+		}
+	} else if (direction == "right2"){
 		if(this.column > 6) {
-//			console.log("Can't move " + direction + " anymore");
+			//			console.log("Can't move " + direction + " anymore");
+		} else {
+			this.board[this.row][this.column] = "0";
+			this.board[this.row][this.column+2] = this;
+			this.column += 2;
+		}
+	} else if (direction == "left3"){
+		if(this.column < 3 ){
+			console.log("Can't move " + direction + " anymore");
+		} else {
+			this.board[this.row][this.column] = "0";
+			this.board[this.row][this.column-3] = this;
+			this.column -= 3;
+		}
+	} else if (direction == "right3"){
+		if(this.column > 5) {
+			//			console.log("Can't move " + direction + " anymore");
+		} else {
+			this.board[this.row][this.column] = "0";
+			this.board[this.row][this.column+3] = this;
+			this.column += 3 ;
+		}
+	} else if(direction == "Knight-1Right") {
+		if(this.column > 6) {
+			//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 2][this.column + 1] = this;
@@ -320,38 +421,38 @@ User.prototype.move = function(direction) {
 		}
 	} else if(direction == "Knight-1Left") {
 		if(this.column < 1) {
-//			console.log("Can't move " + direction + " anymore");
+			//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 2][this.column - 1] = this;
 			this.row += 2;
 			this.column -= 1;
 		}
-	} else if(direction == "Knight-2Right") { 
+	} else if(direction == "Knight-2Right") {
 		if(this.column > 5) {
-//			console.log("Can't move " + direction + " anymore");
+			//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 1][this.column + 2] = this;
 			this.row += 1;
 			this.column += 2;
 		}
-
+		
 	} else if(direction == "Knight-2Left") {
 		if(this.column < 2) {
-	//		console.log("Can't move " + direction + " anymore");
+			//		console.log("Can't move " + direction + " anymore");
 		} else {
-		//	console.log(this.board[this.row][this.column]);
+			//	console.log(this.board[this.row][this.column]);
 			this.board[this.row][this.column] = "0";
-	//		console.log(this.board[this.row][this.column]);
+			//		console.log(this.board[this.row][this.column]);
 			this.board[this.row + 1][this.column - 2] = this;
 			this.row += 1;
 			this.column -2;
 		}
-
+		
 	} else if(direction == "DLeft") {
 		if(this.column < 1) {
-//			console.log("Can't move " + direction + " anymore");	
+			//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 1][this.column - 1] = this;
@@ -360,7 +461,7 @@ User.prototype.move = function(direction) {
 		}
 	} else if(direction =="DRight") {
 		if(this.column > 6) {
-	//		console.log("Can't move " + direction + " anymore");			
+			//		console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row + 1][this.column + 1] = this;
@@ -368,39 +469,60 @@ User.prototype.move = function(direction) {
 			this.column += 1;
 		}
 	} else {
-	//	console.log("invalid direction");
+		//	console.log("invalid direction");
 	}
 	return this.column;
 	console.log("User is now at row " + this.row + " column " + this.column);
 	//console.log(this.board[this.row][this.column].letter);
-
+	
 	//
-
+	
 }
-
+/** Checks if piece can be eaten **/
 User.prototype.eat = function(piece) {
-	//console.log("piece: " + piece + " score: " + score + " rank: "+ this.rank);
-	if(piece == this.rank) {
-		this.count++;
-		if(this.count == 1) {
-			this.count = 0;
-			this.player.setRank(this.rank++);
-			// Giving Player a multipler from their rank for additional points when taking a piece. 
-			//TODO: implement game speed multipler for taking a piece.  
-			this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );
+	//console.log("user: " + this.rank + " color: " + this.color);
+	//console.log("piece: "  + " rank: "+ piece.rank + " color: " + piece.color);
+	//console.log(this.color + " " + piece.color);
+	if(piece.color == this.color) {
+		//this.print();
+		//console.log("same color");
+		//return false;
+		alert("DEAD because collided with same color " + piece.color);
+		//TODO: Add new modal window showing score and letting Player select to end or start again. 
+		this.game.stop();
+	} else if(piece.rank > this.rank) {
+		//this.print();
+		//return false;
+		alert("DEAD because higher rank " + piece.letter);
+		//TODO: Add new modal window showing score and letting Player select to end or start again. 
+		this.game.stop();
+	} else {
+		console.log("eat success");
+		if(piece.rank == this.rank) {
+			this.count++;
+			if(this.count == 10) {
+				alert("Rank Up");
+				this.count = 0;
+				this.player.setRank(this.rank++);
+				// Giving Player a multipler from their rank for additional points when taking a piece.
+				//TODO: implement game speed multipler for taking a piece.
+				//this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );
+			}
 		}
+		//return true;
+		this.score += piece + 1;
 	}
-	this.score += piece + 1;
 }
+
 
 User.prototype.toString = function() {
-//	return this.letter + "(" + this.row + ", " + this.column + ")";
+	return this.letter + "(" + this.row + ", " + this.column + ")";
 }
 
 
 /*
- * This function is to control the score of the game. 
- */
+* This function is to control the score of the game.
+*/
 function ScoreEngine(game){
 	this.game = gameEngine;
 }
@@ -408,20 +530,43 @@ function ScoreEngine(game){
 ScoreEngine.prototype.getScore = function(){
 	return score;
 }
-// Increase the score of the game. 
+// Increase the score of the game.
 ScoreEngine.prototype.IncreaseScore = function(points){
 	score += points;
 }
 
-//Increase the score of the game. 
+//Increase the score of the game.
 ScoreEngine.prototype.setSpeed = function(gameSpeed){
-	this.gameSpeed = gameSpeed;
+	this.gameSpeed = gameSpeed;	
 }
 
 ScoreEngine.prototype.getHighScore = function(){
 	/*
-	 * TODO: Need to implenent DB or something to save a high score. 
-	 * For now just hit keyboard for a high score.
-	 */
-	return 1032402;
-}//end ScoreEngine
+	* TODO: Need to implenent DB or something to save a high score.
+	* For now just hit keyboard for a high score.
+	*/
+	if(score > highScore){
+		//TODO: Notify the user in some fashion that they have passed the previous high score.
+	}
+	return 2000;
+}
+
+ScoreEngine.prototype.captures = function(captured){
+	this.captured += captured;
+}
+
+ScoreEngine.prototype.getCaptures = function(){
+	return this.captured;
+}
+
+ScoreEngine.prototype.captures = function(captured){
+	this.captured += captured;
+}
+
+ScoreEngine.prototype.getCaptures = function(){
+	return this.captured;
+}
+
+
+//end ScoreEngine
+
