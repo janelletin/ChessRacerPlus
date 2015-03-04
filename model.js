@@ -500,7 +500,7 @@ User.prototype.eat = function(piece) {
 		console.log("eat success");
 		if(piece.rank == this.rank) {
 			this.count++;
-			if(this.count == 2) {
+			if(this.count == 10) {
 			    //		alert("Rank Up");                
 			    this.count = 0;
 			    this.rank++;
