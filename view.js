@@ -13,7 +13,7 @@ var clockBounsCount = 0;
 var leftClockMoving = true;
 var rightClockMoving = false;
 
-
+var STARTING_POSITION = 0;
 /**
 *
 * The view of the game board. This class handles the pieces, player, gameboard, and other animations
@@ -73,6 +73,7 @@ GameBoard.prototype.update = function () {
     }
 
     this.frameInterval = Math.floor(this.elapsedTime / GAME_SPEED);
+    current_board_frame_index = this.frameInterval;
     Entity.prototype.update.call(this);
 }
 
@@ -88,8 +89,8 @@ GameBoard.prototype.draw = function (ctx) {
     ctx.drawImage(backgroundClock, 260, 30); // Chess Clock on table!
 
     // Draw the board
-    ctx.drawImage(this.frames[0],
-              //this.frames[this.frameInterval],
+    ctx.drawImage(//this.frames[0],
+              this.frames[this.frameInterval],
               this.x, this.y,
               this.frameWidth, this.frameHeight);
 
@@ -102,19 +103,22 @@ GameBoard.prototype.draw = function (ctx) {
     //ctx.fillText(this.userScoreOnBoard.getScore(),75,100,150);
     
     //Draw Rectangle for Player Score to live in. 
+
+    /**
     ctx.rect(55, 63, 170, 50);
     ctx.fillStyle="blue";
     ctx.fill(); 
     ctx.font = "36px arial";
     ctx.fillStyle = '#00ff00';
-    
+    **/
     //Draw Rectangle for High Score to live in. 
+    /**
     ctx.rect(592, 63, 170, 50);
     ctx.stroke();
     //Score Headers
     ctx.fillText("Player Score",55,50, 170); 
     ctx.fillText("High Score",592,50, 170); 
-    
+    **/
     //Load the scores.
     ctx.fillText(this.userScoreOnBoard.getHighScore(),602,100,150);   
     //TODO: High Score is loading every time and is a waste. it should only load once and be done. 

@@ -26,8 +26,8 @@ function BoardC(gameEngine) {
 
 BoardC.prototype.init = function(player) {
 	// Creates and places the user
-	this.User = new User(this.game, this, 0, 4, player);
-	this.Board[0][4] = this.User; // User
+    this.User = new User(this.game, this, 0, STARTING_POSITION, player);
+    this.Board[0][STARTING_POSITION] = this.User; // User
 	this.Pieces.push(this.User);
 	//var test = new Pawn(this.game, "pawn", 3, 5, "white");
 	//this.Pieces.push(test);
@@ -207,7 +207,7 @@ BoardC.prototype.update = function() {
 				
 				var index = this.Pieces.indexOf(this.Board[1][j]);
 				if (index > -1) {
-					console.log(this.Board[1][j].color + this.Board[1][j].rank + " trying to eat");
+				//	console.log(this.Board[1][j].color + this.Board[1][j].rank + " trying to eat");
 					var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
 					//console.log(indexOfEnt);
 					if(indexOfEnt > -1) {
@@ -500,10 +500,11 @@ User.prototype.eat = function(piece) {
 		console.log("eat success");
 		if(piece.rank == this.rank) {
 			this.count++;
-			if(this.count == 10) {
-				alert("Rank Up");
-				this.count = 0;
-				this.player.setRank(this.rank++);
+			if(this.count == 2) {
+			    //		alert("Rank Up");                
+			    this.count = 0;
+			    this.rank++;
+				this.player.setRank(this.rank);
 				// Giving Player a multipler from their rank for additional points when taking a piece.
 				//TODO: implement game speed multipler for taking a piece.
 				//this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );

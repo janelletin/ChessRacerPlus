@@ -13,7 +13,7 @@ function Player(game, boardC, visualBoard) {
     var canvasPartition = CANVAS_WIDTH / 8;
     this.separationLines = [canvasPartition + 15, canvasPartition * 2 + 15, canvasPartition * 3 + 9, canvasPartition * 4 + 5, canvasPartition * 5, canvasPartition * 6 - 5, CANVAS_WIDTH - this.frameWidth - 20, CANVAS_WIDTH];
 
-    this.x = this.separationLines[6];//(CANVAS_WIDTH / 8) * 4 + 5;
+    this.x = 15;// this.separationLines[15];//(CANVAS_WIDTH / 8) * 4 + 5;
     this.y = CANVAS_HEIGHT - this.frameHeight - 15;
 
     this.horizontalSpeed = 1.6300445;
@@ -27,9 +27,9 @@ function Player(game, boardC, visualBoard) {
     this.inSquare = true;
     this.specialActivated = false;
     this.specialMovesLeft = 0;
-    this.newRank = 1;
-    this.setRank(1);
-    this.column = 7;
+    this.newRank = 0;
+    //this.setRank(1);
+    this.column = STARTING_POSITION;
     Entity.call(this, game, this.x, this.y);
 
 }
@@ -39,18 +39,18 @@ Player.prototype.constructor = Player;
 
 Player.prototype.setRank = function (the_rank) {
     if (the_rank >= 0 && the_rank < 6) {
+        console.log("new rank" + the_rank);
         this.newRank = the_rank;
     }
 }
 
 Player.prototype.update = function () {
-    frameInterval = this.visualBoard.frameInterval;
-    var newFrame = false;
     // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board
+    frameInterval = current_board_frame_index;
     if ((frameInterval >= 0 && frameInterval <= 2) || (frameInterval >= 18 && frameInterval <= 20)) {
-        newFrame = true;
         // Handle Player Ranking Up
         if (this.inSquare && this.rank != this.newRank) {
+            console.log("new rank");
             this.specialActivated = false;
             this.specialMovesLeft = 0;
             this.rank = this.newRank;
@@ -60,9 +60,6 @@ Player.prototype.update = function () {
                     break;
                 case 1: // Knight
                     this.spriteSheet = ASSET_MANAGER.getAsset("./img/knight.png");
-                    this.specialActivated = true;
-                    this.specialMovesLeft = 2;
-                    this.speedIncreasedBy = .5;
                     break;
                 case 2: // Bishop
                     this.spriteSheet = ASSET_MANAGER.getAsset("./img/bishop.png");
@@ -79,25 +76,22 @@ Player.prototype.update = function () {
             }
         }
  
-        var wasStopped = false;
         // Handle animation starting to move right or left
         if (this.game.left) {
             if (this.inSquare) {
                 this.inSquare = false;
-                this.movingLeft = true;
-                this.movingRight = false;
-                this.game.right = false;
                 this.game.left = false;
-                wasStopped = true;
+                this.movingLeft = true;
+                this.game.right = false;
+                this.movingRight = false;                 
             }
         } else if (this.game.right) {
             if (this.inSquare) {
                 this.inSquare = false;
+                this.game.right = false;      
                 this.movingRight = true;
-                this.movingLeft = false;
-                this.game.right = false;
                 this.game.left = false;
-                wasStopped = true;
+                this.movingLeft = false;                
             }
         }
     }
@@ -106,13 +100,16 @@ Player.prototype.update = function () {
             this.updatePawn();
             break;
         case 1: // Knight
-            this.updateKnight(wasStopped);
+            this.updatePawn();
             break;
         case 2: // Bishop
+            this.updatePawn();
             break;
         case 3: // Rook
+            this.updatePawn();
             break;
         case 4: // Queen
+            this.updatePawn();
             break;
     }
 
@@ -125,7 +122,7 @@ Player.prototype.updatePawn = function () {
     // Check Bounds
     this.checkLeftBounds();
     this.checkRightBounds();
-
+    
     // Move Pawn
     if (this.movingLeft) {
         this.x -= this.horizontalSpeed * this.speedIncreasedBy;
@@ -133,7 +130,7 @@ Player.prototype.updatePawn = function () {
         this.x += this.horizontalSpeed * this.speedIncreasedBy;
     }
 
-    var newX = this.updateCheckIfNewSpace();
+    var retX = this.checkIfNewSpace();
     
     // Handle what happends when in a new space
     if (this.inSquare) {
@@ -142,13 +139,13 @@ Player.prototype.updatePawn = function () {
             this.game.left = false;
             this.movingRight = false;
             this.game.right = false;
-            this.x = newX;
+            this.x = retX;
         } else if (this.movingRight) {
             this.movingRight = false;
             this.game.right = false;
             this.movingLeft = false;
             this.game.left = false;
-            this.x = newX;
+            this.x = retX;
         }
     }
 }
@@ -209,19 +206,15 @@ Player.prototype.updateKnight = function (wasStopped) {
             if (!this.specialActivated && this.specialMovesLeft === 0) {
                 this.movingLeft = false;
                 this.game.left = false;
-                this.x = newX;
+                this.x = ret.returnX;
                 this.specialActivated = true;
-                this.specialMovesLeft = 2;
-                this.speedIncreasedBy = .5;
             } 
         } else if (this.movingRight) {
             if (!this.specialActivated && this.specialMovesLeft === 0) {
                 this.movingRight = false;
                 this.game.right = false;
-                this.x = newX;
+                this.x = ret.returnX;
                 this.specialActivated = true;
-                this.specialMovesLeft = 2;
-                this.speedIncreasedBy = .5;
             }
         }
     }
@@ -251,285 +244,27 @@ Player.prototype.checkRightBounds = function () {
 }
 
 
-Player.prototype.updateCheckIfNewSpace = function () {
+Player.prototype.checkIfNewSpace = function () {
+    var offset = 2;
     var bc = this.board.User.column;
-    var ret = { returnX: 0,
-        newSquare: false
-    }
-    // Moving Left
     if (this.movingLeft) {
-        // Check if in the center of a space
-        if (bc > 0 && (this.x >= this.separationLines[bc - 1] && this.x < this.separationLines[bc - 1] + 2)) {
+        if (bc > 0 && this.x >= this.separationLines[bc - 1] && this.x < this.separationLines[bc - 1] + offset) {
             this.inSquare = true;
         }
-        // Check if in new space and update board model
-        if (bc > 0 && this.x < this.separationLines[bc - 1] && bc === this.column) {
-            ret.newSquare = true;
+        if (bc > 0 && this.x < this.separationLines[bc - 1]) {
+            this.board.User.move("left");
+            this.inSquare = false;
         }
-        returnX = this.separationLines[bc - 1] + 1;
-        // Moving Right
+        return this.separationLines[bc - 1];
     } else if (this.movingRight) {
-        // Check if in the center of a space
-        if (bc < 7 && (this.x > this.separationLines[bc - 1] - 2 && this.x <= this.separationLines[bc - 1])) {
+        if (bc < 7 && (this.x > this.separationLines[bc - 1] - offset && this.x <= this.separationLines[bc - 1])) {
             this.inSquare = true;
         }
-        // Check if in new space and update board model
-        if (bc < 7 && this.x + this.frameWidth > this.separationLines[bc] && bc === this.column) {
-            ret.newSquare = true;
+        if (bc < 7 && this.x + this.frameWidth > this.separationLines[bc]) {
+            this.board.User.move("right");
+            this.inSquare = false;
         }
-        returnX = this.separationLines[bc - 1];
-    }
-    // If in the center of the space update speical moves
-    return ret;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Player.prototype.updateNewFrameInterval = function (frameInterval) {
-    // Check to see if the player needs to stop due to reaching the edge, left or edge right of the board
-    if ((frameInterval >= 0 && frameInterval <= 2) || (frameInterval >= 18 && frameInterval <= 20)) {
-
-        // Handle Player Ranking Up
-        if (this.inSquare && this.rank != this.newRank) {
-            this.rank = this.newRank;
-            switch (this.rank) {
-                case 0: // Pawn
-                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/pawn.png");
-                    break;
-                case 1: // Knight
-                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/knight.png");
-                    break;
-                case 2: // Bishop
-                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/bishop.png");
-                    break;
-                case 3: // Rook
-                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/rook.png");
-                    break;
-                case 4: // Queen
-                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/queen.png");
-                    break;
-                case 5: // King
-                    this.spriteSheet = ASSET_MANAGER.getAsset("./img/king.png");
-                    break;
-            }
-            this.specialActivated = false;
-            this.specialMovesLeft = 0;
-        }
-
-        // Handle animation starting to move right or left
-        if (this.game.left) {
-            if (this.inSquare) {
-                this.inSquare = false;
-                this.movingLeft = true;
-                this.movingRight = false;
-                this.game.right = false;
-                this.game.left = false;
-            }
-        } else if (this.game.right) {
-            if (this.inSquare) {
-                this.inSquare = false;
-                this.movingRight = true;
-                this.movingLeft = false;
-                this.game.right = false;
-                this.game.left = false;
-            }
-        }
-
-        
-        // Handle Special Double Tap Activation
-        if (this.game.doubleTap && this.specialMovesLeft === 0 && !this.specialActivated) {
-            this.game.doubleTap = false;
-            switch (this.rank) {
-                case 2: // Bishop
-                    break;
-                case 3: // Rook
-                    var c = this.board.User.column;
-                    if ((c <= 7 && this.movingLeft) || (c >= 0 && this.movingRight)) {
-                        this.specialActivated = true;
-                        this.specialMovesLeft = 3;
-                        this.speedIncreasedBy = 3;
-                        this.game.doubleTap = false;
-                    } else if ((c === 2 && this.movingLeft) || (c === 5 && this.movingRight)) {
-                        this.specialActivated = true;
-                        this.specialMovesLeft = 2;
-                        this.speedIncreasedBy = 2;
-                        this.game.doubleTap = false;
-                    }
-                    break;
-                case 4: // Queen
-                    this.specialActivated = true;
-                    this.specialMovesLeft = 3;
-                    break;
-            }
-        }
-    }
-}
-
-Player.prototype.updateCheckBounds = function () {
-    // Left Edge
-    if (this.x < 15 || (this.x === 15 && this.movingLeft)) {
-        switch (this.rank) {
-            case 0: // Pawn
-                break;
-            case 1: // Knight
-                break;
-            case 2: // Bishop
-                this.game.right = true;
-                break;
-            case 3: // Rook
-                this.specialActivated = false;
-                this.specialMovesLeft = 0;
-                break;
-            case 4: // Queen
-                if (this.specialActivated) {
-                    this.game.right = true;
-                }
-                break;
-        }
-        this.game.left = false;
-        this.movingLeft = false;
-        this.x = 15;
-        this.inSquare = true;
-        // Right Edge
-    } else if (this.x > CANVAS_WIDTH - this.frameWidth - 20 || (this.x === CANVAS_WIDTH - this.frameWidth - 20 && this.movingRight)) {
-        switch (this.rank) {
-            case 0: // Pawn
-                break;
-            case 1: // Knight
-                break;
-            case 2: // Bishop
-                this.game.left = true;
-                break;
-            case 3: // Rook
-                this.specialActivated = false;
-                this.specialMovesLeft = 0;
-                break;
-            case 4: // Queen
-                if (this.specialActivated) {
-                    this.game.left = true;
-                }
-                break;
-        }
-        this.game.right = false;
-        this.movingRight = false;
-        this.x = CANVAS_WIDTH - this.frameWidth - 20;
-        this.inSquare = true;
-    }
-}
-
-Player.prototype.updateMovePlayer = function () {
-    // Move the player left or right based on state of game ie this.game.left == true or this.game.right == true
-    if (this.movingLeft) {
-        this.x -= this.horizontalSpeed * this.speedIncreasedBy;
-    } else if (this.movingRight) {
-        this.x += this.horizontalSpeed * this.speedIncreasedBy;
-    }
-}
-
-
-
-Player.prototype.updateNewSpace = function (newX) {
-    // Handle what happends when in a new space
-    if (this.movingLeft && this.inSquare) {
-        switch (this.rank) {
-            case 0: // Pawn
-                this.movingLeft = false;
-                this.game.left = false;
-                this.movingRight = false;
-                this.game.right = false;
-                this.x = newX;
-                break;
-            case 1: // Knight
-                this.movingLeft = false;
-                this.game.left = false;
-                this.movingRight = false;
-                this.game.right = false;
-                this.x = newX;
-                break;
-            case 2: // Bishop
-                // Bishop nothing needs to Happen
-                break;
-            case 3: // Rook
-                if (!this.specialActivated) {
-                    this.movingLeft = false;
-                    this.game.left = false;
-                    this.movingRight = false;
-                    this.game.right = false;
-                    this.x = newX;
-                }
-                break;
-            case 4: // Queen
-                if (!this.specialActivated) {
-                    this.movingLeft = false;
-                    this.game.left = false;
-                    this.movingRight = false;
-                    this.game.right = false;
-                    this.x = newX;
-                }
-                break;
-        }
-    } else if (this.movingRight && this.inSquare) {
-        switch (this.rank) {
-            case 0: // Pawn
-                this.movingRight = false;
-                this.game.right = false;
-                this.movingLeft = false;
-                this.game.left = false;
-                this.x = newX;
-                break;
-            case 1: // Knight
-                this.movingRight = false;
-                this.game.right = false;
-                this.movingLeft = false;
-                this.game.left = false;
-                this.x = newX;
-                break;
-            case 2: // Bishop
-                // Bishop nothing needs to happen
-                break;
-            case 3: // Rook
-                if (!this.specialActivated) {
-                    this.movingRight = false;
-                    this.game.right = false;
-                    this.movingLeft = false;
-                    this.game.left = false;
-                    this.x = newX;
-                }
-                break;
-            case 4: // Queen
-                if (!this.specialActivated) {
-                    this.movingRight = false;
-                    this.game.right = false;
-                    this.movingLeft = false;
-                    this.game.left = false;
-                    this.x = newX;
-                }
-                break;
-        }
+        return this.separationLines[bc - 1];
     }
 }
 

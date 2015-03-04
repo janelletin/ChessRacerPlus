@@ -87,7 +87,6 @@ ASSET_MANAGER.downloadAll(function () {
 	boardC = new BoardC(gameEngine);
 	var gb = new GameBoard(gameEngine, boardC);
 	var pl = new Player(gameEngine, boardC, gb);
-
 	gameEngine.addEntity(gb);
 	gameEngine.addEntity(pl);
 	boardC.init(pl);
