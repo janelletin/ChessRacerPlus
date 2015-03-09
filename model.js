@@ -18,8 +18,11 @@ function BoardC(gameEngine) {
 			this.Board[i][j]=0;
 		}
 	}
+	this.count = 0;
+	this.chance = ["pawn", "queen", "rook", "rook" , "pawn", "pawn", "bishop", "bishop", "knight", "knight"];
 	//this.init();
 	//console.log(this.Board);
+	this.kingChance = 30;
 }
 
 
@@ -34,6 +37,17 @@ BoardC.prototype.init = function(player) {
 	console.log("initialized board model");
 	//this.test();
 }
+
+BoardC.prototype.rand = function() {
+	var test = [0,0,0,0,0,0,0,0,0,0];
+	for(var i = 0; i < 1000; i++) {
+		//var temp = Math.floor(Math.random() * (11 - 1)) + 1;
+		var temp = Math.round(Math.random()); 
+		test[temp-1]+= 1;
+	}
+	console.log(test);
+}
+
 /** Used to test the eat function **/
 BoardC.prototype.test = function() {
 	var pass = 0;
@@ -119,10 +133,14 @@ BoardC.prototype.print = function() {
 BoardC.prototype.newLine = function() { // Adds a new line
 	// number of new pieces to add 1-3
 	var numOfPieces = Math.floor(Math.random() * (4 - 1)) + 1 // Mozilla math.random get Int
-	//console.log("adding : " + numOfPieces);
+	console.log("adding : " + numOfPieces);
 	var piecesLoc = new Array(); // An array of the pieces location
 	//console.log(pieces.indexOf(0));
 	//console.log(pieces.indexOf(1));
+	
+	if(this.count == this.kingChance) {
+		numOfPieces++; // finds a location for King
+	}
 	
 	// Randomly assigns locations for the pieces
 	for(var i = 0; i < numOfPieces; i++) {
@@ -134,32 +152,22 @@ BoardC.prototype.newLine = function() { // Adds a new line
 		}
 		piecesLoc.push(tempLoc);
 	}
+	if(this.count == this.kingChance) {
+		numOfPieces--; // subtracts so it won't randomize the king
+	}
 	//console.log(piecesLoc);
 	//put the pieces into the board
-	for(var i = 0; i < piecesLoc.length; i++) {
+	for(var i = 0; i < numOfPieces; i++) {
 		var color;
-		var a = Math.round(Math.random()); // used to randomize black and white
-		if( a == 0) {
-			color = "white";
+		if(this.User.rank == 4) {
+			color = this.getColor(30,70);
+		}else if(this.User.rank == 3) {
+			color = this.getColor(40,60);
 		} else {
-			color = "black";
+			color = this.getColor(50,50);
 		}
-		var type;
-		var b = Math.floor(Math.random() * (6));
-		//console.log(b);
-		if(b == 0) {
-			type = "pawn";
-		} else if(b == 1) {
-			type = "pawn"; /**CHANGE TO KNIGHT WHEN IMAGE IS READY **/
-		} else if(b == 2) {
-			type = "bishop";
-		} else if(b == 3) {
-			type = "rook";
-		} else if(b == 4) {
-			type = "queen";
-		} else if(b == 5) {
-			type = "king";
-		}
+		var b = this.getRandInt(10,1);
+		var type = this.chance[b-1];
 		//console.log("model " + type);
 		//console.log(color + " " + a);
 		var temp = new Piece(this.game, type, piecesLoc[i], color);
@@ -170,10 +178,34 @@ BoardC.prototype.newLine = function() { // Adds a new line
 		//this.game.addEntity(temp);
 		
 	}
+	//insert king and reset count
+	if(this.count == this.kingChance) {
+		console.log(piecesLoc);
+		var temp = new Piece(this.game, "king", piecesLoc[numOfPieces], "black");
+		var p = new PieceC(this.game, this, 11, piecesLoc[numOfPieces], "king", "black", temp);
+		this.count = 0;
+	}
 	
 }
 
+// Returns a color taking into account the percent of black and white (adding up to 100)
+BoardC.prototype.getColor = function (black, white) {
+	var temp = this.getRandInt(10, 1); // Gets a random int from 1-10
+	if(temp <= white/10) { // if 1-white/10 then white
+		return "white";
+	} else { // else white/10 to 10 then black
+		return("black");
+	}
+}
+
+//Code from Mozilla
+// Returns a random integer between min (included) and max (included)
+BoardC.prototype.getRandInt = function (min, max) {
+	return Math.round(Math.random() * (max+1 - min)) + min;
+}
+
 BoardC.prototype.update = function() {
+	this.count++; // Adds to row count
 	// Moves the pieces
 	for(var p = 0; p < this.Pieces.length; p++) {
 		if(this.Pieces[p] != this.User) {
@@ -343,7 +375,9 @@ PieceC.prototype.toString = function() {
 function User(game, board, row, column, player) {
 	this.game = game;
 	this.board = board.Board;
+	this.boardC = board;
 	this.letter = "U";
+	this.type = "pawn";
 	this.player = player;
 	this.rank = 0;
 	this.row = row;
@@ -504,6 +538,8 @@ User.prototype.eat = function(piece) {
 			    //		alert("Rank Up");                
 			    this.count = 0;
 			    this.rank++;
+				this.type = this.rankToType(this.rank); // changes the user rank
+				this.boardC.chance[0] = this.type; // changes the change percentage
 				this.player.setRank(this.rank);
 				// Giving Player a multipler from their rank for additional points when taking a piece.
 				//TODO: implement game speed multipler for taking a piece.
@@ -520,6 +556,22 @@ User.prototype.toString = function() {
 	return this.letter + "(" + this.row + ", " + this.column + ")";
 }
 
+//Returns a string of the type from the int rank
+User.prototype.rankToType = function (rank) {
+	if(rank == 0) {
+		return "pawn";
+	} else if(rank == 1) {
+		return "knight";
+	} else if(rank == 2) {
+		return "bishop";
+	} else if(rank == 3) {
+		return "rook";
+	} else if(rank == 4) {
+		return "queen";
+	} else if(rank == 5) {
+		return "king";	
+	}
+}
 
 /*
 * This function is to control the score of the game.
