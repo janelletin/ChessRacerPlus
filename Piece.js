@@ -13,11 +13,8 @@ var SCALES = [[.2, 0.20125, 0.2025, 0.20375, 0.205, 0.20625, 0.2075, 0.20875, 0.
                 [.55, 0.555, 0.56, 0.565, 0.57, 0.575, 0.58, 0.585, 0.59, 0.595, 0.6, 0.605, 0.61, 0.615, 0.62, 0.625, 0.63, 0.635, 0.64, 0.645],
                 [.65, 0.65625, 0.6625, 0.66875, 0.675, 0.68125, 0.6875, 0.69375, 0.7, 0.70625, 0.7125, 0.71875, 0.725, 0.73125, 0.7375, 0.74375, 0.75, 0.75625, 0.7625, 0.76875],
                 [.775, 0.78125, 0.7875, 0.79375, 0.8, 0.80625, 0.8125, 0.81875, 0.825, 0.83125, 0.8375, 0.84375, 0.85, 0.85625, 0.8625, 0.86875, 0.875, 0.88125, 0.8875, 0.89375],
-                [0],
-                [.9, 0.90625, 0.9125, 0.91875, 0.925, 0.93125, 0.9375, 0.94375, 0.95, 0.95625, 0.9625, 0.96875, 0.975, 0.98125, 0.9875, 0.99375, 1, 1.00625, 1.0125, 1.01875]];
-                //[0],
-                //[1.025, 1.03125, 1.0375, 1.04375, 1.05, 1.05625, 1.0625, 1.06875, 1.075, 1.08125, 1.0875, 1.09375, 1.1, 1.10625, 1.1125, 1.11875, 1.125, 1.13125, 1.1375, 1.14375]];
-                //[0]];
+                [.9, 0.90625, 0.9125, 0.91875, 0.925, 0.93125, 0.9375, 0.94375, 0.95, 0.95625, 0.9625, 0.96875, 0.975, 0.98125, 0.9875, 0.99375, 1, 1.00625, 1.0125, 1.01875],
+                [1.025, 1.03125, 1.0375, 1.04375, 1.05, 1.05625, 1.0625, 1.06875, 1.075, 1.08125, 1.0875, 1.09375, 1.1, 1.10625, 1.1125, 1.11875, 1.125, 1.13125, 1.1375, 1.14375]];
 
 var Y_POSITIONS = [[11, 11.8, 12.6, 13.4, 14.2, 15, 15.8, 16.6, 17.4, 18.2, 19, 19.8, 20.6, 21.4, 22.2, 23, 23.8, 24.6, 25.4, 26.2],
                     [27, 28.1, 29.2, 30.3, 31.4, 32.5, 33.6, 34.7, 35.8, 36.9, 38, 39.1, 40.2, 41.3, 42.4, 43.5, 44.6, 45.7, 46.8, 47.9],
@@ -31,11 +28,8 @@ var Y_POSITIONS = [[11, 11.8, 12.6, 13.4, 14.2, 15, 15.8, 16.6, 17.4, 18.2, 19, 
                     [282, 285.05, 288.1, 291.15, 294.2, 297.25, 300.3, 303.35, 306.4, 309.45, 312.5, 315.55, 318.6, 321.65, 324.7, 327.75, 330.8, 333.85, 336.9, 339.95],
                     [343, 346.8, 350.6, 354.4, 358.2, 362, 365.8, 369.6, 373.4, 377.2, 381, 384.8, 388.6, 392.4, 396.2, 400, 403.8, 407.6, 411.4, 415.2],
                     [419, 423.8, 428.6, 433.4, 438.2, 443, 447.8, 452.6, 457.4, 462.2, 467, 471.8, 476.6, 481.4, 486.2, 491, 495.8, 500.6, 505.4, 510.2],
-                    [0],
-                    [515, 521.75, 528.5, 535.25, 542, 548.75, 555.5, 562.25, 569, 575.75, 582.5, 589.25, 596, 602.75, 609.5, 616.25, 623, 629.75, 636.5, 643.25]];
-                    //[0],
-                    //[650, 655, 660, 665, 670, 675, 685, 690, 695, 700, 705, 710, 715, 720, 725, 740, 760, 780, 820, 900]];
-                    //[0]];
+                    [515, 521.75, 528.5, 535.25, 542, 548.75, 555.5, 562.25, 569, 575.75, 582.5, 589.25, 596, 602.75, 609.5, 616.25, 623, 629.75, 636.5, 643.25],
+                    [650, 655, 660, 665, 670, 675, 685, 690, 695, 700, 705, 710, 715, 720, 725, 740, 760, 780, 820, 900]];
 
 function Piece(game, piece_rank, starting_column, color) {
 
@@ -57,7 +51,7 @@ function Piece(game, piece_rank, starting_column, color) {
     // Used to keep track of the frame the board is in
     this.totalTime = GAME_SPEED * TOTAL_FRAMES / 2;
     this.elapsedTime = 0;
-
+    this.radius = 35;
     Entity.call(this, game, this.x, this.y);
 }
 
@@ -66,7 +60,7 @@ Piece.prototype.constructor = Piece;
 
 
 Piece.prototype.update = function () {
-    if (this.row > 11) {
+    if (this.row > 12) {
         return;
     }
 
@@ -117,75 +111,32 @@ Piece.prototype.update = function () {
     Entity.prototype.update.call(this);
 }
 
+
+
 Piece.prototype.draw = function (ctx) {
 
-    //    this.scales = [.2, .25, .3, .35, .45, .65, .9];
-    //    
-    /**
-    var s = .2;
-    var x1 = 418.5;
-    var fH = PIECE_FRAME_HEIGHT * s;
-    var fW = PIECE_FRAME_WIDTH * s;
-    var yadd = 11;
-    var y1 = CANVAS_HEIGHT - BOARD_HEIGHT - fH;
-    console.log(y1 + yadd);
-    ctx.drawImage(this.spriteSheet, x1, y1 + yadd, fW, fH);
-
-    s = .25;
-    x1 = 418.5;
-    var fH = PIECE_FRAME_HEIGHT * s;
-    var fW = PIECE_FRAME_WIDTH * s;
-    var yadd = 49;
-    var y1 = CANVAS_HEIGHT - BOARD_HEIGHT - fH;
-    ctx.drawImage(this.spriteSheet, x1, y1 + yadd, fW, fH);
-
-    s = .3;
-    x1 = 416.125;
-    var fH = PIECE_FRAME_HEIGHT * s;
-    var fW = PIECE_FRAME_WIDTH * s;
-    var yadd = 97;
-    var y1 = CANVAS_HEIGHT - BOARD_HEIGHT - fH;
-    ctx.drawImage(this.spriteSheet, x1, y1 + yadd, fW, fH);
-
-    s = .35;
-    x1 = 416.75;
-    var fH = PIECE_FRAME_HEIGHT * s;
-    var fW = PIECE_FRAME_WIDTH * s;
-    var yadd = 157;
-    var y1 = CANVAS_HEIGHT - BOARD_HEIGHT - fH;
-    ctx.drawImage(this.spriteSheet, x1, y1 + yadd, fW, fH);
-
-    s = .45;
-    x1 = 415.375;
-    var fH = PIECE_FRAME_HEIGHT * s;
-    var fW = PIECE_FRAME_WIDTH * s;
-    var yadd = 230;
-    var y1 = CANVAS_HEIGHT - BOARD_HEIGHT - fH;
-    ctx.drawImage(this.spriteSheet, x1, y1 + yadd, fW, fH);
-
-    s = .65;
-    x1 = 414.2;
-    var fH = PIECE_FRAME_HEIGHT * s;
-    var fW = PIECE_FRAME_WIDTH * s;
-    var yadd = 343;
-    var y1 = CANVAS_HEIGHT - BOARD_HEIGHT - fH;
-    ctx.drawImage(this.spriteSheet, x1, y1 + yadd, fW, fH);
-
-    s = .9;
-    x1 = 405;
-    var fH = PIECE_FRAME_HEIGHT * s;
-    var fW = PIECE_FRAME_WIDTH * s;
-    var yadd = 515;
-    var y1 = CANVAS_HEIGHT - BOARD_HEIGHT - fH;
-    ctx.drawImage(this.spriteSheet, x1, y1 + yadd, fW, fH);
-    
-    **/
-    if (this.row > 11) {
+    if (this.row > 12) {
         return;
     }
-
     ctx.drawImage(this.spriteSheet, this.x, this.y,
-                  this.frameWidth, this.frameHeight);
+              this.frameWidth, this.frameHeight);
+    if (debugging) {
+        ctx.beginPath();
+        ctx.fillStyle = "Green";
+        var r = this.radius * this.scale;
+      //  console.log(this.scale);
+        ctx.arc(this.x + (this.frameWidth / 2), this.y + this.frameHeight - r, r, 0, Math.PI * 2, false);
+        ctx.fill();
+        ctx.closePath();
+
+
+        ctx.moveTo(0, this.y + this.frameHeight);
+        ctx.lineTo(CANVAS_WIDTH, this.y + this.frameHeight);
+        ctx.stroke();
+    }
+
+
+
     Entity.prototype.draw.call(this);
 }
 

@@ -13,7 +13,7 @@ var clockBounsCount = 0;
 var leftClockMoving = true;
 var rightClockMoving = false;
 
-var STARTING_POSITION = 0;
+var STARTING_POSITION = 4;
 /**
 *
 * The view of the game board. This class handles the pieces, player, gameboard, and other animations
