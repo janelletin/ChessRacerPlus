@@ -107,15 +107,28 @@ ASSET_MANAGER.downloadAll(function () {
 	document.getElementById("BishopButton").onclick = function () { pl.setRank(2); }
 	document.getElementById("RookButton").onclick = function () { pl.setRank(3); }
 	document.getElementById("QueenButton").onclick = function () { pl.setRank(4); }
+	document.getElementById("MuteButton").onclick = function () { mute(); }
 	document.getElementById("DebugButton").onclick = function () { debugging = !debugging; }
 
-	myAudio = new Audio('FutureGladiator.mp3');
-	myAudio.addEventListener('ended', function () {
+
+	ma = new Audio('FutureGladiator.mp3');
+	ma.addEventListener('ended', function () {
 	    this.currentTime = 0;
 	    this.play();
 	}, false);
-	myAudio.play();
+	ma.play();
+	ma.muted = false;
 
 	//document.getElementById('mp3').play();
 });
 });
+
+var ma;
+
+function mute() {
+    if (ma.muted) {
+        ma.muted = false;
+    } else {
+        ma.muted = true;
+    }
+}

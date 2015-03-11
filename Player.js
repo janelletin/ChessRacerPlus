@@ -69,7 +69,7 @@ Player.prototype.update = function () {
     frameInterval = this.visualBoard.frameInterval;
     var bc = this.board.User.column;
     // Valid Changes To Movement
-    if ((frameInterval >= 0 && frameInterval <= 2) || (frameInterval >= 18 && frameInterval <= 20) &&      // Within vertical space
+    if ((frameInterval >= 0 && frameInterval <= 2) || (frameInterval >= 16 && frameInterval <= 20) &&      // Within vertical space
         (this.separationLines[bc] < this.x - this.radius && this.x + this.radius < this.separationLines[bc + 1])) {  // Within horizontal space
         if (this.inSquare && this.rank != this.newRank) {
             this.board.User.rank = this.newRank;
@@ -226,7 +226,7 @@ Player.prototype.update = function () {
     // Move
     if (this.movingLeft) {
         this.x -= this.horizontalSpeed * this.speedIncreasedBy;
-        if (this.x - this.radius < this.separationLines[bc]) {
+        if (this.x - this.radius < this.separationLines[bc] + 5) {
             this.board.User.move("left");
             this.newSquare = true;
         } else if (this.newSquare && this.x < this.separationLines[bc] + 2 + this.radius + this.separationX[bc]) {
@@ -235,7 +235,7 @@ Player.prototype.update = function () {
         }
     } else if (this.movingRight) {
         this.x += this.horizontalSpeed * this.speedIncreasedBy;
-        if (this.x + this.radius > this.separationLines[bc + 1]) {           
+        if (this.x + this.radius > this.separationLines[bc + 1] - 5) {           
             this.board.User.move("right");
             this.newSquare = true;
         } else if (this.newSquare && this.x > this.separationLines[bc] + this.radius + this.separationX[bc]) {
