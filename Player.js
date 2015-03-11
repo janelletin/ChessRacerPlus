@@ -63,7 +63,7 @@ Player.prototype.update = function () {
     frameInterval = this.visualBoard.frameInterval;
     var bc = this.board.User.column;
     // Valid Changes To Movement
-    if ((frameInterval >= 0 && frameInterval <= 4) || (frameInterval >= 16 && frameInterval <= 24) || (frameInterval >= 35 && frameInterval <= 39) &&      // Within vertical space
+    if ((frameInterval >= 0 && frameInterval <= 2) || (frameInterval >= 18 && frameInterval <= 22) || (frameInterval >= 37 && frameInterval <= 39) &&      // Within vertical space
         (this.separationLines[bc] < this.x - this.radius && this.x + this.radius < this.separationLines[bc + 1])) {  // Within horizontal space
         this.handleNewRank(bc);
         // If the player isn't in a state of moving, check to see if the player wants to move (ie has hit left or right) and handle appropriatly
