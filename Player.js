@@ -63,7 +63,7 @@ Player.prototype.update = function () {
     frameInterval = this.visualBoard.frameInterval;
     var bc = this.board.User.column;
     // Valid Changes To Movement
-    if ((frameInterval >= 0 && frameInterval <= 2) || (frameInterval >= 14 && frameInterval <= 20) &&      // Within vertical space
+    if ((frameInterval >= 0 && frameInterval <= 4) || (frameInterval >= 16 && frameInterval <= 24) || (frameInterval >= 35 && frameInterval <= 39) &&      // Within vertical space
         (this.separationLines[bc] < this.x - this.radius && this.x + this.radius < this.separationLines[bc + 1])) {  // Within horizontal space
         this.handleNewRank(bc);
         // If the player isn't in a state of moving, check to see if the player wants to move (ie has hit left or right) and handle appropriatly
@@ -84,7 +84,6 @@ Player.prototype.update = function () {
             this.movingLeft = false;
             this.game.right = false;
         } else if (this.game.specialLeft && this.specialMovesLeft === 0) {
-            console.log("Special Left");
             this.game.specialLeft = false;
             this.movingRight = false;
             this.movingLeft = true;
@@ -93,7 +92,6 @@ Player.prototype.update = function () {
             this.specialRight = false;
             this.handleSpecialLeft(bc);
         } else if (this.game.specialRight && this.specialMovesLeft === 0) {
-            console.log("Special Right");
             this.movingRight = true;
             this.movingLeft = false;
             this.game.specialRight = false;
@@ -107,7 +105,7 @@ Player.prototype.update = function () {
     if (this.movingLeft) {
         this.x -= this.horizontalSpeed;
         if (this.x - this.radius < this.separationLines[bc] + 10) {
-            this.board.User.move("left");
+            this.board.User.move("left");        
             this.newSquare = true;
 
 
@@ -117,8 +115,8 @@ Player.prototype.update = function () {
         }
     } else if (this.movingRight) {
         this.x += this.horizontalSpeed;
-        if (this.x + this.radius > this.separationLines[bc + 1] - 10) {           
-            this.board.User.move("right");
+        if (this.x + this.radius > this.separationLines[bc + 1] - 10) {
+            this.board.User.move("right");      
             this.newSquare = true;
 
 
@@ -254,6 +252,10 @@ Player.prototype.handleNewSpace = function (bc) {
             this.x = this.separationLines[bc] + this.radius + this.separationX[bc];
             break;
     }
+}
+
+Player.prototype.isTransitioning = function () {
+    return this.specialMovesLeft > 0;
 }
 
 Player.prototype.handleSpecialLeft = function (bc) {
