@@ -35,7 +35,7 @@ BoardC.prototype.init = function(player) {
 	this.Pieces.push(this.User);
 	//var test = new Pawn(this.game, "pawn", 3, 5, "white");
 	//this.Pieces.push(test);
-	console.log("initialized board model");
+	//console.log("initialized board model");
 	//this.test();
 }
 

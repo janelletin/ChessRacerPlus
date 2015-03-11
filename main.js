@@ -74,7 +74,6 @@ ASSET_MANAGER.queueDownload("./img/blackbishop.png");
 ASSET_MANAGER.queueDownload("./img/blackqueen.png");
 ASSET_MANAGER.queueDownload("./img/blackrook.png");
 ASSET_MANAGER.queueDownload("./img/blackking.png");
-ASSET_MANAGER.queueDownload("./img/broken_pawn.png");
 ASSET_MANAGER.queueDownload("./img/woodtable.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock_frame.png");
@@ -82,7 +81,7 @@ ASSET_MANAGER.queueDownload("./img/border.png");
 ASSET_MANAGER.queueDownload("./img/lake.jpg");
 window.onload = (function () {
 ASSET_MANAGER.downloadAll(function () {
-    console.log("starting up da shield");
+    //console.log("starting up da shield");
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
 
