@@ -1,6 +1,7 @@
 var score;
 var scoreBoard;
 var highScore;
+var STARTING_POSITION = 4;
 
 function BoardC(gameEngine) {
 	this.game = gameEngine;
