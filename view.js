@@ -12,6 +12,7 @@ var scoreclock;
 var clockBounsCount = 0;
 var leftClockMoving = true;
 var rightClockMoving = false;
+var mouseEnabled = false;
 /**
 *
 * The view of the game board. This class handles the pieces, player, gameboard, and other animations

@@ -103,7 +103,7 @@ ASSET_MANAGER.downloadAll(function () {
     canvas.height="800";
        
 	
-	document.getElementById("PauseButton").onclick = function(){gameEngine.stop();}
+	document.getElementById("PauseButton").onclick = function(){pause();}
 	document.getElementById("PawnButton").onclick = function () { pl.setRank(0); }
 	document.getElementById("KnightButton").onclick = function () { pl.setRank(1); }
 	document.getElementById("BishopButton").onclick = function () { pl.setRank(2); }
@@ -111,7 +111,7 @@ ASSET_MANAGER.downloadAll(function () {
 	document.getElementById("QueenButton").onclick = function () { pl.setRank(4); }
 	document.getElementById("MuteButton").onclick = function () { mute(); }
 	document.getElementById("DebugButton").onclick = function () { debugging = !debugging; }
-
+	document.getElementById("MouseButton").onclick = function () { enableMouse(); }
 
 	ma = new Audio('FutureGladiator.mp3');
 	ma.addEventListener('ended', function () {
@@ -126,13 +126,29 @@ ASSET_MANAGER.downloadAll(function () {
 });
 
 var ma;
+var paused = false;
+
+function pause() {
+    gameEngine.stop();
+    mute();
+}
+
+function enableMouse() {
+    if (mouseEnabled) {
+        document.getElementById("MouseButton").value = "A-Mouse (b)";
+    } else {
+        document.getElementById("MouseButton").value = "D-Mouse (b)";
+    }
+    mouseEnabled = !mouseEnabled;
+
+}
 
 function mute() {
     if (ma.muted) {
-        document.getElementById("MuteButton").value = "Mute";
+        document.getElementById("MuteButton").value = "Mute (M)";
         ma.muted = false;
     } else {
-        document.getElementById("MuteButton").value = "Play";
+        document.getElementById("MuteButton").value = "Unmute (M)";
         ma.muted = true;
     }
 }

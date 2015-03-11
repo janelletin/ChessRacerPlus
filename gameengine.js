@@ -43,6 +43,7 @@ function GameEngine() {
 	this.timer;
 	this.rightClockRunning = false;
 	this.removedEntities = [];
+	this.mouseX = 0;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -98,8 +99,44 @@ GameEngine.prototype.startInput = function () {
                 that.left = false;
                 that.right = false;
                 break;
+            case 'M':
+                mute();
+                break;
+            case 'B':
+                enableMouse();
+                break;
+            case 'P':
+                pause();
+                break;
+            case 'V':
+                debugging = !debugging;
+                break;
         }
         e.preventDefault();
+    }, false);
+
+    this.ctx.canvas.addEventListener("mousemove", function (e) {
+        that.mouseX = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
+    }, false);
+
+    this.ctx.canvas.addEventListener("click", function (e) {
+        if (mouseEnabled) {
+            switch (e.which) {
+                case 1:
+                    that.left = false;
+                    that.right = false;
+                    that.specialLeft = true;
+                    that.specialRight = false;
+                    break;
+                case 3:
+                    that.specialLeft = false;
+                    that.specialRight = true;
+                    that.left = false;
+                    that.right = false;
+                    break;
+            }
+        }
+
     }, false);
 
 }

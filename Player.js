@@ -67,7 +67,14 @@ Player.prototype.update = function () {
         (this.separationLines[bc] < this.x - this.radius && this.x + this.radius < this.separationLines[bc + 1])) {  // Within horizontal space
         this.handleNewRank(bc);
         // If the player isn't in a state of moving, check to see if the player wants to move (ie has hit left or right) and handle appropriatly
-        if (this.game.left && this.specialMovesLeft === 0) {            
+        if (this.game.mouseX < this.x - this.radius && mouseEnabled) {
+            this.game.left = true;
+        } else if (this.game.mouseX > this.x + this.radius && mouseEnabled) {
+            this.game.right = true;
+        }
+
+
+        if (this.game.left && this.specialMovesLeft === 0) {
             if ((this.rank === 1 && !this.movingLeft)) {
                 this.specialMovesLeft = 1;
                 this.spriteSheet = ASSET_MANAGER.getAsset("./img/knightTransparent.png");
