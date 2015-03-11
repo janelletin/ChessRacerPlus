@@ -111,7 +111,7 @@ Player.prototype.update = function () {
         }
 
         if (this.game.left) {            
-            if ((this.rank === 1 || this.rank === 2) && !this.movingLeft) {
+            if ((this.rank === 1 && !this.movingLeft)) {
                 this.specialMovesLeft = 1;
             }
             this.movingLeft = true;
@@ -119,7 +119,7 @@ Player.prototype.update = function () {
             this.game.right = false;
 
         } else if (this.game.right) {
-            if ((this.rank === 1 || this.rank === 2) && !this.movingRight) {
+            if ((this.rank === 1 && !this.movingRight)) {
                 this.specialMovesLeft = 1;
             }
             this.movingRight = true;
@@ -165,9 +165,7 @@ Player.prototype.update = function () {
                 }
                 break;
             case 2: // Bishop
-                if (this.specialMovesLeft > 0) {
-                    this.game.right = true;
-                }
+                this.game.right = true;
                 break;
             case 3: // Rook
                 if (this.specialActivated) {
@@ -202,9 +200,7 @@ Player.prototype.update = function () {
                 }
                 break;
             case 2: // Bishop
-                if (this.specialMovesLeft > 0) {
-                    this.game.left = true;
-                }
+                this.game.left = true;
                 break;
             case 3: // Rook
                 if (this.specialActivated) {
@@ -272,15 +268,18 @@ Player.prototype.handleNewSpace = function (bc) {
             }
             break;
         case 2: // Bishop
-            if (this.specialMovesLeft > 0) {
-                this.specialMovesLeft--;
-            } else {
+            if (this.movingRight) {
                 this.movingLeft = false;
+                this.game.left = false;
+                this.movingRight = false;
+                this.game.right = true;
+            } else if (this.movingLeft) {
                 this.movingRight = false;
                 this.game.right = false;
-                this.game.left = false;
-                this.x = this.separationLines[bc] + this.radius + this.separationX[bc];
+                this.movingLeft = false;
+                this.game.left = true;
             }
+            this.x = this.separationLines[bc] + this.radius + this.separationX[bc];
             break;
         case 3: // Rook
             if (this.specialActivated) {
