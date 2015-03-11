@@ -133,7 +133,7 @@ BoardC.prototype.print = function() {
 BoardC.prototype.newLine = function() { // Adds a new line
 	// number of new pieces to add 1-3
 	var numOfPieces = Math.floor(Math.random() * (4 - 1)) + 1 // Mozilla math.random get Int
-	console.log("adding : " + numOfPieces);
+	//console.log("adding : " + numOfPieces);
 	var piecesLoc = new Array(); // An array of the pieces location
 	//console.log(pieces.indexOf(0));
 	//console.log(pieces.indexOf(1));

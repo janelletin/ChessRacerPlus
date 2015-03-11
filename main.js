@@ -107,5 +107,14 @@ ASSET_MANAGER.downloadAll(function () {
 	document.getElementById("BishopButton").onclick = function () { pl.setRank(2); }
 	document.getElementById("RookButton").onclick = function () { pl.setRank(3); }
 	document.getElementById("QueenButton").onclick = function () { pl.setRank(4); }
+
+	myAudio = new Audio('FutureGladiator.mp3');
+	myAudio.addEventListener('ended', function () {
+	    this.currentTime = 0;
+	    this.play();
+	}, false);
+	myAudio.play();
+
+	//document.getElementById('mp3').play();
 });
 });
