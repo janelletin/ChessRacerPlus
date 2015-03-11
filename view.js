@@ -12,8 +12,6 @@ var scoreclock;
 var clockBounsCount = 0;
 var leftClockMoving = true;
 var rightClockMoving = false;
-
-var STARTING_POSITION = 4;
 /**
 *
 * The view of the game board. This class handles the pieces, player, gameboard, and other animations
@@ -69,7 +67,7 @@ GameBoard.prototype.update = function () {
         //this.boardC.update(); // Updates every other row
     } else if (this.halfTime >= this.totalTime / 2) {
         this.halfTime = 0;
-        this.boardC.update(); // Updates every row
+   //     this.boardC.update(); // Updates every row
     }
 
     this.frameInterval = Math.floor(this.elapsedTime / GAME_SPEED);

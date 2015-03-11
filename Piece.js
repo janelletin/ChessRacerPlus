@@ -120,16 +120,14 @@ Piece.prototype.draw = function (ctx) {
     }
     ctx.drawImage(this.spriteSheet, this.x, this.y,
               this.frameWidth, this.frameHeight);
+
     if (debugging) {
         ctx.beginPath();
         ctx.fillStyle = "Green";
         var r = this.radius * this.scale;
-      //  console.log(this.scale);
         ctx.arc(this.x + (this.frameWidth / 2), this.y + this.frameHeight - r, r, 0, Math.PI * 2, false);
         ctx.fill();
         ctx.closePath();
-
-
         ctx.moveTo(0, this.y + this.frameHeight);
         ctx.lineTo(CANVAS_WIDTH, this.y + this.frameHeight);
         ctx.stroke();

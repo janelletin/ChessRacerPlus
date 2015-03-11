@@ -62,9 +62,12 @@ ASSET_MANAGER.queueDownload("./img/39.png");
 ASSET_MANAGER.queueDownload("./img/pawn.png");
 ASSET_MANAGER.queueDownload("./img/bishop.png");
 ASSET_MANAGER.queueDownload("./img/queen.png");
+ASSET_MANAGER.queueDownload("./img/queenTransparent.png");
 ASSET_MANAGER.queueDownload("./img/king.png");
 ASSET_MANAGER.queueDownload("./img/knight.png");
+ASSET_MANAGER.queueDownload("./img/knightTransparent.png");
 ASSET_MANAGER.queueDownload("./img/rook.png");
+ASSET_MANAGER.queueDownload("./img/rookTransparent.png");
 ASSET_MANAGER.queueDownload("./img/blackpawn.png");
 ASSET_MANAGER.queueDownload("./img/blackknight.png");
 ASSET_MANAGER.queueDownload("./img/blackbishop.png");
@@ -117,7 +120,7 @@ ASSET_MANAGER.downloadAll(function () {
 	    this.play();
 	}, false);
 	ma.play();
-	ma.muted = false;
+	ma.muted = true;
 
 	//document.getElementById('mp3').play();
 });
@@ -127,8 +130,10 @@ var ma;
 
 function mute() {
     if (ma.muted) {
+        document.getElementById("MuteButton").value = "Mute";
         ma.muted = false;
     } else {
+        document.getElementById("MuteButton").value = "Play";
         ma.muted = true;
     }
 }

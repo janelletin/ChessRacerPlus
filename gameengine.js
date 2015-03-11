@@ -43,8 +43,6 @@ function GameEngine() {
 	this.timer;
 	this.rightClockRunning = false;
 	this.removedEntities = [];
-	this.lastKeypressTime;
-	this.lastKeypressed;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -76,54 +74,31 @@ GameEngine.prototype.startInput = function () {
     that.doubleTap = false;
     this.ctx.canvas.addEventListener("keydown", function (e) {
         switch (String.fromCharCode(e.which)) {
-            case ' ':
-                that.space = true;
-                break;
             case 'A':
-                var tolerance = 750;
-                var thisKeypressTime = new Date();
-                if (thisKeypressTime - this.lastKeypressTime <= tolerance && 
-                    this.lastKeyPressed == 'A') {
-                    that.doubleTap = true;
-                } else {
-                }
                 that.left = true;
                 that.right = false;
-                this.lastKeypressTime = thisKeypressTime;
+                that.specialLeft = false;
+                that.specialRight = false;
                 break;
             case 'D':
-                var tolerance = 750;
-                var thisKeypressTime = new Date();
-                if (thisKeypressTime - this.lastKeypressTime < tolerance && 
-                    this.lastKeyPressed == 'D') {
-                    that.doubleTap = true;
-                } else {
-                }
-                that.left = false;
-                that.right = true; 
-                this.lastKeypressTime = thisKeypressTime;
-                break;
-            case 'W':
-                that.left = false;
-                that.right = false;
-                break;
-            case '%':
-
-                that.right = false;
-                that.left = true;
- 
-                that.isLeft = true;
-                that.isRight = false;
-                break;
-            case '\'':
                 that.left = false;
                 that.right = true;
-   
-                that.isLeft = false;
-                that.isRight = true;
+                that.specialLeft = false;
+                that.specialRight = false;
+                break;
+            case 'Q':
+                that.left = false;
+                that.right = false;
+                that.specialLeft = true;
+                that.specialRight = false;
+                break;
+            case 'E':
+                that.specialLeft = false;
+                that.specialRight = true;
+                that.left = false;
+                that.right = false;
                 break;
         }
-        this.lastKeyPressed = String.fromCharCode(e.which);
         e.preventDefault();
     }, false);
 
