@@ -1,5 +1,5 @@
-var STARTING_POSITION = 1;
-var debugging = true;
+var STARTING_POSITION = 4;
+var debugging = false;
 
 function Player(game, boardC, visualBoard) {
     this.board = boardC;
@@ -46,7 +46,7 @@ function Player(game, boardC, visualBoard) {
     this.inSquare = true;
     this.specialActivated = false;
     this.specialMovesLeft = 0;
-    this.setRank(3);
+    //this.setRank(3);
     Entity.call(this, game, this.x, this.y);
 }
 

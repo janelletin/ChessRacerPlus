@@ -120,7 +120,7 @@ ASSET_MANAGER.downloadAll(function () {
 	    this.play();
 	}, false);
 	ma.play();
-	ma.muted = true;
+	ma.muted = false;
 
 	//document.getElementById('mp3').play();
 });

@@ -12,70 +12,74 @@
     <script type="text/javascript" src="./Piece.js"></script>
     <script type="text/javascript" src="./main.js"></script>
 </head>
-<body>
+<body bgcolor="#000000">
     <audio id="mp3" src="FutureGladiator.mp3" preload="auto"></audio>
-<table>
-<tr>
-<td valign=top>
-    <button type="button" id="PauseButton" name="Pause" style="float:left">Pause</button>
-    </br></br>
-    <input type="button" id="MuteButton" name="mute" style="float:left" value="Mute"></input>
-    </br></br>
-    </br></br>
-    </br></br>
-    </br></br>
-    User Score: <div id="scoreOnPage"></div>
-	</br></br>
-	High Score: <div id="highScoreOnPage"></div>
-    </br></br>
-    </br></br>
-    </br></br>
-    </br></br>
-    <button type="button" id="DebugButton" name="Pause" style="float:left">Debug</button>
-    </br></br>
-    <button type="button" id="PawnButton" name="Pause" style="float:left">Pawn</button>
-    </br></br>
-    <button type="button" id="KnightButton" name="Pause" style="float:left">Knight</button>
-    </br></br>
-    <button type="button" id="BishopButton" name="Pause" style="float:left">Bishop</button>
-    </br></br>
-    <button type="button" id="RookButton" name="Pause" style="float:left">Rook</button>
-    </br></br>
-    <button type="button" id="QueenButton" name="Pause" style="float:left">Queen</button>
+    <table>
+        <tr>
+            <td valign=top>
+                <button type="button" id="PauseButton" name="Pause" style="float:left">Pause</button>
+                </br></br>
+                <input type="button" id="MuteButton" name="mute" style="float:left" value="Mute"></input>
+                </br></br>
+                </br></br>
+                </br></br>
+                </br></br>
+                <font color="white">
+                    User Score: <div id="scoreOnPage"></div>
+                    </br></br>
+                    High Score: <div id="highScoreOnPage"></div>
+                </font>
+                    </br></br>
+                    </br></br>
+                    </br></br>
+                    </br></br>
+                    <button type="button" id="DebugButton" name="Pause" style="float:left">Debug</button>
+                    </br></br>
+                    <button type="button" id="PawnButton" name="Pause" style="float:left">Pawn</button>
+                    </br></br>
+                    <button type="button" id="KnightButton" name="Pause" style="float:left">Knight</button>
+                    </br></br>
+                    <button type="button" id="BishopButton" name="Pause" style="float:left">Bishop</button>
+                    </br></br>
+                    <button type="button" id="RookButton" name="Pause" style="float:left">Rook</button>
+                    </br></br>
+                    <button type="button" id="QueenButton" name="Pause" style="float:left">Queen</button>
 </td>
-<td>
-    <canvas id="gameWorld" tabindex="1" style="border: 1px solid brown;"></canvas>
+            <td>
+                <canvas id="gameWorld" tabindex="1"></canvas>
+            </td>
+            <td valign=top>
+                </br></br>
+                <font color="white">
+                    Instructions: You must work your way up the rank by capturing the other teams pieces.
+                    A piece may capture any piece it's rank or below. However only pieces it's
+                    own rank count twards ranking up! Capture 3 of your own rank to progress while
+                    avoiding higher ranks and your own team. Capture enough and become the king!
+                    </br></br>
+                    Ranks:        Pawn --> Knight --> Bishop --> Rook --> Queen --> King!
+                    </br></br>
+                    Controls:
+                    </br></br>        Pawn:   Left 1 Space:          A
+                    Right 1 Space:         D
+                    </br></br>
+                    Knight: Left 2 Spaces:         A
+                    Right 2 Spaces:        D
+                    </br></br>
+                    Bishop: Auto Move Left:        A
+                    Auto Move Right:       D
+                    </br></br>
+                    Rook:   Left 1 Space:          A
+                    Right 1 Space:         D
+                    Left 3 Spaces:         Q
+                    Right 3 Spaces:        E
+                    </br></br>
+                    Queen:  Left 1 Space:           A
+                    Right 1 Space:          D
+                    Move to Left Edge:      Q
+                    Move to Right Edge:     E</font>
 </td>
-    <td valign=top>
-        </br></br>
-            Instructions: You must work your way up the rank by capturing the other teams pieces.
-                          A piece may capture any piece it's rank or below. However only pieces it's
-                          own rank count twards ranking up! Capture 3 of your own rank to progress while
-                          avoiding higher ranks and your own team. Capture enough and become the king!
-        </br></br>
-            Ranks:        Pawn --> Knight --> Bishop --> Rook --> Queen --> King!
-        </br></br>
-            Controls:     Pawn: Left 1 Space:       A
-                                Right 1 Space:      D
-        </br></br>
-                          Knight: Left 2 Spaces:    A
-                                  Right 2 Spaces:   D
-        </br></br>
-                          Bishop: Auto Left:        A
-                                  Auto Right:       D
-        </br></br>
-                          Rook:   Left 1 Space:     A
-                                  Right 1 Space:    D
-                                  Left 4 Spaces:    Double Tap A
-                                  Right 4 Spaces:   Double Tap D
-        </br></br>
-                          Queen: Left 1 Space:     A
-                                 Right 1 Space:    D
-                                 Left 4 Spaces:    Double Tap A
-                                 Right 4 Spaces:   Double Tap D
-    </td>
-</tr>
-</table>
+        </tr>
+    </table>
 
 </body>
 </html>
