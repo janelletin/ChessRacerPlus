@@ -536,15 +536,21 @@ User.prototype.eat = function(piece) {
 		if(piece.rank == this.rank) {
 			this.count++;
 			if(this.count == 3) {
-			    //		alert("Rank Up");                
-			    this.count = 0;
-			    this.rank++;
-				this.type = this.rankToType(this.rank); // changes the user rank
-				this.boardC.chance[0] = this.type; // changes the change percentage
-				this.player.setRank(this.rank);
-				// Giving Player a multipler from their rank for additional points when taking a piece.
-				//TODO: implement game speed multipler for taking a piece.
-				//this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );
+			    if (piece.rank === 5) {
+			        alert("You Win!");
+			        this.game.stop();
+			    } else {
+			        //		alert("Rank Up");                
+			        this.count = 0;
+			        this.rank++;
+			        this.type = this.rankToType(this.rank); // changes the user rank
+			        this.boardC.chance[0] = this.type; // changes the change percentage
+			        this.player.setRank(this.rank);
+			        // Giving Player a multipler from their rank for additional points when taking a piece.
+			        //TODO: implement game speed multipler for taking a piece.
+			        //this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );
+			    }
+
 			}
 		}
 		//return true;
