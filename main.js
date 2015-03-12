@@ -113,7 +113,7 @@ ASSET_MANAGER.downloadAll(function () {
 	
 	document.getElementById("PauseButton").onclick = function(){pause();}
 	document.getElementById("MuteButton").onclick = function () { mute(); }
-	//document.getElementById("DebugButton").onclick = function () { debugging = !debugging; }
+	document.getElementById("DebugButton").onclick = function () { debugging = !debugging; }
 	document.getElementById("MouseButton").onclick = function () { enableMouse(); }
 
 	ma = new Audio('FutureGladiator.mp3');
@@ -137,7 +137,6 @@ function pause() {
 }
 
 function enableMouse() {
-    console.log("Mouse");
     if (mouseEnabled) {
         document.getElementById("MouseButton").value = "A-Mouse (b)";
     } else {
