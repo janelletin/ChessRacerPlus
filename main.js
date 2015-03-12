@@ -79,6 +79,14 @@ ASSET_MANAGER.queueDownload("./img/chess_clock.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock_frame.png");
 ASSET_MANAGER.queueDownload("./img/border.png");
 ASSET_MANAGER.queueDownload("./img/lake.jpg");
+ASSET_MANAGER.queueDownload("./img/a.png");
+ASSET_MANAGER.queueDownload("./img/aRed.png");
+ASSET_MANAGER.queueDownload("./img/d.png");
+ASSET_MANAGER.queueDownload("./img/dRed.png");
+ASSET_MANAGER.queueDownload("./img/q.png");
+ASSET_MANAGER.queueDownload("./img/qRed.png");
+ASSET_MANAGER.queueDownload("./img/e.png");
+ASSET_MANAGER.queueDownload("./img/eRed.png");
 window.onload = (function () {
 ASSET_MANAGER.downloadAll(function () {
     //console.log("starting up da shield");
@@ -104,13 +112,8 @@ ASSET_MANAGER.downloadAll(function () {
        
 	
 	document.getElementById("PauseButton").onclick = function(){pause();}
-	document.getElementById("PawnButton").onclick = function () { pl.setRank(0); }
-	document.getElementById("KnightButton").onclick = function () { pl.setRank(1); }
-	document.getElementById("BishopButton").onclick = function () { pl.setRank(2); }
-	document.getElementById("RookButton").onclick = function () { pl.setRank(3); }
-	document.getElementById("QueenButton").onclick = function () { pl.setRank(4); }
 	document.getElementById("MuteButton").onclick = function () { mute(); }
-	document.getElementById("DebugButton").onclick = function () { debugging = !debugging; }
+	//document.getElementById("DebugButton").onclick = function () { debugging = !debugging; }
 	document.getElementById("MouseButton").onclick = function () { enableMouse(); }
 
 	ma = new Audio('FutureGladiator.mp3');
@@ -134,6 +137,7 @@ function pause() {
 }
 
 function enableMouse() {
+    console.log("Mouse");
     if (mouseEnabled) {
         document.getElementById("MouseButton").value = "A-Mouse (b)";
     } else {
