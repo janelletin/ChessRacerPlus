@@ -32,7 +32,7 @@ var Y_POSITIONS = [[11, 11.8, 12.6, 13.4, 14.2, 15, 15.8, 16.6, 17.4, 18.2, 19, 
                     [650, 655, 660, 665, 670, 675, 685, 690, 695, 700, 705, 710, 715, 720, 725, 740, 760, 780, 820, 900]];
 
 function Piece(game, piece_rank, starting_column, color) {
-
+    this.game = game;
     // Piece Information Initialization
     this.rank = piece_rank;
     this.color = color;
@@ -82,7 +82,6 @@ Piece.prototype.update = function () {
     // Calculate x position
     switch (this.column) {
         case 0:
-
             this.x = (this.y - 592.361) / -1.2574;
             break;
         case 1:
@@ -148,4 +147,12 @@ Piece.prototype.isDone = function () {
 
 Piece.prototype.toString = function() {
 	return this.color + this.rank + "(" + this.row + ", " + this.column + ")";
+}
+
+Piece.prototype.kill = function () {
+    this.spriteSheet = ASSET_MANAGER.getAsset("./img/" + this.rank + "Red.png");
+    var canvas = document.getElementById('gameWorld');
+    var ctx = canvas.getContext('2d');
+    this.draw(ctx);
+    this.game.entities[1].draw(ctx);
 }

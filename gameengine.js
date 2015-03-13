@@ -63,7 +63,6 @@ GameEngine.prototype.start = function () {
 }
 
 GameEngine.prototype.stop = function() {
-	console.log(this);
 	//console.log(this.on);
 	this.on = !this.on;
 	//console.log(this.on);
@@ -150,16 +149,21 @@ GameEngine.prototype.addEntity = function (entity) {
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.save();
-
     this.entities[0].draw(this.ctx);
+    var piecesAfterPlayer = [];
+    var playerY = this.entities[1].y - 150 - this.entities[1].radius;
     for (var i = this.entities.length - 1; i > 1; i--) {
-        this.entities[i].draw(this.ctx);
+
+        this.y - 150 - this.radius
+        if (this.entities[i].y <= playerY) {
+            this.entities[i].draw(this.ctx);
+        } else {
+            piecesAfterPlayer.push(this.entities[i]);
+        }
     }
     this.entities[1].draw(this.ctx);
-    for (var i = this.entities.length - 1; i > 1; i--) {
-        if (this.entities[i].row >= 11) {
-            this.entities[i].draw(this.ctx);
-        }
+    for (var i = piecesAfterPlayer.length - 1; i > 1; i--) {
+        this.entities[i].draw(this.ctx);
     }
     this.ctx.restore();
 }
@@ -170,8 +174,7 @@ GameEngine.prototype.update = function () {
 		//console.log(this.removedEntities.length);
 	}
     //console.log("number of entities = " + entitiesCount);
-
-	 for (var i = entitiesCount - 1; i >= 0; i--) {
+	for (var i = entitiesCount - 1; i >= 0; i--) {
         var entity = this.entities[i];
         if (!entity.removeFromWorld) {
             entity.update();

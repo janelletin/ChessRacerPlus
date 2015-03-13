@@ -59,6 +59,12 @@ ASSET_MANAGER.queueDownload("./img/36.png");
 ASSET_MANAGER.queueDownload("./img/37.png");
 ASSET_MANAGER.queueDownload("./img/38.png");
 ASSET_MANAGER.queueDownload("./img/39.png");
+ASSET_MANAGER.queueDownload("./img/pawnRed.png");
+ASSET_MANAGER.queueDownload("./img/bishopRed.png");
+ASSET_MANAGER.queueDownload("./img/queenRed.png");
+ASSET_MANAGER.queueDownload("./img/kingRed.png");
+ASSET_MANAGER.queueDownload("./img/knightRed.png");
+ASSET_MANAGER.queueDownload("./img/rookRed.png");
 ASSET_MANAGER.queueDownload("./img/pawn.png");
 ASSET_MANAGER.queueDownload("./img/bishop.png");
 ASSET_MANAGER.queueDownload("./img/queen.png");
@@ -79,14 +85,6 @@ ASSET_MANAGER.queueDownload("./img/chess_clock.png");
 ASSET_MANAGER.queueDownload("./img/chess_clock_frame.png");
 ASSET_MANAGER.queueDownload("./img/border.png");
 ASSET_MANAGER.queueDownload("./img/lake.jpg");
-ASSET_MANAGER.queueDownload("./img/a.png");
-ASSET_MANAGER.queueDownload("./img/aRed.png");
-ASSET_MANAGER.queueDownload("./img/d.png");
-ASSET_MANAGER.queueDownload("./img/dRed.png");
-ASSET_MANAGER.queueDownload("./img/q.png");
-ASSET_MANAGER.queueDownload("./img/qRed.png");
-ASSET_MANAGER.queueDownload("./img/e.png");
-ASSET_MANAGER.queueDownload("./img/eRed.png");
 window.onload = (function () {
 ASSET_MANAGER.downloadAll(function () {
     //console.log("starting up da shield");
@@ -122,6 +120,7 @@ ASSET_MANAGER.downloadAll(function () {
 	document.getElementById("RookButton").onclick = function () { pl.setRank(3); }
 	document.getElementById("QueenButton").onclick = function () { pl.setRank(4); }
 	document.getElementById("KingButton").onclick = function () { pl.setRank(5); }
+	document.getElementById("gameWorld").focus();
 
 	ma = new Audio('FutureGladiator.mp3');
 	ma.addEventListener('ended', function () {

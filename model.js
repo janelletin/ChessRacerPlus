@@ -181,12 +181,10 @@ BoardC.prototype.newLine = function() { // Adds a new line
 	}
 	//insert king and reset count
 	if(this.count == this.kingChance) {
-		console.log(piecesLoc);
 		var temp = new Piece(this.game, "king", piecesLoc[numOfPieces], "black");
 		var p = new PieceC(this.game, this, 11, piecesLoc[numOfPieces], "king", "black", temp);
 		this.count = 0;
 	}
-	
 }
 
 // Returns a color taking into account the percent of black and white (adding up to 100)
@@ -237,7 +235,6 @@ BoardC.prototype.update = function() {
 			// Checks row 1 for collisions with the User
 		} else {
 			if(this.Board[1][j] != 0) { /** COLLIDED **/
-				
 				var index = this.Pieces.indexOf(this.Board[1][j]);
 				if (index > -1) {
 				//	console.log(this.Board[1][j].color + this.Board[1][j].rank + " trying to eat");
@@ -245,7 +242,7 @@ BoardC.prototype.update = function() {
 					//console.log(indexOfEnt);
 					if(indexOfEnt > -1) {
 						this.game.entities[indexOfEnt].removeFromWorld = true;
-						this.User.eat(this.Board[1][j]);
+						this.User.eat(this.Board[1][j]);												
 						//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
 						//TODO: Add new modal window showing score and letting Player select to end or start again. 
 					}
@@ -398,14 +395,13 @@ User.prototype.move = function(direction) {
 	//			" with the rank of " + this.rank);
 	if(direction == "left") {
 		if(this.column < 1) {
-			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row][this.column-1] = this;
 			this.column -= 1;
 		}
 	} else if (direction == "right") {
-		if(this.column > 7) {
+		if(this.column >= 7) {
 			//			console.log("Can't move " + direction + " anymore");
 		} else {
 			this.board[this.row][this.column] = "0";
@@ -414,36 +410,44 @@ User.prototype.move = function(direction) {
 		}
 		
 	} else if (direction == "left2"){
-		if(this.column < 2 ){
-			console.log("Can't move " + direction + " anymore");
+		if(this.column <= 1 ){
+		    this.board[this.row][this.column] = "0";
+		    this.board[this.row][0] = this;
+		    this.column = 0;
 		} else {
 			this.board[this.row][this.column] = "0";
-			this.board[this.row][this.column-2] = this;
+			this.board[this.row][this.column - 2] = this;
 			this.column -= 2;
 		}
 	} else if (direction == "right2"){
-		if(this.column > 6) {
-			//			console.log("Can't move " + direction + " anymore");
+		if(this.column >= 6) {
+		    this.board[this.row][this.column] = "0";
+		    this.board[this.row][7] = this;
+		    this.column = 7;
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row][this.column+2] = this;
 			this.column += 2;
 		}
 	} else if (direction == "left3"){
-		if(this.column < 3 ){
-			console.log("Can't move " + direction + " anymore");
+		if(this.column <= 3 ){
+		    this.board[this.row][this.column] = "0";
+		    this.board[this.row][0] = this;
+		    this.column = 0;
 		} else {
 			this.board[this.row][this.column] = "0";
-			this.board[this.row][this.column-3] = this;
+			this.board[this.row][this.column - 3] = this;
 			this.column -= 3;
 		}
 	} else if (direction == "right3"){
-		if(this.column > 5) {
-			//			console.log("Can't move " + direction + " anymore");
+		if(this.column >= 4) {
+		    this.board[this.row][this.column] = "0";
+		    this.board[this.row][7] = this;
+		    this.column = 7;
 		} else {
 			this.board[this.row][this.column] = "0";
 			this.board[this.row][this.column+3] = this;
-			this.column += 3 ;
+			this.column += 3;
 		}
 	} else if(direction == "Knight-1Right") {
 		if(this.column > 6) {
@@ -472,7 +476,6 @@ User.prototype.move = function(direction) {
 			this.row += 1;
 			this.column += 2;
 		}
-		
 	} else if(direction == "Knight-2Left") {
 		if(this.column < 2) {
 			//		console.log("Can't move " + direction + " anymore");
@@ -485,7 +488,19 @@ User.prototype.move = function(direction) {
 			this.column -2;
 		}
 		
-	} else if(direction == "DLeft") {
+	} else if (direction == "leftEdge") {
+	    this.board[this.row][this.column] = "0";
+	    //		console.log(this.board[this.row][this.column]);
+	    this.board[this.row][0] = this;
+	    this.column = 0;
+
+	} else if (direction == "rightEdge") {
+	    this.board[this.row][this.column] = "0";
+	    //		console.log(this.board[this.row][this.column]);
+	    this.board[this.row][7] = this;
+	    this.column = 7;
+
+	} else if (direction == "DLeft") {
 		if(this.column < 1) {
 			//			console.log("Can't move " + direction + " anymore");
 		} else {
@@ -517,30 +532,43 @@ User.prototype.move = function(direction) {
 User.prototype.eat = function(piece) {
 	//console.log("user: " + this.rank + " color: " + this.color);
 	//console.log("piece: "  + " rank: "+ piece.rank + " color: " + piece.color);
-	//console.log(this.color + " " + piece.color);
+    //console.log(this.color + " " + piece.color);
+    piece.ent.kill();
 	if(piece.color == this.color) {
 		//this.print();
 		//console.log("same color");
-		//return false;
-		alert("DEAD because collided with same color " + piece.color);
+	    //return false;
+	    piece.ent.kill();
+	    if (confirm("You hit your own team! Hit OK to restart!") == true) {
+	        window.location.reload()
+	    } else {
+	        window.location.reload()
+	    }
 		//TODO: Add new modal window showing score and letting Player select to end or start again. 
 		this.game.stop();
 	} else if(piece.rank > this.rank) {
 		//this.print();
-		//return false;
-		alert("DEAD because higher rank " + piece.letter);
+	    //return false;
+	    piece.ent.kill();
+	    if (confirm("You Died! Hit OK to restart!") == true) {
+	        window.location.reload()
+	    } else {
+	        window.location.reload()
+	    }
 		//TODO: Add new modal window showing score and letting Player select to end or start again. 
 		this.game.stop();
 	} else {
-		console.log("eat success");
-		if(piece.rank == this.rank) {
+	    piece.ent.kill();
+	    if (piece.rank == this.rank) {    
 			this.count++;
 			if(this.count == 3) {
 			    if (piece.rank === 5) {
-			        alert("You Win!");
-			        this.game.stop();
-			    } else {
-			        //		alert("Rank Up");                
+			        if (confirm("Congratulations!\nYou Are The King!") == true) {
+			            window.location.reload()
+			        } else {
+			            window.location.reload()
+			        }
+			    } else {            
 			        this.count = 0;
 			        this.rank++;
 			        this.type = this.rankToType(this.rank); // changes the user rank
@@ -550,7 +578,6 @@ User.prototype.eat = function(piece) {
 			        //TODO: implement game speed multipler for taking a piece.
 			        //this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );
 			    }
-
 			}
 		}
 		//return true;
