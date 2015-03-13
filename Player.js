@@ -379,6 +379,7 @@ Player.prototype.checkEdges = function () {
             case 3: // Rook
                 if (this.invisible && !this.specialRight) {
                     this.board.User.column = 0;
+                    this.column = 0;
                     this.invisible = false;
                     this.specialMovesLeft = 0;
                     this.movingLeft = false;
@@ -392,6 +393,7 @@ Player.prototype.checkEdges = function () {
             case 4: // Queen
                 if (this.invisible && !this.specialRight) {
                     this.board.User.column = 0;
+                    this.column = 0;
                     this.invisible = false;
                     this.specialMovesLeft = 0;
                     this.movingLeft = false;
@@ -399,6 +401,8 @@ Player.prototype.checkEdges = function () {
                     this.spriteSheet = ASSET_MANAGER.getAsset("./img/queen.png");
                     this.horizontalSpeed = 4.5;
                     this.game.right = true;
+                    this.x = this.separationLines[0] + this.radius + this.separationX[0];
+                } else if (!this.specialRight) {
                     this.x = this.separationLines[0] + this.radius + this.separationX[0];
                 }
                 this.game.right = true;
