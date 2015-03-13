@@ -115,6 +115,13 @@ ASSET_MANAGER.downloadAll(function () {
 	document.getElementById("MuteButton").onclick = function () { mute(); }
 	document.getElementById("DebugButton").onclick = function () { debugging = !debugging; }
 	document.getElementById("MouseButton").onclick = function () { enableMouse(); }
+	document.getElementById("DebugButton").onclick = function () { debugging = !debugging; }
+	document.getElementById("PawnButton").onclick = function () { pl.setRank(0); }
+	document.getElementById("KnightButton").onclick = function () { pl.setRank(1); }
+	document.getElementById("BishopButton").onclick = function () { pl.setRank(2); }
+	document.getElementById("RookButton").onclick = function () { pl.setRank(3); }
+	document.getElementById("QueenButton").onclick = function () { pl.setRank(4); }
+	document.getElementById("KingButton").onclick = function () { pl.setRank(5); }
 
 	ma = new Audio('FutureGladiator.mp3');
 	ma.addEventListener('ended', function () {
