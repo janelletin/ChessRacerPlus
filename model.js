@@ -559,25 +559,38 @@ User.prototype.eat = function(piece) {
 		this.game.stop();
 	} else {
 	    piece.ent.kill();
-	    if (piece.rank == this.rank) {    
+	    if (piece.rank == this.rank) {
+	        if (piece.rank === 5) {
+	            if (confirm("Congratulations!\nYou Are The King!") == true) {
+	                var isMuted;
+	                if (ma.muted) {
+	                    isMuted = true;
+	                }                         
+	                window.location.reload()
+	                if (isMuted) {
+	                    mute();
+	                }
+	            } else {
+	                var isMuted;
+	                if (ma.muted) {
+	                    isMuted = true;
+	                }
+	                window.location.reload()
+	                if (isMuted) {
+	                    mute();
+	                }
+	            }
+	        }
 			this.count++;
-			if(this.count == 3) {
-			    if (piece.rank === 5) {
-			        if (confirm("Congratulations!\nYou Are The King!") == true) {
-			            window.location.reload()
-			        } else {
-			            window.location.reload()
-			        }
-			    } else {            
-			        this.count = 0;
-			        this.rank++;
-			        this.type = this.rankToType(this.rank); // changes the user rank
-			        this.boardC.chance[0] = this.type; // changes the change percentage
-			        this.player.setRank(this.rank);
-			        // Giving Player a multipler from their rank for additional points when taking a piece.
-			        //TODO: implement game speed multipler for taking a piece.
-			        //this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );
-			    }
+			if(this.count == 3) {            
+			    this.count = 0;
+			    this.rank++;
+			    this.type = this.rankToType(this.rank); // changes the user rank
+			    this.boardC.chance[0] = this.type; // changes the change percentage
+			    this.player.setRank(this.rank);
+			    // Giving Player a multipler from their rank for additional points when taking a piece.
+			    //TODO: implement game speed multipler for taking a piece.
+			    //this.scoreBoard.IncreaseScore(50 * ((this.rank+1)*3) );			    
 			}
 		}
 		//return true;
