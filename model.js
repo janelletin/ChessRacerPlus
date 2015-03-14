@@ -208,58 +208,28 @@ BoardC.prototype.update = function() {
 	// Moves the pieces
 	for(var p = 0; p < this.Pieces.length; p++) {
 		if(this.Pieces[p] != this.User) {
-			//this.Pieces[p].move();
+			this.Pieces[p].move();
 		}
 	}
-	
-	//console.log("number of pieces before update " + this.Pieces.length);
-	// Checks the first row for collision and removes pieces
-	for(j=0;j<this.columns;j++) {
-		//console.log("Piece " + this.Board[0][j] + " User " + this.User + " " + this.Board[0][j] != this.User);
-		// Removes the pieces from row 0 except the user
-		if(this.Board[0][j] != this.User) { // Pieces on row 0 that aren't the user
-			var index = this.Pieces.indexOf(this.Board[0][j]);
-			//console.log(this.Board[0][j] + " index = " + index);
-			if (index > -1) {
-				
-				var indexOfEnt = this.game.entities.indexOf(this.Board[0][j].ent);
-				//console.log(indexOfEnt);
-				if(indexOfEnt > -1) {
-					this.game.entities[indexOfEnt].removeFromWorld = true;
-					//console.log(this.game.entities[indexOfEnt].removeFromWorld);
-				}
-				this.Pieces.splice(index, 1);
-				//console.log("changed removeFromWorld");
-			}
-			this.Board[0][j] = 0;
-			// Checks row 1 for collisions with the User
-		} else {
-			if(this.Board[1][j] != 0) { /** COLLIDED **/
-				var index = this.Pieces.indexOf(this.Board[1][j]);
-				if (index > -1) {
-				//	console.log(this.Board[1][j].color + this.Board[1][j].rank + " trying to eat");
-					var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
-					//console.log(indexOfEnt);
-					if(indexOfEnt > -1) {
-						this.game.entities[indexOfEnt].removeFromWorld = true;
-						this.User.eat(this.Board[1][j]);												
-						//alert(this.game.entities[indexOfEnt].removeFromWorld + " you have collided with a piece");
-						//TODO: Add new modal window showing score and letting Player select to end or start again. 
-					}
-					this.Pieces.splice(index, 1);
-					//console.log("removing a collided piece");
-					//this.Board[1][j].removeFromWorld = true;
-				}
-				//this.Board[1][j] = 0;
-				//}
-			}
-			this.Board[1][j] = 0;
-			/* } else { // NO COLLISION
-			//console.log("no collision");
-			} */
-		}
-	}
+	//Removes row 0 except the user
+	this.removeLastRow();
+	//Checks for collision on row 1
+	this.check();
 	// Moves pieces down a row starting from the second row
+	this.moveDown();
+
+	this.newLine(); // adds a new line
+
+	//this.print();
+	/*
+	* Add a score to the game for staying alive!
+	*/
+	this.scoreBoard.IncreaseScore(50);
+	
+} 
+
+BoardC.prototype.moveDown = function() {
+		// Moves pieces down a row starting from the second row
 	for (i=1;i<this.rows;i++) {
 		for (j=0;j<this.columns;j++) {
 			if(this.Board[i][j]!=0) {
@@ -269,17 +239,49 @@ BoardC.prototype.update = function() {
 			}
 		}
 	}
-	//console.log("number of pieces middle " + this.Pieces.length);
-	this.newLine(); // adds a new line
-	//console.log("number of pieces after " + this.Pieces.length);
-	//console.log(this.Pieces);
-	//this.print();
-	/*
-	* Add a score to the game for staying alive!
-	*/
-	this.scoreBoard.IncreaseScore(50);
-	
-} // end of BoardC
+}
+
+BoardC.prototype.removeLastRow = function() {
+	for(j=0;j<this.columns;j++) { // Go through every column
+		// Removes the pieces from row 0 except the user
+		if(this.Board[0][j] != this.User) { // Pieces on row 0 that aren't the user
+			var index = this.Pieces.indexOf(this.Board[0][j]); // Get the index to remove
+			if (index > -1) {
+				var indexOfEnt = this.game.entities.indexOf(this.Board[0][j].ent);
+				if(indexOfEnt > -1) {
+					// remove from entities
+					this.game.entities[indexOfEnt].removeFromWorld = true;
+				}
+				this.Pieces.splice(index, 1); // remove from my pieces array
+			}
+			this.Board[0][j] = 0; // set to 0
+		}
+	}
+}
+
+BoardC.prototype.check = function() {
+	for(j=0;j<this.columns;j++) { // Go through every column
+			// Checks row 1 for collisions with the User
+			if(this.Board[1][j] != 0 && this.Board[0][j] == this.User) { /** COLLIDED **/
+				var index = this.Pieces.indexOf(this.Board[1][j]);
+				if (index > -1) {
+					var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
+					if(indexOfEnt > -1) {
+						//remove from entities 
+						this.game.entities[indexOfEnt].removeFromWorld = true;
+						//checks if the User can eat the piece or if they die
+						this.User.eat(this.Board[1][j]);												
+					}
+					//removes piece
+					this.Pieces.splice(index, 1);
+				}
+			}
+			//resets
+			this.Board[1][j] = 0;
+	}
+}
+
+// end of BoardC
 
 PieceC.prototype = new Entity();
 PieceC.prototype.constructor = PieceC;
@@ -324,14 +326,14 @@ PieceC.prototype.test = function() {
 }
 
 PieceC.prototype.move = function(){
+	if(this.row > 8) {
 	
-	
-	// 0.25 chance to move
-	var poss = Math.floor(Math.random() * (4)); // Mozilla math.random
-	console.log(poss);
+	// 0.33 chance to move
+	var poss = Math.floor(Math.random() * (3)); // Mozilla math.random
+	//console.log(poss);
 	if(poss == 0) { // 0 means move
 		var dir = Math.floor(Math.random() * (2)); // 0 means left 1 means right
-		//	console.log("Moving Piece " + dir + " from row " + this.row + " column " + this.column);
+			//console.log("Moving Piece " + dir + " from row " + this.row + " column " + this.column);
 		if(dir == 0) {
 			if(this.column < 1) {
 				//			console.log("Can't move left anymore");
@@ -340,6 +342,7 @@ PieceC.prototype.move = function(){
 					this.board[this.row][this.column] = "0";
 					this.board[this.row][this.column-1] = this;
 					this.column -= 1;
+					this.ent.column--;
 				} else {
 					//			console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
 				}
@@ -352,6 +355,7 @@ PieceC.prototype.move = function(){
 					this.board[this.row][this.column] = "0";
 					this.board[this.row][this.column+1] = this;
 					this.column += 1;
+					this.ent.column++;
 				} else {
 					//			console.log("collision"); /** NEEDS TO BE IMPLEMENTED **/
 				}
@@ -359,7 +363,7 @@ PieceC.prototype.move = function(){
 		}
 		//	console.log("Piece is now at row " + this.row + " column " + this.column);
 	}
-	
+	}
 }
 
 PieceC.prototype.toString = function() {
