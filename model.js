@@ -287,8 +287,7 @@ BoardC.prototype.check = function() {
 				var index = this.Pieces.indexOf(this.Board[1][j]);
 				if (index > -1) {
 					var indexOfEnt = this.game.entities.indexOf(this.Board[1][j].ent);
-					//console.log(this.User.player.isTransitioning());
-					if(indexOfEnt > -1 && !this.User.player.isTransitioning()) {
+					if(indexOfEnt > -1) {
 						//remove from entities 
 						this.game.entities[indexOfEnt].removeFromWorld = true;
 						//checks if the User can eat the piece or if they die
