@@ -103,21 +103,21 @@ GameBoard.prototype.draw = function (ctx) {
     
     //Draw Rectangle for Player Score to live in. 
 
-    /**
+    
     ctx.rect(55, 63, 170, 50);
     ctx.fillStyle="blue";
     ctx.fill(); 
     ctx.font = "36px arial";
     ctx.fillStyle = '#00ff00';
-    **/
+
     //Draw Rectangle for High Score to live in. 
-    /**
+
     ctx.rect(592, 63, 170, 50);
     ctx.stroke();
     //Score Headers
     ctx.fillText("Player Score",55,50, 170); 
     ctx.fillText("High Score",592,50, 170); 
-    **/
+
     //Load the scores.
     ctx.fillText(this.userScoreOnBoard.getHighScore(),602,100,150);   
     //TODO: High Score is loading every time and is a waste. it should only load once and be done. 
@@ -271,8 +271,8 @@ UserScore.prototype.updateScore = function (tick, ctx, x, y) {
         	this.elapsedTime = 0;
         } 
     }
-    document.getElementById("scoreOnPage").innerHTML = this.userScore.getScore();
-	document.getElementById("highScoreOnPage").innerHTML = this.userScore.getHighScore();
+    //document.getElementById("scoreOnPage").innerHTML = this.userScore.getScore();
+	//document.getElementById("highScoreOnPage").innerHTML = this.userScore.getHighScore();
     
     	
 }
