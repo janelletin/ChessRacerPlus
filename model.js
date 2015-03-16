@@ -7,13 +7,13 @@ var STARTING_POSITION = 4;
 function save() {
     var n = prompt("Enter Your Name!", "name");
     var s = score;
-    socket.emit('save', { studentname: 'JT', statename: 'highScore', name: n, score: s });
+    socket.emit('save', { studentname: "Blue Three", statename: 'highScore', name: n, score: s });
 }
 
 function load() {
     var canvas = document.getElementById('gameWorld');
     var ctx = canvas.getContext('2d');
-    socket.emit('load', { studentname: 'JT', statename: 'highScore' });
+    socket.emit('load', { studentname: 'Blue Three', statename: 'highScore' });
     socket.on('load', function (data) {
 		//console.log("testing" + data.score);
         var n = data.name;
