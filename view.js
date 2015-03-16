@@ -104,24 +104,25 @@ GameBoard.prototype.draw = function (ctx) {
     //Draw Rectangle for Player Score to live in. 
 
     
-    ctx.rect(55, 63, 170, 50);
+/*     ctx.rect(55, 63, 170, 50);
     ctx.fillStyle="blue";
     ctx.fill(); 
     ctx.font = "36px arial";
-    ctx.fillStyle = '#00ff00';
+    ctx.fillStyle = '#00ff00' */;
 
     //Draw Rectangle for High Score to live in. 
 
-    ctx.rect(592, 63, 170, 50);
-    ctx.stroke();
+/*     ctx.rect(592, 63, 170, 50);
+    ctx.stroke(); */
     //Score Headers
-    ctx.fillText("Player Score",55,50, 170); 
-    ctx.fillText("High Score",592,50, 170); 
+	ctx.font = "36px arial";
+    ctx.fillText("Player Score",55,250, 170); 
+    ctx.fillText("High Score",592,250, 170); 
 
     //Load the scores.
-    ctx.fillText(this.userScoreOnBoard.getHighScore(),602,100,150);   
+    ctx.fillText(this.userScoreOnBoard.getHighScore(),602,300,150);   
     //TODO: High Score is loading every time and is a waste. it should only load once and be done. 
-    ctx.fillText(this.userScoreOnBoard.getScore(),65,100,150);
+    ctx.fillText(this.userScoreOnBoard.getScore(),65,300,150);
     
     if(this.userScoreOnBoard.getScore() > this.userScoreOnBoard.getHighScore())
     {
