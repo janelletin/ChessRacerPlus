@@ -259,7 +259,6 @@ ChessClockAnimation.prototype.isDone = function () {
 function UserScore(game) {
     this.userScore = new ScoreEngine(game); 
     this.elapsedTime = 0; 
-    document.getElementById("highScoreOnPage").innerHTML = this.userScore.getHighScore();
 }
 
 /*
@@ -273,6 +272,7 @@ UserScore.prototype.updateScore = function (tick, ctx, x, y) {
         } 
     }
     document.getElementById("scoreOnPage").innerHTML = this.userScore.getScore();
+	document.getElementById("highScoreOnPage").innerHTML = this.userScore.getHighScore();
     
     	
 }

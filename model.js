@@ -1,7 +1,28 @@
+var socket = io.connect("http://76.28.150.193:8888");
 var score;
 var scoreBoard;
-var highScore;
+var highScore = 0;
 var STARTING_POSITION = 4;
+
+function save() {
+    var n = prompt("Enter Your Name!", "name");
+    var s = score;
+    socket.emit('save', { studentname: 'JT', statename: 'highScore', name: n, score: s });
+}
+
+function load() {
+    var canvas = document.getElementById('gameWorld');
+    var ctx = canvas.getContext('2d');
+    socket.emit('load', { studentname: 'JT', statename: 'highScore' });
+    socket.on('load', function (data) {
+		//console.log("testing" + data.score);
+        var n = data.name;
+		//console.log(highScore);
+        highScore = data.score;
+		//console.log(highScore);
+        // set highscore in index and in his game engine
+    });
+}
 
 function BoardC(gameEngine) {
 	this.game = gameEngine;
@@ -543,6 +564,9 @@ User.prototype.eat = function(piece) {
 		//console.log("same color");
 	    //return false;
 	    piece.ent.kill();
+		if(score > highScore) {
+				save();
+			}
 	    if (confirm("You hit your own team! Hit OK to restart!") == true) {
 	        window.location.reload()
 	    } else {
@@ -554,6 +578,9 @@ User.prototype.eat = function(piece) {
 		//this.print();
 	    //return false;
 	    piece.ent.kill();
+		if(score > highScore) {
+				save();
+			}
 	    if (confirm("You Died! Hit OK to restart!") == true) {
 	        window.location.reload()
 	    } else {
@@ -562,6 +589,7 @@ User.prototype.eat = function(piece) {
 		//TODO: Add new modal window showing score and letting Player select to end or start again. 
 		this.game.stop();
 	} else {
+		
 	    piece.ent.kill();
 	    if (piece.rank == this.rank) {
 	        if (piece.rank === 5) {
@@ -629,6 +657,8 @@ User.prototype.rankToType = function (rank) {
 */
 function ScoreEngine(game){
 	this.game = gameEngine;
+	load();
+	this.highScore = highScore;
 }
 // Get the score of the game currently running.
 ScoreEngine.prototype.getScore = function(){
@@ -652,7 +682,7 @@ ScoreEngine.prototype.getHighScore = function(){
 	if(score > highScore){
 		//TODO: Notify the user in some fashion that they have passed the previous high score.
 	}
-	return 2000;
+	return highScore;
 }
 
 ScoreEngine.prototype.captures = function(captured){
