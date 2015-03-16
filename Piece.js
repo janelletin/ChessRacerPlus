@@ -114,7 +114,7 @@ Piece.prototype.update = function () {
 
 Piece.prototype.draw = function (ctx) {
 
-    if (this.row > 12) {
+    if (this.row > 11) {
         return;
     }
     ctx.drawImage(this.spriteSheet, this.x, this.y,
