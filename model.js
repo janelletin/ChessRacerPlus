@@ -626,7 +626,9 @@ User.prototype.eat = function(piece) {
 			}
 		}
 		//return true;
-		this.score += piece + 1;
+		//console.log(score);
+		score += (piece.rank+1)*1000;
+		//console.log(score);
 	}
 }
 
