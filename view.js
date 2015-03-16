@@ -116,6 +116,7 @@ GameBoard.prototype.draw = function (ctx) {
     ctx.stroke(); */
     //Score Headers
 	ctx.font = "36px arial";
+	ctx.fillStyle = "white";
     ctx.fillText("Player Score",55,250, 170); 
     ctx.fillText("High Score",592,250, 170); 
 
